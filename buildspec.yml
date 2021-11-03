@@ -1,0 +1,35 @@
+version: 0.2
+
+environment_variables:
+  plaintext:
+    DJANGO_SETTINGS_MODULE: afriweddings.settings
+
+phases:
+  install:
+    run-as: root
+    runtime-versions: 
+      python: 3.7 
+    commands:
+      - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
+      - apt update
+      - apt-get install -y libmemcached-dev
+      - apt-get install -y zlib1g-dev
+      - cd ..
+      - ls
+      - python -m venv env
+      - ls
+      - . env/bin/activate
+      - cd src && pip install -r requirements.txt
+  pre_build:
+    commands:
+      - ls
+      - cd test_cases && python tests.py
+  build:
+    commands:
+      - echo Building starting completed on `date`
+  post_build:
+    commands:
+      - cd ..
+      - ls
+      - echo Build completed on `date`
+      - zappa update staging && zappa manage staging migrate
