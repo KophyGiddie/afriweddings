@@ -1,53 +1,63 @@
 from django.db import models
 from apps.weddings.models import Wedding
 from apps.guests.models import Guest
+from django.conf import settings
 import uuid
 
 
-class RSVPQuestion(models.Model):
+class SeatingTable(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
-        related_name='rsvp',
+        related_name='seating_tables',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
-    question = models.CharField(max_length=2000, blank=True, null=True)
-    question_type = models.CharField(max_length=2000, blank=True, null=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='seating_tables',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    name = models.CharField(max_length=2000, blank=True, null=True)
+    table_capacity = models.IntegerField(default=0)
+    seats_assigned = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'RSVP Question'
+        verbose_name_plural = 'Seating Table'
         ordering = ('-created_at',)
 
     def __str__(self):
-        return '%s' % (self.question)
+        return '%s' % (self.name)
 
 
-class RSVP(models.Model):
+class SeatingChart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    rsvp_question = models.ForeignKey(
-        RSVPQuestion,
-        related_name='rsvp',
+    table = models.ForeignKey(
+        SeatingTable,
+        related_name='team',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     guest = models.ForeignKey(
         Guest,
-        related_name='rsvp',
+        related_name='team',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
-    answer = models.CharField(max_length=2000, blank=True, null=True)
+    seat_number = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'RSVP'
+        verbose_name_plural = 'Seating Chart'
+        ordering = ('-created_at',)
 
     def __str__(self):
-        return '%s' % (self.answer)
+        return 'Seat Number - %s' % (self.seat_number)

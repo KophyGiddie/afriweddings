@@ -30,8 +30,8 @@ class BudgetCategory(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'Checklist Category'
-        ordering = ('title',)
+        verbose_name_plural = 'Budget Category'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s' % (self.title)
@@ -41,7 +41,7 @@ class BudgetExpense(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.ForeignKey(
         BudgetCategory,
-        related_name='team',
+        related_name='budget_expense',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -56,8 +56,8 @@ class BudgetExpense(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'Default Checklist Schedule'
-        ordering = ('priority',)
+        verbose_name_plural = 'Budget Expense'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s' % (self.name)

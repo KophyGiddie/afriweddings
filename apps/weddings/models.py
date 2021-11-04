@@ -9,7 +9,7 @@ class Wedding(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='wedding',
+        related_name='weddings',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -40,7 +40,7 @@ class Wedding(models.Model):
 
     class Meta:
         verbose_name_plural = 'Weddings'
-        ordering = ('id',)
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s - %s' % (self.partner_first_name, self.partner_role)
@@ -62,6 +62,10 @@ class WeddingMedia(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name_plural = 'Wedding Media'
+        ordering = ('-created_at',)
+
 
 class WeddingRole(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -75,6 +79,10 @@ class WeddingRole(models.Model):
     role = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Wedding Roles'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return str(self.role)
@@ -100,7 +108,7 @@ class WeddingTeam(models.Model):
     last_name = models.CharField(max_length=200, blank=True, null=True)
     role = models.ForeignKey(
         WeddingRole,
-        related_name='team',
+        related_name='teams',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -122,14 +130,14 @@ class WallPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
-        related_name='team',
+        related_name='wallpost',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='team',
+        related_name='wallpost',
         on_delete=models.CASCADE,
         null=True,
         blank=True

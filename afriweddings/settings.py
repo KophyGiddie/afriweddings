@@ -47,6 +47,7 @@ LOCAL_APPS = [
     'apps.rsvp',
     'apps.users',
     'apps.weddings',
+    'apps.seating',
     'apps.prerequisites'
 ]
 

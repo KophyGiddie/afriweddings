@@ -18,8 +18,8 @@ class GuestEvent(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'Checklist Category'
-        ordering = ('title',)
+        verbose_name_plural = 'Guest Events'
+        ordering = ('name',)
 
     def __str__(self):
         return '%s' % (self.title)
@@ -39,8 +39,8 @@ class GuestGroup(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'Checklist Category'
-        ordering = ('title',)
+        verbose_name_plural = 'Guest Groups'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s' % (self.title)
@@ -78,6 +78,10 @@ class Guest(models.Model):
     companion = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Guests'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s' % (self.first_name)

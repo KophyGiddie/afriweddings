@@ -110,7 +110,7 @@ class AFUser(AbstractBaseUser):
         return self.email
 
     class Meta:
-        ordering = ('id', 'first_name',)
+        ordering = ('-created_at', 'first_name',)
         verbose_name = _('AfriWedding User')
         verbose_name_plural = _('AfriWedding User')
 
@@ -157,4 +157,3 @@ class UserActivity(models.Model):
 
     def __str__(self):
         return self.description
-

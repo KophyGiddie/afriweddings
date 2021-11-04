@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.weddings.models import *
+from apps.rsvp.models import *
 
 # Register your models here.
 admin.site.register(RSVPQuestion)

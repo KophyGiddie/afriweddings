@@ -8,7 +8,7 @@ class ChecklistCategory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
-        related_name='team',
+        related_name='checlist_category',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -29,18 +29,18 @@ class ChecklistSchedule(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
-        related_name='team',
+        related_name='checklist_schedule',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     name = models.CharField(max_length=2000, blank=True, null=True)
-    priority = models.CharField(default=1)
+    priority = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'Default Checklist Schedule'
+        verbose_name_plural = 'Checklist Schedule'
         ordering = ('priority',)
 
     def __str__(self):
@@ -51,28 +51,28 @@ class Checklist(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
-        related_name='team',
+        related_name='checklist',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     category = models.ForeignKey(
         ChecklistCategory,
-        related_name='team',
+        related_name='checklist',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='wedding',
+        related_name='checklist',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     schedule = models.ForeignKey(
         ChecklistSchedule,
-        related_name='team',
+        related_name='checklist',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -83,9 +83,13 @@ class Checklist(models.Model):
     title = models.CharField(max_length=2000, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
-    priority = models.CharField(default=1)
+    priority = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Checklist'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s' % (self.name)

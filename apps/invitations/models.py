@@ -8,14 +8,14 @@ class Invitation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
-        related_name='team',
+        related_name='invitation',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     invited_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='team',
+        related_name='invitation',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -25,7 +25,7 @@ class Invitation(models.Model):
     invitation_type = models.CharField(max_length=200, blank=True, null=True)
     invitee_role = models.ForeignKey(
         WeddingRole,
-        related_name='team',
+        related_name='invitation',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -34,6 +34,10 @@ class Invitation(models.Model):
     email_sent = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Invitation'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)
