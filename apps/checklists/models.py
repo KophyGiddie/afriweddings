@@ -14,6 +14,7 @@ class ChecklistCategory(models.Model):
         blank=True
     )
     title = models.CharField(max_length=2000, blank=True, null=True)
+    identifier = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -34,6 +35,7 @@ class ChecklistSchedule(models.Model):
         null=True,
         blank=True
     )
+    identifier = models.CharField(max_length=2000, blank=True, null=True)
     name = models.CharField(max_length=2000, blank=True, null=True)
     priority = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -49,6 +51,7 @@ class ChecklistSchedule(models.Model):
 
 class Checklist(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    identifier = models.CharField(max_length=2000, blank=True, null=True)
     wedding = models.ForeignKey(
         Wedding,
         related_name='checklist',

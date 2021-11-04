@@ -1,0 +1,34 @@
+[
+    {
+        "label": "Begining",
+        "value": "begining"
+    },
+    {
+        "label": "Next Stage",
+        "value": "middle_stage"
+    },
+    {
+        "label": "Final Stages",
+        "value": "final_stage"
+    },
+    {
+        "label": "The last month",
+        "value": "the_last_month"
+    },
+    {
+        "label": "2 weeks",
+        "value": "two_weeks"
+    },
+    {
+        "label": "Last Week",
+        "value": "last_week"
+    },
+    {
+        "label": "Last day",
+        "value": "last_day"
+    },
+    {
+        "label": "After the wedding",
+        "value": "after_the_wedding"
+    }
+]

@@ -1,0 +1,70 @@
+[
+    {
+        "label": "Planning",
+        "value": "planning"
+    },
+    {
+        "label": "Legal Processes",
+        "value": "legal"
+    },
+    {
+        "label": "Ceremony",
+        "value": "ceremony"
+    },
+    {
+        "label": "Reception",
+        "value": "reception"
+    },
+    {
+        "label": "Music",
+        "value": "music"
+    },
+    {
+        "label": "Wedding Invitations",
+        "value": "wedding_invitations"
+    },
+    {
+        "label": "Wedding Favours",
+        "value": "wedding_favours"
+    },
+    {
+        "label": "Flowers and Decoration",
+        "value": "flowers_and_decoration"
+    },
+    {
+        "label": "Photography and Video",
+        "value": "photography_and_video"
+    },
+    {
+        "label": "Transport",
+        "value": "transport"
+    },
+    {
+        "label": "Jewellery",
+        "value": "jewellery"
+    },
+    {
+        "label": "Bridal Accessories",
+        "value": "bridal_accessories"
+    },
+    {
+        "label": "Groom's Accessories",
+        "value": "groom_accessories"
+    },
+    {
+        "label": "Health and Beauty",
+        "value": "health_and_beauty"
+    },
+    {
+        "label": "Honeymoon",
+        "value": "honeymoon"
+    },
+    {
+        "label": "Gift List",
+        "value": "gift_list"
+    },
+    {
+        "label": "Other",
+        "value": "other"
+    }
+]

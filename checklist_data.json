@@ -1,0 +1,900 @@
+[
+    {
+        "title": "Announce your engagement to family and friends!",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "1"
+    },
+    {
+        "title": "Plan an engagement party",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "2"
+    },
+    {
+        "title": "Start researching venues",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "3"
+    },
+    {
+        "title": "Schedule an engagement photoshoot",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "begining",
+        "essential": false,
+        "id": "4"
+    },
+    {
+        "title": "Start your guest list",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "5"
+    },
+    {
+        "title": "Explore our Ideas section and Real Weddings for advice and inspiration!",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "6"
+    },
+    {
+        "title": "Figure out your budget",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "7"
+    },
+    {
+        "title": "Research and book a wedding planner",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "8"
+    },
+    {
+        "title": "Research religious officiants, celebrants or registrars",
+        "description": "",
+        "category": "ceremony",
+        "schedule": "begining",
+        "essential": false,
+        "id": "9"
+    },
+    {
+        "title": "Choose a theme and colour scheme",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "10"
+    },
+    {
+        "title": "Select your wedding party",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "11"
+    },
+    {
+        "title": "Research venues with a few dates in mind",
+        "description": "",
+        "category": "ceremony",
+        "schedule": "begining",
+        "essential": false,
+        "id": "12"
+    },
+    {
+        "title": "Start your registry",
+        "description": "",
+        "category": "gift_list",
+        "schedule": "begining",
+        "essential": false,
+        "id": "13"
+    },
+    {
+        "title": "Start collecting guest list information",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "14"
+    },
+    {
+        "title": "Book your venue and set the date!",
+        "description": "",
+        "category": "reception",
+        "schedule": "begining",
+        "essential": true,
+        "id": "15"
+    },
+    {
+        "title": "Reserve your catering",
+        "description": "",
+        "category": "reception",
+        "schedule": "begining",
+        "essential": true,
+        "id": "16"
+    },
+    {
+        "title": "Create your wedding website",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "17"
+    },
+    {
+        "title": "Research and meet a few photographers",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "begining",
+        "essential": false,
+        "id": "18"
+    },
+    {
+        "title": "Create a weather 'Plan B'",
+        "description": "",
+        "category": "reception",
+        "schedule": "begining",
+        "essential": false,
+        "id": "19"
+    },
+    {
+        "title": "Research music and entertainment for your reception",
+        "description": "",
+        "category": "music",
+        "schedule": "begining",
+        "essential": false,
+        "id": "20"
+    },
+    {
+        "title": "Meet with a few photographers",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "begining",
+        "essential": false,
+        "id": "21"
+    },
+    {
+        "title": "Start looking at wedding outfits",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "begining",
+        "essential": false,
+        "id": "22"
+    },
+    {
+        "title": "Revise your guest list",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "23"
+    },
+    {
+        "title": "Confirm your wedding party",
+        "description": "",
+        "category": "other",
+        "schedule": "begining",
+        "essential": false,
+        "id": "24"
+    },
+    {
+        "title": "Book your photographer",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "begining",
+        "essential": true,
+        "id": "25"
+    },
+    {
+        "title": "Create and order your save the dates",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "begining",
+        "essential": false,
+        "id": "26"
+    },
+    {
+        "title": "Book your reception musician, entertainer, band and/or DJ",
+        "description": "",
+        "category": "music",
+        "schedule": "begining",
+        "essential": true,
+        "id": "27"
+    },
+    {
+        "title": "Start researching wedding party attire",
+        "description": "",
+        "category": "other",
+        "schedule": "begining",
+        "essential": false,
+        "id": "28"
+    },
+    {
+        "title": "Come up with a wellness plan",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "begining",
+        "essential": false,
+        "id": "29"
+    },
+    {
+        "title": "Reserve hotel rooms for your guests",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "30"
+    },
+    {
+        "title": "Start researching videographers",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "begining",
+        "essential": false,
+        "id": "31"
+    },
+    {
+        "title": "Start looking at florists",
+        "description": "",
+        "category": "flowers_and_decoration",
+        "schedule": "begining",
+        "essential": false,
+        "id": "32"
+    },
+    {
+        "title": "Contact your local registry office",
+        "description": "",
+        "category": "legal",
+        "schedule": "begining",
+        "essential": false,
+        "id": "33"
+    },
+    {
+        "title": "Book your videographer",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "begining",
+        "essential": false,
+        "id": "34"
+    },
+    
+  
+    {
+        "title": "Research decorations for your ceremony and reception",
+        "description": "",
+        "category": "flowers_and_decoration",
+        "schedule": "begining",
+        "essential": false,
+        "id": "35"
+    },
+    {
+        "title": "Start researching invitation designers",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "begining",
+        "essential": false,
+        "id": "36"
+    },
+    {
+        "title": "Book your florist",
+        "description": "",
+        "category": "flowers_and_decoration",
+        "schedule": "begining",
+        "essential": true,
+        "id": "37"
+    },
+    {
+        "title": "Research wedding rings",
+        "description": "",
+        "category": "jewellery",
+        "schedule": "begining",
+        "essential": false,
+        "id": "38"
+    },
+    {
+        "title": "Start looking at honeymoon destinations",
+        "description": "",
+        "category": "honeymoon",
+        "schedule": "begining",
+        "essential": false,
+        "id": "39"
+    },
+    {
+        "title": "Make appointments at wedding boutiques and/or suit shops",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "begining",
+        "essential": false,
+        "id": "40"
+    },
+    {
+        "title": "Choose your wedding attire and schedule your first fitting",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "begining",
+        "essential": true,
+        "id": "41"
+    },
+    {
+        "title": "Update your supplier team",
+        "description": "",
+        "category": "planning",
+        "schedule": "begining",
+        "essential": false,
+        "id": "42"
+    },
+    {
+        "title": "Meet with your religious officiant, celebrant or registrar",
+        "description": "",
+        "category": "ceremony",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "43"
+    },
+    {
+        "title": "Research rentals like marquees, place settings, chairs, and aisle runners",
+        "description": "",
+        "category": "flowers_and_decoration",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "44"
+    },
+    {
+        "title": "Research headpieces and veils",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "45"
+    },
+    {
+        "title": "Create a gift list",
+        "description": "",
+        "category": "gift_list",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "46"
+    },
+    {
+        "title": "Confirm your honeymoon plans",
+        "description": "",
+        "category": "honeymoon",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "47"
+    },
+    {
+        "title": "Research cake makers and schedule a tasting",
+        "description": "",
+        "category": "reception",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "48"
+    },
+    {
+        "title": "Send save the dates",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "49"
+    },
+    {
+        "title": "Order your invitations and thank you cards",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "50"
+    },
+    {
+        "title": "Book your wedding musician(s)",
+        "description": "",
+        "category": "music",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "51"
+    },
+    {
+        "title": "Book rental, decoration and lighting professionals",
+        "description": "",
+        "category": "reception",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "52"
+    },
+    {
+        "title": "Book transportation for you and for your guests",
+        "description": "",
+        "category": "transport",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "53"
+    },
+    {
+        "title": "Research rehearsal dinner locations",
+        "description": "",
+        "category": "other",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "54"
+    },
+    {
+        "title": "Start researching hair and makeup suppliers",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "55"
+    },
+    {
+        "title": "Book your cake maker",
+        "description": "",
+        "category": "reception",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "56"
+    },
+    {
+        "title": "Prepare to send the invitations - confirm guests' addresses!",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "57"
+    },
+    {
+        "title": "Book your hair and makeup professionals",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "58"
+    },
+    {
+        "title": "Use your wedding website to collect information from your guests (RSVPs, meal selections, etc.)",
+        "description": "",
+        "category": "planning",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "59"
+    },
+    {
+        "title": "Begin the first steps to legally get married",
+        "description": "",
+        "category": "legal",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "60"
+    },
+    {
+        "title": "Buy or hire male wedding party suits",
+        "description": "",
+        "category": "groom_accessories",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "61"
+    },
+    {
+        "title": "Book accommodation for your wedding night",
+        "description": "",
+        "category": "other",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "62"
+    },
+    {
+        "title": "Arrange the wedding rehearsal",
+        "description": "",
+        "category": "other",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "63"
+    },
+    {
+        "title": "Make sure your wedding party has ordered their outfits",
+        "description": "",
+        "category": "wedding_favours",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "64"
+    },
+    {
+        "title": "Order your wedding favours",
+        "description": "",
+        "category": "jewellery",
+        "schedule": "middle_stage",
+        "essential": true,
+        "id": "65"
+    },
+    {
+        "title": "Think of wedding ring engravings",
+        "description": "",
+        "category": "planning",
+        "schedule": "middle_stage",
+        "essential": false,
+        "id": "66"
+    },
+    {
+        "title": "Purchase outfit accessories",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "67"
+    },
+    {
+        "title": "Address and send your wedding invitations",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "final_stage",
+        "essential": true,
+        "id": "68"
+    },
+    {
+        "title": "Purchase your guest book",
+        "description": "",
+        "category": "reception",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "69"
+    },
+    {
+        "title": "Purchase your wedding rings",
+        "description": "",
+        "category": "jewellery",
+        "schedule": "final_stage",
+        "essential": true,
+        "id": "70"
+    },
+    {
+        "title": "Research/book a day-of-coordinator",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "71"
+    },
+    {
+        "title": "Check on passports, vaccines and visas!",
+        "description": "",
+        "category": "honeymoon",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "72"
+    },
+    {
+        "title": "Think of a signature cocktail",
+        "description": "",
+        "category": "other",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "73"
+    },
+    {
+        "title": "If you want a hair cut, go now!",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "74"
+    },
+    {
+        "title": "Purchase a wedding gift for your spouse-to-be",
+        "description": "",
+        "category": "other",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "75"
+    },
+    {
+        "title": "Think of something unique!",
+        "description": "",
+        "category": "other",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "76"
+    },
+    {
+        "title": "Sit down with your photographer again",
+        "description": "",
+        "category": "photography_and_video",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "77"
+    },
+    {
+        "title": "Decide on hair and makeup styles",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "78"
+    },
+    {
+        "title": "Double check with your transportation",
+        "description": "",
+        "category": "transport",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "79"
+    },
+    {
+        "title": "Order any wedding party accessories",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "80"
+    },
+    {
+        "title": "Check in with your religious officiant, celebrant or registrar and give notice",
+        "description": "",
+        "category": "legal",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "81"
+    },
+    {
+        "title": "Confirm meal selections and notify caterer and dessert suppliers of any food allergies",
+        "description": "",
+        "category": "reception",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "82"
+    },
+    {
+        "title": "Book a bartending or alcohol service, if not included in your venue or catering",
+        "description": "",
+        "category": "reception",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "83"
+    },
+    {
+        "title": "Hair and makeup trial!",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "84"
+    },
+    {
+        "title": "Finalise your wedding songs",
+        "description": "",
+        "category": "music",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "85"
+    },
+    {
+        "title": "Make a packing list for your wedding/honeymoon",
+        "description": "",
+        "category": "honeymoon",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "86"
+    },
+    {
+        "title": "Create your ceremony and reception timelines",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "87"
+    },
+    {
+        "title": "Order your place cards, menus and orders of service",
+        "description": "",
+        "category": "wedding_invitations",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "88"
+    },
+    {
+        "title": "Make sure your wedding party knows the timeline",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "89"
+    },
+    {
+        "title": "Buy wedding party gifts",
+        "description": "",
+        "category": "other",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "90"
+    },
+    {
+        "title": "Start thinking of your vows and speeches",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "91"
+    },
+    {
+        "title": "Double check your orders of service and place cards",
+        "description": "",
+        "category": "ceremony",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "92"
+    },
+    {
+        "title": "Pick up your rings",
+        "description": "",
+        "category": "jewellery",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "93"
+    },
+    {
+        "title": "Review the guest list and call guests that haven't RSVP'd",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "94"
+    },
+    {
+        "title": "Finalise vows",
+        "description": "",
+        "category": "planning",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "95"
+    },
+    {
+        "title": "Have another dress or outfit fitting",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "final_stage",
+        "essential": true,
+        "id": "96"
+    },
+    {
+        "title": "Confirm wedding rehearsal",
+        "description": "",
+        "category": "other",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "97"
+    },
+    {
+        "title": "Finalise and share the seating plan with your reception venue",
+        "description": "",
+        "category": "reception",
+        "schedule": "final_stage",
+        "essential": true,
+        "id": "98"
+    },
+    {
+        "title": "Make sure the speeches are ready",
+        "description": "",
+        "category": "reception",
+        "schedule": "final_stage",
+        "essential": false,
+        "id": "99"
+    },
+    {
+        "title": "Start practising for your first dance",
+        "description": "",
+        "category": "music",
+        "schedule": "two_weeks",
+        "essential": false,
+        "id": "100"
+    },
+    {
+        "title": "Pamper yourself!",
+        "description": "",
+        "category": "health_and_beauty",
+        "schedule": "two_weeks",
+        "essential": false,
+        "id": "101"
+    },
+    {
+        "title": "Confirm your witnesses",
+        "description": "",
+        "category": "legal",
+        "schedule": "two_weeks",
+        "essential": false,
+        "id": "102"
+    },
+    {
+        "title": "Pick up you and your partner's wedding outfits",
+        "description": "",
+        "category": "bridal_accessories",
+        "schedule": "last_week",
+        "essential": false,
+        "id": "103"
+    },
+    {
+        "title": "Confirm details with wedding party",
+        "description": "",
+        "category": "planning",
+        "schedule": "last_week",
+        "essential": false,
+        "id": "104"
+    },
+    {
+        "title": "Confirm final details with all your suppliers and send last payments",
+        "description": "",
+        "category": "planning",
+        "schedule": "last_week",
+        "essential": false,
+        "id": "105"
+    },
+    {
+        "title": "Pack for your honeymoon",
+        "description": "",
+        "category": "honeymoon",
+        "schedule": "last_week",
+        "essential": false,
+        "id": "106"
+    },
+    {
+        "title": "Write a sweet note to your partner",
+        "description": "",
+        "category": "other",
+        "schedule": "last_week",
+        "essential": false,
+        "id": "107"
+    },
+    {
+        "title": "Pull together any last-minute essentials",
+        "description": "",
+        "category": "other",
+        "schedule": "last_week",
+        "essential": false,
+        "id": "108"
+    },
+    {
+        "title": "Drop off decor to the venue(s)",
+        "description": "",
+        "category": "flowers_and_decoration",
+        "schedule": "last_day",
+        "essential": true,
+        "id": "109"
+    },
+    {
+        "title": "Smile. You're finished!",
+        "description": "",
+        "category": "other",
+        "schedule": "last_day",
+        "essential": false,
+        "id": "110"
+    },
+    {
+        "title": "Submit your Real Wedding",
+        "description": "",
+        "category": "other",
+        "schedule": "after_the_wedding",
+        "essential": true,
+        "id": "111"
+    },
+    {
+        "title": "Review your supplier team on AfriWeddings",
+        "description": "",
+        "category": "other",
+        "schedule": "after_the_wedding",
+        "essential": true,
+        "id": "112"
+    }
+]

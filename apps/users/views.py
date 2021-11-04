@@ -1,3 +1,300 @@
-from django.shortcuts import render
+from utils.responses import error_response, success_response
+from rest_framework import viewsets
+from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework.status import (HTTP_201_CREATED,
+                                   HTTP_200_OK,
+                                   HTTP_304_NOT_MODIFIED,
+                                   HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
+from apps.users.serializer import *
+from apps.users.models import *
+from utils.pagination import PageNumberPagination
+from utils.utilities import send_activation_email, get_client_ip, send_forgot_password_email
+from utils.token import account_activation_token
 
-# Create your views here.
+
+class SignupUser(APIView):
+
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        user_role = format_number(request.data.get('user_role'))
+        password = request.data.get('password', None)
+        first_name = request.data.get('first_name', None)
+        last_name = request.data.get('last_name', None)
+        email = request.data.get('email', None)
+
+        try:
+            if password is not None\
+                and first_name is not None\
+                and last_name is not None\
+                and email is not None\
+                and user_role is not None:
+
+                user = AFUser.objects.get(email=email)
+                return Response(error_response("Email already exist", '101'), status=HTTP_400_BAD_REQUEST)
+            else:
+                return Response(error_response("Please all supply required parameters", '103'), status=HTTP_400_BAD_REQUEST)
+
+        except AFUser.DoesNotExist:
+            user = AFUser(
+                        email=email,
+                        first_name=first_name,
+                        user_type='COUPLE',
+                        user_role=user_role,
+                        last_name=last_name,
+                        username=email,
+                        gender=gender,
+                        is_active=False,
+                    )
+            user.set_password(password)
+            user.save()
+
+            mytoken = account_activation_token.make_token(user)
+            user.activation_token = mytoken
+            user.save()
+
+            hashed = hash_string(password)
+            StoredPass.objects.create(hashed=hashed, author=user)
+
+            send_activation_email(user, mytoken, "Kindly Activate Your Account")
+
+            return Response(success_response('Kindly validate your email'), status=HTTP_200_OK)
+
+
+class ValidateEmail(APIView):
+
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        print (request.data)
+        token = request.data.get('token', None)
+
+        try:
+            theuser = AFUser.objects.get(activation_token=token)
+            theuser.activation_token = ''
+            theuser.is_active = True
+            theuser.save()
+            return Response(success_response('Your email has been verified successfully kindly login'), status=HTTP_200_OK)
+        except AFUser.DoesNotExist:
+            return Response(error_response("Invalid Token", '102'), status=HTTP_400_BAD_REQUEST)
+
+
+class CurrentUserProfile(APIView):
+
+    def get(self, request, *args, **kwargs):
+        serializer = UserSerializer(request.user, context={'request': request})
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        profile = request.data
+        try:
+            serializer = UserSerializer(user, context={'request': request}, data=profile, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+            return Response(error_response("Please all supply required parameters", '103'), status=HTTP_400_BAD_REQUEST)
+        except ValueError:
+            serializer = UserSerializer(user, context={'request': request}, data=profile, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+            serializer = UserSerializer(profile, context={'request': request})
+            return Response(error_response(serializer.errors, '105'), status=HTTP_400_BAD_REQUEST)
+        finally:
+            serializer = UserSerializer(user, context={'request': request})
+            return Response(success_response('Data edited successfully', serializer.data), status=HTTP_200_OK)
+
+
+class ChangePassword(APIView):
+
+    def post(self, request, *args, **kwargs):
+        password = request.data.get('new_password', None)
+        old_password = request.data.get('old_password', None)
+
+        user = authenticate(email=request.user.phone_number, password=old_password)
+
+        if user is None:
+            return Response(error_response(serializer.errors, '102'), status=HTTP_400_BAD_REQUEST)
+
+        myuser = request.user
+        hashed = hash_string(password)
+        mypasses = StoredPass.objects.filter(author=myuser)
+
+        for item in mypasses:
+            if item.hashed == hashed:
+                return Response(error_response("This password has already been used", '106'), status=HTTP_400_BAD_REQUEST)
+
+        myuser.set_password(request.data.get('new_password'))
+        myuser.password_changed = True
+        myuser.save()
+
+        user = UserSerializer(myuser, context={'request': request})
+        return Response(success_response('Password Changed Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class ResendSignupVerification(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+
+        email = request.data.get('email')
+        myuser = AFUser.objects.get(email=email)
+
+        mytoken = account_activation_token.make_token(myuser)
+        myuser.activation_token = mytoken
+        myuser.save()
+
+        send_activation_email(myuser, mytoken, "Kindly Activate Your Account")
+
+        return Response(success_response('Email Sent'), status=HTTP_200_OK)
+
+
+class ForgotPassword(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+
+        try:
+            myuser = AFUser.objects.get(email=email)
+            myuser.account_activation_token = account_activation_token.make_token(myuser)
+            myuser.email_initiation_date = timezone.now()
+            myuser.save()
+
+            title = 'Afriweddings Password Reset'
+
+            send_forgot_password_email(myuser, myuser.account_activation_token, title)
+
+            return Response(success_response('Please check your email for the password reset instructions',), status=HTTP_200_OK)
+
+        except AFUser.DoesNotExist:
+            return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
+
+
+class ResetPassword(APIView):
+
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        password = request.data.get('password', None)
+        activation_token = request.data.get('token', None)
+
+        try:
+            myuser = AFUser.objects.get(activation_token=activation_token)
+            new_date = timezone.now() - relativedelta(days=2)
+
+            if myuser.email_initiation_date < new_date:
+                return Response(error_response("Your Linked has Expired. Contact Admin", '110'), status=HTTP_400_BAD_REQUEST)
+
+        except AFUser.DoesNotExist:
+            return Response(error_response("Invalid Token", '110'), status=HTTP_400_BAD_REQUEST)
+
+        hashed = hash_string(password)
+        mypasses = StoredPass.objects.filter(author=myuser)
+
+        for item in mypasses:
+            if item.hashed == hashed:
+                return Response(error_response("This password has already been used", '110'), status=HTTP_400_BAD_REQUEST)
+
+        myuser.set_password(password)
+        myuser.wild_string = ''
+        myuser.password_changed = True
+        myuser.save()
+
+        return Response(success_response('Password Reset Successfully. Kindly login'), status=HTTP_200_OK)
+
+
+@api_view(['POST',])
+@permission_classes((AllowAny,))
+def login_user(request):
+    email = request.data.get('email')
+    password = request.data.get('password', None)
+
+    if not email:
+        return Response(error_response("Please provide the email value", '112'), status=HTTP_400_BAD_REQUEST)
+
+    if not password:
+        return Response(error_response("Please provide the password value", '113'), status=HTTP_400_BAD_REQUEST)
+
+    try:
+        myuser = AFUser.objects.get(email=email)
+
+        #checks if the user is blocked and reverts a message or reset the temporal login fails and unblock if time exceeds
+        if myuser.is_blocked:
+            cooloff = (timezone.now() - myuser.failed_login_attempts.all().latest('id').date_created).seconds
+            if cooloff > 300:
+                myuser.is_blocked = False
+                myuser.temporal_login_fails = 0
+                myuser.save()
+            else:
+                left = int(300) - int(cooloff)
+                return Response(error_response('You have attempted to login 3 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
+
+        user = authenticate(email=phone_number, password=password)
+
+        #if user credentials passes authentication do OAuth login here
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                serializer = UserAuthSerializer(user, context={'request': request})
+                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+            else:
+                if user.is_blocked:
+                    return Response(error_response('Your account has been blocked. Please Contact Provident Insurance Support', '114'), status=HTTP_400_BAD_REQUEST)
+
+        # if user credentials fails increase failed login attempts counter
+        else:
+            FailedLogin.objects.create(author=myuser, ip_address=get_client_ip(request))
+            myuser.temporal_login_fails += 1
+            myuser.save()
+
+            if int(myuser.temporal_login_fails) == 3:
+                myuser.is_blocked = True
+                myuser.permanent_login_fails += 1
+                myuser.save()
+
+                if int(myuser.permanent_login_fails) >= 3:
+                    myuser.is_active = False
+                    myuser.save()
+
+                return Response(error_response("You have attempted to login 3 times, with no success. Your account has been locked temporarily for 300 seconds", '111'), status=HTTP_400_BAD_REQUEST)
+            left = 3 - myuser.temporal_login_fails
+            return Response(error_response('Your Password is incorrect. %s tries left' % left, '115'), status=HTTP_400_BAD_REQUEST)
+
+    except AFUser.DoesNotExist:
+        return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
+
+
+class UpdateUserAvatar(APIView):
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        avatar = request.FILES.get('avatar', None)
+        if avatar is not None:
+            user.avatar = avatar
+            user.save()
+            serializer = UserSerializer(user, context={'request': request})
+            # compress_image_choice(user.avatar)
+            return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+        else:
+            return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
+
+
+class UpdatePartnerDetails(APIView):
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        avatar = request.FILES.get('avatar', None)
+        if avatar is not None:
+            user.avatar = avatar
+            user.save()
+            serializer = UserSerializer(user, context={'request': request})
+            # compress_image_choice(user.avatar)
+            return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+        else:
+            return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)

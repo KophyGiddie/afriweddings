@@ -57,6 +57,8 @@ class AFUser(AbstractBaseUser):
                                         )
     user_type = models.CharField(max_length=100, default='COUPLE')
     user_role = models.CharField(max_length=1000, blank=True, null=True)
+    activation_token = models.CharField(max_length=1000, blank=True, null=True)
+    email_initiation_date = models.DateTimeField(blank=True, null=True)
     country = models.CharField(max_length=1000, blank=True, null=True)
     city = models.CharField(max_length=1000, blank=True, null=True)
     is_active = models.BooleanField(default=True)
