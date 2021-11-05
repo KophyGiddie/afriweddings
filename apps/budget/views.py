@@ -133,7 +133,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         serializer = ExpensePaymentSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='get_expense_payments')
+    @action(methods=['post'], detail=True, url_path='create_expense_payment')
     def create_expense_payment(self, request, *args, **kwargs):
         payment_date = request.data.get('payment_date', None)
         payment_due = request.data.get('payment_due', None)

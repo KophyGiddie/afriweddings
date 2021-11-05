@@ -34,7 +34,7 @@ def assign_wedding_checklists(user_id, wedding_id):
 @app.task()
 def populate_wedding_checklist(schedule_identifier, author_id):
     start = time.time()
-    myscheduled_checklist = DefaultChecklist.objects.select_related('category').filter(identifier=schedule_identifier)
+    myscheduled_checklist = DefaultChecklist.objects.select_related('category').filter(schedule__identifier=schedule_identifier)
     myauthor = AFUser.objects.get(id=author_id)
     mywedding = Wedding.objects.get(id=myauthor.wedding_id)
     myschedule = ChecklistSchedule.objects.get(identifier=schedule_identifier, created_by=myauthor)

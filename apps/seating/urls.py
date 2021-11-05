@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.seating.views import SeatingTableViewSet
 
 router = DefaultRouter()
-router.register(r'seating_table', SeatingTableViewSet)
+router.register(r'seating_tables', SeatingTableViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
