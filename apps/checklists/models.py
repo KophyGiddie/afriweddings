@@ -30,7 +30,7 @@ class ChecklistCategory(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return '%s' % (self.title)
+        return '%s' % (self.name)
 
 
 class ChecklistSchedule(models.Model):
