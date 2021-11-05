@@ -84,10 +84,10 @@ class SignupUser(APIView):
                 user.activation_token = mytoken
                 user.save()
 
+                send_activation_email(user, mytoken, "Kindly Activate Your Account")
+
             hashed = hash_string(password)
             StoredPass.objects.create(hashed=hashed, author=user)
-
-            send_activation_email(user, mytoken, "Kindly Activate Your Account")
 
             return Response(success_response('Kindly validate your email'), status=HTTP_200_OK)
 
