@@ -79,7 +79,7 @@ class DefaultChecklist(models.Model):
         ordering = ('priority',)
 
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s' % (self.title)
 
 
 class DefaultWeddingRole(models.Model):
