@@ -3,31 +3,31 @@ from django.contrib.auth import get_user_model
 
 
 class UserAvatarSerializer(serializers.ModelSerializer):
-    user_avatar = serializers.URLField(source='get_avatar_full')
+    profile_picture = serializers.URLField(source='get_avatar_full')
 
     class Meta:
         model = get_user_model()
-        fields = ('user_avatar',)
+        fields = ('profile_picture',)
 
 
 class UserAuthSerializer(serializers.ModelSerializer):
     auth_token = serializers.CharField(max_length=500, read_only=True)
-    user_avatar = serializers.URLField(source='get_avatar_full')
+    profile_picture = serializers.URLField(source='get_avatar_full')
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'auth_token', 'email', 'username', 'user_avatar',
+        fields = ('id', 'auth_token', 'email', 'username', 'profile_picture',
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at',
                   )
 
 
 class UserSerializer(serializers.ModelSerializer):
-    user_avatar = serializers.URLField(source='get_avatar_full')
+    profile_picture = serializers.URLField(source='get_avatar_full')
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'auth_token', 'email', 'username', 'user_avatar',
+        fields = ('id', 'auth_token', 'email', 'username', 'profile_picture',
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at'
                   )

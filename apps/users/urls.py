@@ -16,7 +16,7 @@ urlpatterns = [
     path('resend_verification_email/', ResendSignupVerification.as_view()),
     path('reset_password/', ResetPassword.as_view()),
     path('change_password/', ChangePassword.as_view()),
-    path('update_user_avatar/', UpdateUserAvatar.as_view()),
+    path('update_profile_picture/', UpdateProfilePicture.as_view()),
     path('me/', CurrentUserProfile.as_view()),
     path('', include(router.urls)),
 ]
