@@ -2,14 +2,13 @@ import os
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from random import randrange
 from utils import sendgrid
+from utils.constants import WEB_APP_URL
 from django.template.loader import render_to_string
-from utils.bulk_create_manager import BulkCreateManager
-from apps.checklists.models import Checklist, ChecklistCategory, ChecklistSchedule
 
 
-def generate_new_token():
+def generate_invitation_code():
     CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwwxyz'
-    LENGTH = 9
+    LENGTH = 16
     new_code = ''
     for i in range(LENGTH):
         new_code += CHARSET[randrange(0, len(CHARSET))]
@@ -22,10 +21,23 @@ def hash_string(mystring):
     return hashed
 
 
+def send_invitation_email(myinvitation):
+    title = 'Afriweddings Invitations'
+    context = {
+        'title': title,
+        'first_name': myinvitation.invited_by.first_name,
+        'user_role': myinvitation.user_role.role,
+        'button_url': '%saccept-invite/%s' % (WEB_APP_URL, myinvitation.invitation_code)
+    }
+    msg_html = render_to_string('email_templates/invitation_email.html', context)
+    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), myinvitation.email)
+
+
 def send_activation_email(myuser, token, title):
     context = {
+        'title': title,
         'user': myuser,
-        'token': token,
+        'button_url': '%sverify-account/%s' % (WEB_APP_URL, token)
     }
     msg_html = render_to_string('email_templates/activation_email.html', context)
     sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), myuser.email)
@@ -33,8 +45,9 @@ def send_activation_email(myuser, token, title):
 
 def send_forgot_password_email(myuser, token, title):
     context = {
+        'title': title,
         'user': myuser,
-        'token': token,
+        'button_url': '%sconfirm-password/%s' % (WEB_APP_URL, token)
     }
     msg_html = render_to_string('email_templates/forgot_password.html', context)
     sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), myuser.email)
@@ -51,8 +64,4 @@ def get_client_ip(request):
     return ip
 
 
-def bulk_create_items(queryset):
-    bulk_mgr = BulkCreateManager(chunk_size=100)
-    for row in queryset:
-        bulk_mgr.add(Checklist(attr1=row['attr1'], attr2=row['attr2']))
-    bulk_mgr.done()
+

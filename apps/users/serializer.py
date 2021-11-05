@@ -32,4 +32,3 @@ class UserSerializer(serializers.ModelSerializer):
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at'
                   )
-

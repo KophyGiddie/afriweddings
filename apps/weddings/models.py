@@ -76,6 +76,7 @@ class WeddingRole(models.Model):
         null=True,
         blank=True
     )
+    is_default = models.BooleanField(default=False)
     role = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -106,6 +107,7 @@ class WeddingTeam(models.Model):
     )
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
+    email = models.CharField(max_length=200, blank=True, null=True)
     role = models.ForeignKey(
         WeddingRole,
         related_name='teams',

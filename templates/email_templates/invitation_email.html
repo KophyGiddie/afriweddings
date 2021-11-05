@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no">
   <meta name="x-apple-disable-message-reformatting">
-  <title> {{title}} </title>
+  <title>{{title}} </title>
   <style type="text/css">
     @media screen {
       @font-face {
@@ -178,7 +178,7 @@
     <style type="text/css">
         .pc-fb-font {
             font-family: Helvetica, Arial, sans-serif !important;
-        }
+        } 
     </style>
     <![endif]-->
   <!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
@@ -260,7 +260,7 @@
                                   <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
                                     <tbody>
                                       <tr>
-                                        <td class="pc-fb-font" valign="top" style="padding: 10px 0 0; font-family: 'Fira Sans', Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 700; line-height: 34px; letter-spacing: -0.4px; color: #151515;">Hello {{user.first_name}}</td>
+                                        <td class="pc-fb-font" valign="top" style="padding: 10px 0 0; font-family: 'Fira Sans', Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 700; line-height: 34px; letter-spacing: -0.4px; color: #151515;">Hello </td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -269,7 +269,7 @@
                             </tbody>
                             <tbody>
                               <tr>
-                                <td class="pc-fb-font" valign="top" style="font-family: 'Fira Sans', Helvetica, Arial, sans-serif; padding: 10px 20px 0; line-height: 28px; font-size: 18px; font-weight: 300; letter-spacing: -0.2px; color: #9B9B9B;">Your have requested for a reset of your password. Please click on the link below to set a new password. This link expires in 48 hours</td>
+                                <td class="pc-fb-font" valign="top" style="font-family: 'Fira Sans', Helvetica, Arial, sans-serif; padding: 10px 20px 0; line-height: 28px; font-size: 18px; font-weight: 300; letter-spacing: -0.2px; color: #9B9B9B;">{{first_name}} sent you an invite as a {{user_role}} on Afriweddings. Please click the button below to view invitation details </td>
                               </tr>
                               <tr>
                                 <td height="4" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
@@ -301,7 +301,7 @@
 															<tr>
 																<td align="center" bgcolor="#E24F9E" style="border:1px solid #E24F9E;font-size:16px; line-height: 20px; font-weight:bold;font-family:Arial, sans-serif, 'Arial Bold', 'gdsherpa-bold';background-color:#E24F9E;">
                                       <span>
-										   <a href="https://afriweddings.netlify.app/verify-account/{{token}}" style="text-decoration: none; background-color: #E24F9E; border-top: 20px solid #E24F9E; border-bottom: 20px solid #E24F9E; border-left: 40px solid #E24F9E; border-right: 40px solid #E24F9E; display: inline-block; mso-table-lspace:0pt; mso-table-rspace:0pt;  color: #FFFFFF;text-align:center;">Reset Your Password&nbsp;<span style="vertical-align:middle;display:inline-block;"><img src="https://img1.wsimg.com/cdn/Image/Email/All/1e6d903b-eaa2-4e0b-9096-7ee498e64f34/arrow_btn_white.png" width="16" border="0" style="display:block;border:0;" /></span></a>
+										   <a href="{{button_url}}" style="text-decoration: none; background-color: #E24F9E; border-top: 20px solid #E24F9E; border-bottom: 20px solid #E24F9E; border-left: 40px solid #E24F9E; border-right: 40px solid #E24F9E; display: inline-block; mso-table-lspace:0pt; mso-table-rspace:0pt;  color: #FFFFFF;text-align:center;">Accept Invite&nbsp;<span style="vertical-align:middle;display:inline-block;"><img src="https://img1.wsimg.com/cdn/Image/Email/All/1e6d903b-eaa2-4e0b-9096-7ee498e64f34/arrow_btn_white.png" width="16" border="0" style="display:block;border:0;" /></span></a>
                                       </span>
 																</td>
 															</tr>

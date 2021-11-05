@@ -22,6 +22,7 @@ class Invitation(models.Model):
     )
     email = models.CharField(max_length=200, blank=True, null=True)
     invitation_code = models.CharField(max_length=200, blank=True, null=True)
+    user_role = models.CharField(max_length=200, blank=True, null=True)
     invitation_type = models.CharField(max_length=200, blank=True, null=True)
     invitee_role = models.ForeignKey(
         WeddingRole,

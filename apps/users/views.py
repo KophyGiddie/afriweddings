@@ -1,5 +1,4 @@
 from utils.responses import error_response, success_response
-from rest_framework import viewsets
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
@@ -9,11 +8,14 @@ from rest_framework.status import (HTTP_201_CREATED,
                                    HTTP_200_OK,
                                    HTTP_304_NOT_MODIFIED,
                                    HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
-from apps.users.serializer import *
-from apps.users.models import *
-from utils.pagination import PageNumberPagination
-from utils.utilities import send_activation_email, get_client_ip, send_forgot_password_email
+from apps.users.serializer import UserSerializer, UserAuthSerializer
+from apps.users.models import AFUser, FailedLogin, StoredPass
+from apps.invitations.models import Invitation
+from utils.utilities import hash_string, send_activation_email, get_client_ip, send_forgot_password_email
 from utils.token import account_activation_token
+from django.utils import timezone
+from apps.weddings.models import WeddingTeam
+from dateutil.relativedelta import relativedelta
 
 
 class SignupUser(APIView):
@@ -21,11 +23,13 @@ class SignupUser(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request, *args, **kwargs):
-        user_role = format_number(request.data.get('user_role'))
+        user_role = request.data.get('user_role')
+        user_type = request.data.get('user_type')
         password = request.data.get('password', None)
         first_name = request.data.get('first_name', None)
         last_name = request.data.get('last_name', None)
         email = request.data.get('email', None)
+        invitation_code = request.data.get('invitation_code', None)
 
         try:
             if password is not None\
@@ -42,20 +46,39 @@ class SignupUser(APIView):
         except AFUser.DoesNotExist:
             user = AFUser(
                         email=email,
+                        invitation_code=invitation_code,
                         first_name=first_name,
-                        user_type='COUPLE',
+                        user_type=user_type,
                         user_role=user_role,
                         last_name=last_name,
                         username=email,
-                        gender=gender,
                         is_active=False,
                     )
             user.set_password(password)
             user.save()
 
-            mytoken = account_activation_token.make_token(user)
-            user.activation_token = mytoken
-            user.save()
+            if invitation_code and invitation_code is not None and invitation_code != '':
+                try:
+                    myinvitation = Invitation.objects.get(invitation_code=invitation_code)
+                    if myinvitation.invitation_type == 'Partner':
+                        mywedding = myinvitation.wedding
+                        mywedding.partner = user
+                        mywedding.save()
+
+                        user.wedding_id = mywedding.id
+                        user.save()
+                    elif myinvitation.invitation_type == 'Team':
+                        myteam = WeddingTeam.objects.get(email=email)
+                        myteam.member = user
+                        myteam.save()
+                except Invitation.DoesNotExist:
+                    # ignore
+                    pass
+
+            else:
+                mytoken = account_activation_token.make_token(user)
+                user.activation_token = mytoken
+                user.save()
 
             hashed = hash_string(password)
             StoredPass.objects.create(hashed=hashed, author=user)
@@ -78,6 +101,9 @@ class ValidateEmail(APIView):
             theuser.activation_token = ''
             theuser.is_active = True
             theuser.save()
+
+            #Start doing backjobs here
+
             return Response(success_response('Your email has been verified successfully kindly login'), status=HTTP_200_OK)
         except AFUser.DoesNotExist:
             return Response(error_response("Invalid Token", '102'), status=HTTP_400_BAD_REQUEST)
@@ -119,7 +145,7 @@ class ChangePassword(APIView):
         user = authenticate(email=request.user.phone_number, password=old_password)
 
         if user is None:
-            return Response(error_response(serializer.errors, '102'), status=HTTP_400_BAD_REQUEST)
+            return Response(error_response('Your old password is wrong', '102'), status=HTTP_400_BAD_REQUEST)
 
         myuser = request.user
         hashed = hash_string(password)
@@ -209,65 +235,67 @@ class ResetPassword(APIView):
         return Response(success_response('Password Reset Successfully. Kindly login'), status=HTTP_200_OK)
 
 
-@api_view(['POST',])
-@permission_classes((AllowAny,))
-def login_user(request):
-    email = request.data.get('email')
-    password = request.data.get('password', None)
+class LoginUser(APIView):
 
-    if not email:
-        return Response(error_response("Please provide the email value", '112'), status=HTTP_400_BAD_REQUEST)
+    permission_classes = (AllowAny, )
 
-    if not password:
-        return Response(error_response("Please provide the password value", '113'), status=HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password', None)
 
-    try:
-        myuser = AFUser.objects.get(email=email)
+        if not email:
+            return Response(error_response("Please provide the email value", '112'), status=HTTP_400_BAD_REQUEST)
 
-        #checks if the user is blocked and reverts a message or reset the temporal login fails and unblock if time exceeds
-        if myuser.is_blocked:
-            cooloff = (timezone.now() - myuser.failed_login_attempts.all().latest('id').date_created).seconds
-            if cooloff > 300:
-                myuser.is_blocked = False
-                myuser.temporal_login_fails = 0
-                myuser.save()
+        if not password:
+            return Response(error_response("Please provide the password value", '113'), status=HTTP_400_BAD_REQUEST)
+
+        try:
+            myuser = AFUser.objects.get(email=email)
+
+            #checks if the user is blocked and reverts a message or reset the temporal login fails and unblock if time exceeds
+            if myuser.is_blocked:
+                cooloff = (timezone.now() - myuser.failed_login_attempts.all().latest('id').date_created).seconds
+                if cooloff > 300:
+                    myuser.is_blocked = False
+                    myuser.temporal_login_fails = 0
+                    myuser.save()
+                else:
+                    left = int(300) - int(cooloff)
+                    return Response(error_response('You have attempted to login 3 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
+
+            user = authenticate(email=email, password=password)
+
+            #if user credentials passes authentication do OAuth login here
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    serializer = UserAuthSerializer(user, context={'request': request})
+                    return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+                else:
+                    if user.is_blocked:
+                        return Response(error_response('Your account has been blocked. Please Contact Provident Insurance Support', '114'), status=HTTP_400_BAD_REQUEST)
+
+            # if user credentials fails increase failed login attempts counter
             else:
-                left = int(300) - int(cooloff)
-                return Response(error_response('You have attempted to login 3 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
-
-        user = authenticate(email=phone_number, password=password)
-
-        #if user credentials passes authentication do OAuth login here
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                serializer = UserAuthSerializer(user, context={'request': request})
-                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
-            else:
-                if user.is_blocked:
-                    return Response(error_response('Your account has been blocked. Please Contact Provident Insurance Support', '114'), status=HTTP_400_BAD_REQUEST)
-
-        # if user credentials fails increase failed login attempts counter
-        else:
-            FailedLogin.objects.create(author=myuser, ip_address=get_client_ip(request))
-            myuser.temporal_login_fails += 1
-            myuser.save()
-
-            if int(myuser.temporal_login_fails) == 3:
-                myuser.is_blocked = True
-                myuser.permanent_login_fails += 1
+                FailedLogin.objects.create(author=myuser, ip_address=get_client_ip(request))
+                myuser.temporal_login_fails += 1
                 myuser.save()
 
-                if int(myuser.permanent_login_fails) >= 3:
-                    myuser.is_active = False
+                if int(myuser.temporal_login_fails) == 3:
+                    myuser.is_blocked = True
+                    myuser.permanent_login_fails += 1
                     myuser.save()
 
-                return Response(error_response("You have attempted to login 3 times, with no success. Your account has been locked temporarily for 300 seconds", '111'), status=HTTP_400_BAD_REQUEST)
-            left = 3 - myuser.temporal_login_fails
-            return Response(error_response('Your Password is incorrect. %s tries left' % left, '115'), status=HTTP_400_BAD_REQUEST)
+                    if int(myuser.permanent_login_fails) >= 3:
+                        myuser.is_active = False
+                        myuser.save()
 
-    except AFUser.DoesNotExist:
-        return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
+                    return Response(error_response("You have attempted to login 3 times, with no success. Your account has been locked temporarily for 300 seconds", '111'), status=HTTP_400_BAD_REQUEST)
+                left = 3 - myuser.temporal_login_fails
+                return Response(error_response('Your Password is incorrect. %s tries left' % left, '115'), status=HTTP_400_BAD_REQUEST)
+
+        except AFUser.DoesNotExist:
+            return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
 
 
 class UpdateUserAvatar(APIView):
@@ -284,17 +312,3 @@ class UpdateUserAvatar(APIView):
         else:
             return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
 
-
-class UpdatePartnerDetails(APIView):
-
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        avatar = request.FILES.get('avatar', None)
-        if avatar is not None:
-            user.avatar = avatar
-            user.save()
-            serializer = UserSerializer(user, context={'request': request})
-            # compress_image_choice(user.avatar)
-            return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
-        else:
-            return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)

@@ -10,3 +10,16 @@ if "LIVE" in os.environ:
     WEB_APP_URL = 'https://afriweddings.netlify.app/'
 else:
     WEB_APP_URL = 'https://afriweddings.netlify.app/'
+
+
+#DEFAULT ROLES
+BRIDE = "Bride"
+GROOM = "Groom"
+BUSINESS = "Business"
+RELATIVE = "Relative"
+
+
+# INVITATION TYPES
+WEDDING_PARTNER = "Partner"
+WEDDING_TEAM = "Team"
+WEDDING_GUEST = "Guest"

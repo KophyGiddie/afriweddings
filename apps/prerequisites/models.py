@@ -29,7 +29,7 @@ class DefaultChecklistCategory(models.Model):
 
     class Meta:
         verbose_name_plural = 'Default Checklist Category'
-        ordering = ('title',)
+        ordering = ('name',)
 
 
 class DefaultChecklistSchedule(models.Model):

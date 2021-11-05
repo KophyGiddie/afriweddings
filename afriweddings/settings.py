@@ -48,7 +48,8 @@ LOCAL_APPS = [
     'apps.users',
     'apps.weddings',
     'apps.seating',
-    'apps.prerequisites'
+    'apps.prerequisites',
+    'apps.celerytasks',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -220,8 +221,6 @@ AWS_S3_ENDPOINT_URL = 'https://s3-eu-west-1.amazonaws.com'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-# AUTH_USER_MODEL = 'users.AFUser'
 
 # Rest framework config
 REST_FRAMEWORK = {
