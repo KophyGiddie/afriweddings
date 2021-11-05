@@ -5,6 +5,7 @@ from apps.users.models import AFUser
 from apps.checklists.models import Checklist, ChecklistCategory, ChecklistSchedule
 from apps.prerequisites.models import DefaultChecklist, DefaultChecklistSchedule
 import time
+from apps.checklists.helpers import update_checklist_done
 
 logger = get_task_logger(__name__)
 
@@ -35,12 +36,14 @@ def populate_wedding_checklist(schedule_identifier, author_id):
     start = time.time()
     myscheduled_checklist = DefaultChecklist.objects.select_related('category').filter(identifier=schedule_identifier)
     myauthor = AFUser.objects.get(id=int(author_id))
+    mywedding = Wedding.objects.get(id=myauthor.wedding_id)
     myschedule = ChecklistSchedule.objects.get(identifier=schedule_identifier, created_by=myauthor)
 
     for item in myscheduled_checklist:
         Checklist.objects.create(
             title=item.title,
             created_by=myauthor,
+            wedding=mywedding,
             description=item.description,
             category=ChecklistCategory.objects.get(identifier=item.category.identifier, created_by=myauthor),
             schedule=myschedule,
@@ -51,3 +54,4 @@ def populate_wedding_checklist(schedule_identifier, author_id):
         )
     end = time.time()
     print('Time taken to run: ', end - start)
+    update_checklist_done(mywedding)

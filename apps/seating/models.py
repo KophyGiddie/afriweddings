@@ -39,14 +39,14 @@ class SeatingChart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     table = models.ForeignKey(
         SeatingTable,
-        related_name='team',
+        related_name='chart',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
     guest = models.ForeignKey(
         Guest,
-        related_name='team',
+        related_name='chart',
         on_delete=models.CASCADE,
         null=True,
         blank=True

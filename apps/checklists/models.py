@@ -89,11 +89,12 @@ class Checklist(models.Model):
     )
     schedule = models.ForeignKey(
         ChecklistSchedule,
-        related_name='checklist',
+        related_name='checklists',
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
+    time_done = models.DateTimeField(blank=True, null=True)
     is_essential = models.BooleanField(default=False)
     is_default = models.BooleanField(default=False)
     is_done = models.BooleanField(default=False)

@@ -31,6 +31,8 @@ class Wedding(models.Model):
     currency = models.CharField(blank=True, max_length=128, default="GHS")
     venue = models.CharField(blank=True, max_length=1028, null=True)
     expected_guests = models.IntegerField(default=0)
+    checklist_completed = models.IntegerField(default=0)
+    total_checklist = models.IntegerField(default=0)
     wedding_date = models.DateField(blank=True, null=True)
     start_time = models.CharField(max_length=200, blank=True, null=True)
     end_time = models.CharField(max_length=200, blank=True, null=True)

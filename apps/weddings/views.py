@@ -31,6 +31,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         wedding_date = request.data.get('wedding_date', None)
         expected_guests = request.data.get('expected_guests', None)
         country = request.data.get('country', None)
+        currency = request.data.get('currency', 'GHS')
         city = request.data.get('city', None)
         budget = request.data.get('budget', None)
         start_time = request.data.get('start_time', None)
@@ -45,6 +46,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
                                   wedding_date=wedding_date,
                                   expected_guests=expected_guests,
                                   country=country,
+                                  currency=currency,
                                   partner_role=partner_role,
                                   partner_last_name=partner_last_name,
                                   partner_first_name=partner_first_name,
@@ -91,6 +93,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if request.data.get('budget') and request.data.get('budget') != "":
             mywedding.budget = request.data.get('budget')
 
+        if request.data.get('currency') and request.data.get('currency') != "":
+            mywedding.currency = request.data.get('currency')
+
         if request.FILES.get('partner_picture'):
             mywedding.partner_picture = request.FILES.get('picture')
 
@@ -114,7 +119,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WallPostSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='get_wallposts')
+    @action(methods=['get'], detail=False, url_path='get_wallposts')
     def get_wallposts(self, request):
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
         myqueryset = mywedding.wallpost.all()
@@ -123,7 +128,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WallPostSerializer(result_page, context={'request': request}, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-    @action(methods=['post'], detail=False, url_path='get_wallposts')
+    @action(methods=['get'], detail=False, url_path='get_wallposts')
     def get_wedding_media(self, request):
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
         myqueryset = mywedding.media.all()
@@ -145,7 +150,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WeddingMediaSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Media Created Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='delete_wall_post')
+    @action(methods=['delete'], detail=False, url_path='delete_wall_post')
     def delete_wall_post(self, request):
         post_id = request.data.get('post_id')
 
@@ -155,7 +160,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mypost.delete()
         return Response(success_response('Post Deleted Successfully'), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='delete_wedding_media')
+    @action(methods=['delete'], detail=False, url_path='delete_wedding_media')
     def delete_wedding_media(self, request):
         media_id = request.data.get('media_id')
 

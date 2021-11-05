@@ -4,6 +4,12 @@ from random import randrange
 from utils import sendgrid
 from utils.constants import WEB_APP_URL
 from django.template.loader import render_to_string
+from apps.weddings.models import Wedding
+
+
+def get_wedding(request):
+    mywedding = Wedding.objects.get(id=request.user.id)
+    return mywedding
 
 
 def generate_invitation_code():

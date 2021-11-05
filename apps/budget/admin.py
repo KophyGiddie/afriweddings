@@ -4,4 +4,4 @@ from apps.budget.models import *
 # Register your models here.
 admin.site.register(BudgetCategory)
 admin.site.register(BudgetExpense)
-
+admin.site.register(ExpensePayment)

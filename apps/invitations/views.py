@@ -13,7 +13,7 @@ from rest_framework.status import (HTTP_201_CREATED,
 from apps.invitations.serializer import InvitationSerializer
 from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
-from utils.utilities import send_invitation_email, generate_invitation_code
+from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
 from apps.weddings.models import WeddingRole, Wedding
 
 
@@ -49,7 +49,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                       invitee_role=myrole,
                                       user_role=myrole.role,
                                       email=email,
-                                      wedding=Wedding.objects.get(id=request.user.wedding_id),
+                                      wedding=get_wedding(request),
                                       status='PENDING_ACCEPTANCE',
                                       invited_by=request.user,
                                     )
