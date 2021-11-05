@@ -38,6 +38,13 @@ class Wedding(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     hashtag = models.CharField(blank=True, max_length=1028, null=True)
 
+    def get_partner_picture(self):
+        if self.partner_picture:
+            myimage = self.partner_picture.url
+        else:
+            myimage = ''
+        return myimage
+
     class Meta:
         verbose_name_plural = 'Weddings'
         ordering = ('-created_at',)
@@ -65,6 +72,13 @@ class WeddingMedia(models.Model):
     class Meta:
         verbose_name_plural = 'Wedding Media'
         ordering = ('-created_at',)
+
+    def get_image(self):
+        if self.image:
+            myimage = self.image.url
+        else:
+            myimage = ''
+        return myimage
 
 
 class WeddingRole(models.Model):
@@ -152,6 +166,13 @@ class WallPost(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+    def get_image(self):
+        if self.image:
+            myimage = self.image.url
+        else:
+            myimage = ''
+        return myimage
 
     def __str__(self):
         return '%s' % (self.post)

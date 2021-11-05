@@ -68,12 +68,13 @@ class SignupUser(APIView):
                         mywedding.partner = user
                         mywedding.save()
 
-                        user.wedding_id = mywedding.id
-                        user.save()
                     elif myinvitation.invitation_type == 'Team':
                         myteam = WeddingTeam.objects.get(email=email)
                         myteam.member = user
                         myteam.save()
+
+                    user.wedding_id = mywedding.id
+                    user.save()
                 except Invitation.DoesNotExist:
                     # ignore
                     pass
@@ -112,7 +113,12 @@ class ValidateEmail(APIView):
             for item in checklist_categories:
                 ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier)
 
-            populate_wedding_checklist.delay(schedule_identifier, author_id)
+            for item in checklist_schedules:
+                ChecklistSchedule.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
+
+            myschedules = ChecklistSchedule.objects.filter(created_by=theuser)
+            for item in myschedules:
+                populate_wedding_checklist.delay(item.identifier, theuser.id)
 
             return Response(success_response('Your email has been verified successfully kindly login'), status=HTTP_200_OK)
         except AFUser.DoesNotExist:
