@@ -20,7 +20,7 @@ class WeddingSerializer(serializers.Serializer):
     end_time = serializers.CharField()
     created_at = serializers.DateTimeField()
     total_checklist = serializers.IntegerField()
-    checklist_done = serializers.IntegerField()
+    checklist_completed = serializers.IntegerField()
 
 
 class WallPostSerializer(serializers.Serializer):
