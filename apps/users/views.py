@@ -16,6 +16,7 @@ from utils.token import account_activation_token
 from django.utils import timezone
 from apps.weddings.models import WeddingTeam
 from dateutil.relativedelta import relativedelta
+from apps.celerytasks.tasks import populate_wedding_checklist
 
 
 class SignupUser(APIView):
@@ -103,6 +104,8 @@ class ValidateEmail(APIView):
             theuser.save()
 
             #Start doing backjobs here
+
+            populate_wedding_checklist.delay(schedule_identifier, author_id)
 
             return Response(success_response('Your email has been verified successfully kindly login'), status=HTTP_200_OK)
         except AFUser.DoesNotExist:

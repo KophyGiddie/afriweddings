@@ -47,29 +47,6 @@ def populate_default_checklist(request):
     return render(request, 'index.html')
 
 
-def populate_wedding_checklist(request, schedule_identifier, author_id):
-    start = time.time()
-    myscheduled_checklist = DefaultChecklist.objects.select_related('category').filter(identifier=schedule_identifier)
-    myauthor = AFUser.objects.get(id=int(author_id))
-    myschedule = ChecklistSchedule.objects.get(identifier=schedule_identifier, created_by=author)
-
-    for item in myscheduled_checklist:
-        Checklist.objects.create(
-            title=item.title,
-            created_by=myauthor,
-            description=item.description,
-            category=ChecklistCategory.objects.get(identifier=item.category.identifier, created_by=author),
-            schedule=myschedule,
-            is_essential=item.is_essential,
-            is_default=True,
-            priority=item.priority,
-            identifier=item.identifier,
-        )
-    end = time.time()
-    print('Time taken to run: ', end - start)
-    return render(request, 'index.html')
-
-
 def handler500(request):
     return JsonResponse({'message': 'The server encountered an unexpected error but do not worry, Our engineers have been notified and will fix it ASAP. Kindly try again later',
                          'response_code': '500'
@@ -78,5 +55,5 @@ def handler500(request):
 
 def handler404(request, exception):
     return JsonResponse({'detail': 'The page you are looking for took a day off.',
-                        'response_code':'404'
-                        }, status=404)
+                         'response_code': '404'
+                         }, status=404)
