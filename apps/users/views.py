@@ -206,7 +206,7 @@ class ForgotPassword(APIView):
 
             title = 'Afriweddings Password Reset'
 
-            send_forgot_password_email(myuser, myuser.account_activation_token, title)
+            send_forgot_password_email(myuser, mytoken, title)
 
             return Response(success_response('Please check your email for the password reset instructions',), status=HTTP_200_OK)
 
