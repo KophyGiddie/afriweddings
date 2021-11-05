@@ -13,13 +13,13 @@ def home(request):
 def populate_default_schedules(request):
     with open("checklist_categories.json", "r") as checklists:
         data = json.load(checklists)
-        for check in data:
+        for item in data:
             if not DefaultChecklistCategory.objects.filter(name=item["label"]).exist():
                 DefaultChecklistCategory.objects.create(name=item["label"], identifier=item["value"])
 
     with open("checklist_schedules.json", "r") as checklists:
         data = json.load(checklists)
-        for check in data:
+        for item in data:
             if not DefaultChecklistSchedule.objects.filter(name=item["label"]).exist():
                 DefaultChecklistSchedule.objects.create(name=item["label"], identifier=item["value"])
 
