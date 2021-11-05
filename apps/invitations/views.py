@@ -34,7 +34,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         invitation_type = request.data.get('invitation_type', None)
         user_role = request.data.get('user_role', None)
 
-        if invitation_type == 'PARTNER':
+        if invitation_type == 'Partner':
             myrole = WeddingRole.objects.get(role=user_role)
         else:
             myrole = WeddingRole.objects.get(id=user_role)
