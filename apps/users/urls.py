@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.users.views import (
     LoginUser, ValidateEmail, ForgotPassword,
     SignupUser, CurrentUserProfile, ResetPassword,
-    ChangePassword, UpdateUserAvatar, ResendSignupVerification
+    ChangePassword, UpdateProfilePicture, ResendSignupVerification
 )
 router = DefaultRouter()
 

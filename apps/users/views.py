@@ -311,7 +311,7 @@ class LoginUser(APIView):
             return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
 
 
-class UpdateUserAvatar(APIView):
+class UpdateProfilePicture(APIView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
