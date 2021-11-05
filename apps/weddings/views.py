@@ -105,7 +105,10 @@ class WeddingViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False, url_path='post_to_wall')
     def post_to_wall(self, request):
         post = request.data.get('post')
-        image = request.FILES.get('image')
+        image = request.FILES.get('image', None)
+
+        if not image or image != '':
+            image = None
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
