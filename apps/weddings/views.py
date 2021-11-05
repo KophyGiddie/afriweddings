@@ -112,7 +112,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
-        mypost = WallPost.objects.create(author=request.user,
+        mypost = WallPost.objects.create(created_by=request.user,
                                          wedding=mywedding,
                                          post=post,
                                          image=image)

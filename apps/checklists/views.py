@@ -184,7 +184,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         serializer = ChecklistSerializer(mychecklist, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='mark_as_done')
+    @action(methods=['post'], detail=True, url_path='mark_as_not_done')
     def mark_as_not_done(self, request, *args, **kwargs):
         mychecklist = self.get_object()
         mychecklist.is_done = True

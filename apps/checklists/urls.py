@@ -5,7 +5,7 @@ from apps.checklists.views import ChecklistCategoryViewSet, ChecklistScheduleVie
 
 
 router = DefaultRouter()
-router.register(r'checklist', ChecklistCategoryViewSet)
+router.register(r'checklist_category', ChecklistCategoryViewSet)
 router.register(r'checklist_schedule', ChecklistScheduleViewSet)
 router.register(r'checklist', ChecklistViewSet)
 
