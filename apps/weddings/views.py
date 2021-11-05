@@ -20,6 +20,7 @@ from apps.celerytasks.tasks import assign_wedding_checklists
 class WeddingViewSet(viewsets.ModelViewSet):
     model = Wedding
     serializer_class = WeddingSerializer
+    queryset = Wedding.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
         myqueryset = Wedding.objects.get(id=request.user.wedding_id)
@@ -87,6 +88,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if request.data.get('expected_guests') and request.data.get('expected_guests') != "":
             mywedding.expected_guests = request.data.get('expected_guests')
 
+        if request.data.get('budget') and request.data.get('budget') != "":
+            mywedding.budget = request.data.get('budget')
+
         if request.FILES.get('partner_picture'):
             mywedding.partner_picture = request.FILES.get('picture')
 
@@ -95,7 +99,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WeddingSerializer(mywedding, context={'request': request})
         return Response(success_response('Wedding Updated Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='post_to_wall')
+    @action(methods=['post'], detail=False, url_path='post_to_wall')
     def post_to_wall(self, request):
         post = request.data.get('post')
         image = request.FILES.get('image')
@@ -110,7 +114,25 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WallPostSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='post_to_wall')
+    @action(methods=['post'], detail=False, url_path='get_wallposts')
+    def get_wallposts(self, request):
+        mywedding = Wedding.objects.get(id=request.user.wedding_id)
+        myqueryset = mywedding.wallpost.all()
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = WallPostSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+    @action(methods=['post'], detail=False, url_path='get_wallposts')
+    def get_wedding_media(self, request):
+        mywedding = Wedding.objects.get(id=request.user.wedding_id)
+        myqueryset = mywedding.media.all()
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = WeddingMediaSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+    @action(methods=['post'], detail=False, url_path='post_to_wall')
     def add_wedding_media(self, request):
         image = request.FILES.get('image')
 
@@ -123,7 +145,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WeddingMediaSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Media Created Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='delete_wall_post')
+    @action(methods=['post'], detail=False, url_path='delete_wall_post')
     def delete_wall_post(self, request):
         post_id = request.data.get('post_id')
 
@@ -133,7 +155,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mypost.delete()
         return Response(success_response('Post Deleted Successfully'), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='delete_wedding_media')
+    @action(methods=['post'], detail=False, url_path='delete_wedding_media')
     def delete_wedding_media(self, request):
         media_id = request.data.get('media_id')
 

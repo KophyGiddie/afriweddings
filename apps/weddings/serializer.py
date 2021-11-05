@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.user.serializer import UserSerializer
+from apps.users.serializer import UserSerializer
 
 
 class WeddingSerializer(serializers.Serializer):
@@ -8,12 +8,16 @@ class WeddingSerializer(serializers.Serializer):
     partner = UserSerializer(many=False)
     hashtag = serializers.CharField()
     partner_first_name = serializers.CharField()
+    partner_last_name = serializers.CharField()
+    venue = serializers.CharField()
+    budget = serializers.DecimalField(max_digits=15, decimal_places=2)
     partner_email = serializers.CharField()
     partner_picture = serializers.URLField(source='get_partner_picture')
-    user_role = serializers.CharField()
-    email = serializers.CharField()
-    invitation_type = serializers.CharField()
-    status = serializers.CharField()
+    partner_role = serializers.CharField()
+    expected_guests = serializers.CharField()
+    wedding_date = serializers.DateField()
+    start_time = serializers.CharField()
+    end_time = serializers.CharField()
     created_at = serializers.DateTimeField()
 
 

@@ -5,7 +5,7 @@ from django.conf.urls import include, handler500, handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1.0/budget/', include('apps.budget.urls',)),
+    path('api/v1.0/', include('apps.budget.urls',)),
     path('api/v1.0/', include('apps.checklists.urls',)),
     path('api/v1.0/guests/', include('apps.guests.urls',)),
     path('api/v1.0/', include('apps.invitations.urls',)),
