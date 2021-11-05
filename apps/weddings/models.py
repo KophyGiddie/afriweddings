@@ -29,6 +29,7 @@ class Wedding(models.Model):
     budget = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     partner_picture = models.ImageField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     currency = models.CharField(blank=True, max_length=128, default="GHS")
+    country = models.CharField(blank=True, max_length=128, default="Ghana")
     venue = models.CharField(blank=True, max_length=1028, null=True)
     expected_guests = models.IntegerField(default=0)
     checklist_completed = models.IntegerField(default=0)
