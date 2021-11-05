@@ -4,6 +4,7 @@ from afriweddings.views import home, populate_default_checklist, populate_defaul
 from django.conf.urls import include, handler500, handler404
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('api/v1.0/', include('apps.budget.urls',)),
     path('api/v1.0/', include('apps.checklists.urls',)),
