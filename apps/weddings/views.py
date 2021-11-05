@@ -40,8 +40,6 @@ class WeddingViewSet(viewsets.ModelViewSet):
         partner_first_name = request.data.get('partner_first_name', None)
         partner_last_name = request.data.get('partner_last_name', None)
 
-        wedding_date = parse(wedding_date, dayfirst=True)
-
         mywedding = Wedding.objects.create(
                                   wedding_date=wedding_date,
                                   expected_guests=expected_guests,
