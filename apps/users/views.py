@@ -144,10 +144,7 @@ class CurrentUserProfile(APIView):
         except AssertionError:
             print (serializer.errors)
             serializer = UserSerializer(profile, context={'request': request})
-            return Response(error_response(serializer.errors, '105'), status=HTTP_400_BAD_REQUEST)
-        finally:
-            serializer = UserSerializer(user, context={'request': request})
-            return Response(success_response('Data edited successfully', serializer.data), status=HTTP_200_OK)
+            return Response(error_response("An unexpected error happened. Our engineers have been notified and will fix it", '103'), status=HTTP_400_BAD_REQUEST)
 
 
 class ChangePassword(APIView):
@@ -156,7 +153,7 @@ class ChangePassword(APIView):
         password = request.data.get('new_password', None)
         old_password = request.data.get('old_password', None)
 
-        user = authenticate(email=request.user.phone_number, password=old_password)
+        user = authenticate(email=request.user.email, password=old_password)
 
         if user is None:
             return Response(error_response('Your old password is wrong', '102'), status=HTTP_400_BAD_REQUEST)
@@ -173,7 +170,7 @@ class ChangePassword(APIView):
         myuser.password_changed = True
         myuser.save()
 
-        user = UserSerializer(myuser, context={'request': request})
+        serializer = UserSerializer(myuser, context={'request': request})
         return Response(success_response('Password Changed Successfully', serializer.data), status=HTTP_200_OK)
 
 
