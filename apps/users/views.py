@@ -17,6 +17,8 @@ from django.utils import timezone
 from apps.weddings.models import WeddingTeam
 from dateutil.relativedelta import relativedelta
 from apps.celerytasks.tasks import populate_wedding_checklist
+from apps.prerequisites.models import DefaultChecklistCategory, DefaultChecklistSchedule
+from apps.checklists.models import ChecklistCategory, ChecklistSchedule
 
 
 class SignupUser(APIView):
@@ -104,6 +106,11 @@ class ValidateEmail(APIView):
             theuser.save()
 
             #Start doing backjobs here
+            checklist_categories = DefaultChecklistCategory.objects.all()
+            checklist_schedules = DefaultChecklistSchedule.objects.all()
+
+            for item in checklist_categories:
+                ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier)
 
             populate_wedding_checklist.delay(schedule_identifier, author_id)
 
