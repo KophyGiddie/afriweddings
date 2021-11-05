@@ -17,7 +17,6 @@ ALLOWED_HOSTS = ['afriweddings-api.herokuapp.com',
                  ]
 
 DJANGO_APPS = [
-    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
