@@ -14,13 +14,17 @@ def populate_default_schedules(request):
     with open("checklist_categories.json", "r") as checklists:
         data = json.load(checklists)
         for item in data:
-            if not DefaultChecklistCategory.objects.filter(name=item["label"]).exist():
+            try:
+                DefaultChecklistCategory.objects.get(name=item["label"])
+            except:
                 DefaultChecklistCategory.objects.create(name=item["label"], identifier=item["value"])
 
     with open("checklist_schedules.json", "r") as checklists:
         data = json.load(checklists)
         for item in data:
-            if not DefaultChecklistSchedule.objects.filter(name=item["label"]).exist():
+            try:
+                DefaultChecklistSchedule.objects.get(name=item["label"])
+            except:
                 DefaultChecklistSchedule.objects.create(name=item["label"], identifier=item["value"])
 
     return render(request, 'index.html')
