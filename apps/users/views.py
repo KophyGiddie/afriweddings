@@ -141,11 +141,8 @@ class CurrentUserProfile(APIView):
                 serializer.save()
                 return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
             return Response(error_response("Please all supply required parameters", '103'), status=HTTP_400_BAD_REQUEST)
-        except ValueError:
-            serializer = UserSerializer(user, context={'request': request}, data=profile, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+        except AssertionError:
+            print (serializer.errors)
             serializer = UserSerializer(profile, context={'request': request})
             return Response(error_response(serializer.errors, '105'), status=HTTP_400_BAD_REQUEST)
         finally:
