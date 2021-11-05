@@ -74,7 +74,7 @@ class AFUser(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     temporal_login_fails = models.IntegerField(default=0)
-    wedding_id = models.IntegerField(default=0)
+    wedding_id = models.CharField(max_length=500, blank=True, null=True)
     permanent_login_fails = models.IntegerField(default=0)
 
     objects = AFUserManager()
