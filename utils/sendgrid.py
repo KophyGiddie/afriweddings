@@ -16,4 +16,5 @@ def send_email(subject, body, _from, to):
         sg.client.mail.send.post(request_body=message.get())
         return True
     except Exception as e:
+        print (e)
         return e
