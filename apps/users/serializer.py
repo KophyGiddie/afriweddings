@@ -24,7 +24,6 @@ class UserAuthSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     user_avatar = serializers.URLField(source='get_avatar_full')
-    full_name = serializers.URLField(source='get_full_name')
 
     class Meta:
         model = get_user_model()
