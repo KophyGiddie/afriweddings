@@ -199,7 +199,8 @@ class ForgotPassword(APIView):
 
         try:
             myuser = AFUser.objects.get(email=email)
-            myuser.account_activation_token = account_activation_token.make_token(myuser)
+            mytoken = account_activation_token.make_token(myuser)
+            myuser.activation_token = mytoken
             myuser.email_initiation_date = timezone.now()
             myuser.save()
 
