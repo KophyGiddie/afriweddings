@@ -180,13 +180,14 @@ class ResendSignupVerification(APIView):
     def post(self, request, *args, **kwargs):
 
         email = request.data.get('email')
-        myuser = AFUser.objects.get(email=email)
+        user = AFUser.objects.get(email=email)
 
-        mytoken = account_activation_token.make_token(myuser)
-        myuser.activation_token = mytoken
-        myuser.save()
+        mytoken = account_activation_token.make_token(user)
+        print (mytoken)
+        user.activation_token = mytoken
+        user.save()
 
-        send_activation_email(myuser, mytoken, "Kindly Activate Your Account")
+        send_activation_email(user, mytoken, "Kindly Activate Your Account")
 
         return Response(success_response('Email Sent'), status=HTTP_200_OK)
 
@@ -316,7 +317,7 @@ class UpdateUserAvatar(APIView):
         user = request.user
         avatar = request.FILES.get('avatar', None)
         if avatar is not None:
-            user.avatar = avatar
+            user.profile_picture = avatar
             user.save()
             serializer = UserSerializer(user, context={'request': request})
             # compress_image_choice(user.avatar)

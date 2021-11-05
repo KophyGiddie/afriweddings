@@ -15,8 +15,8 @@ urlpatterns = [
     path('api/v1.0/users/', include('apps.users.urls',)),
     path('api/v1.0/', include('apps.weddings.urls',)),
     path('', home),
-    path('populate_default_schedules', populate_default_schedules),
-    path('populate_default_checklist', populate_default_checklist),
+    path('populate_default_schedules/', populate_default_schedules),
+    path('populate_default_checklist/', populate_default_checklist),
 ]
 
 handler500 = 'afriweddings.views.handler500'
