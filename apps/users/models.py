@@ -50,7 +50,7 @@ class AFUser(AbstractBaseUser):
     phone_number = models.CharField(max_length=100, null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
-    profile_picture = models.ImageField('Profile Pic',
+    profile_picture = models.FileField('Profile Pic',
                                         upload_to=constants.PROFILE_PIC_DIR,
                                         blank=True,
                                         null=True,

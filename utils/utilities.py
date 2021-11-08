@@ -8,8 +8,11 @@ from apps.weddings.models import Wedding
 
 
 def get_wedding(request):
-    mywedding = Wedding.objects.get(id=request.user.wedding_id)
-    return mywedding
+    try:
+        mywedding = Wedding.objects.get(id=request.user.wedding_id)
+        return mywedding
+    except Wedding.DoesNotExist:
+        return None
 
 
 def generate_invitation_code():
