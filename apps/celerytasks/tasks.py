@@ -30,6 +30,9 @@ def assign_wedding_checklists(user_id, wedding_id):
         item.wedding = mywedding
         item.save()
 
+    mywedding.total_checklist = mychecklist.count()
+    mywedding.save()
+
 
 @app.task()
 def populate_wedding_checklist(schedule_identifier, author_id):
