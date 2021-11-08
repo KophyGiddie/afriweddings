@@ -25,7 +25,7 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
     queryset = BudgetCategory.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = BudgetCategory.objects.filter(wedding_id=request.user.wedding_id)
+        myqueryset = BudgetCategory.objects.filter(wedding__id=request.user.wedding_id)
         serializer = BudgetCategorySerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 

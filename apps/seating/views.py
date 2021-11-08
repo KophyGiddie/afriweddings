@@ -24,7 +24,7 @@ class SeatingTableViewSet(viewsets.ModelViewSet):
     queryset = SeatingTable.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = SeatingTable.objects.filter(wedding_id=request.user.wedding_id)
+        myqueryset = SeatingTable.objects.filter(wedding__id=request.user.wedding_id)
         serializer = SeatingTableSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 

@@ -24,7 +24,7 @@ class ChecklistCategoryViewSet(viewsets.ModelViewSet):
     queryset = ChecklistCategory.objects.all().order_by('?')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = ChecklistCategory.objects.filter(wedding_id=request.user.wedding_id).order_by('?')
+        myqueryset = ChecklistCategory.objects.filter(wedding__id=request.user.wedding_id).order_by('?')
         serializer = ChecklistCategorySerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
@@ -66,7 +66,7 @@ class ChecklistScheduleViewSet(viewsets.ModelViewSet):
     queryset = ChecklistSchedule.objects.all().order_by('-priority')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = ChecklistSchedule.objects.filter(wedding_id=request.user.wedding_id).order_by('priority')
+        myqueryset = ChecklistSchedule.objects.filter(wedding__id=request.user.wedding_id).order_by('priority')
         serializer = ChecklistCategorySerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
@@ -214,7 +214,7 @@ class FilterChecklist(APIView):
         is_done = request.data.get('is_done')
         paginate = request.data.get('paginate', True)
 
-        myqueryset = ChecklistSchedule.objects.prefetch_related('checklists', 'checklists__category').filter(wedding_id=request.user.wedding_id).order_by('priority')
+        myqueryset = ChecklistSchedule.objects.prefetch_related('checklists', 'checklists__category').filter(wedding__id=request.user.wedding_id).order_by('priority')
 
         if schedule_id and schedule_id != '':
             myschedule = get_checklist_schedule(schedule_id)
