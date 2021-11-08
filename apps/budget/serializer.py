@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 class BudgetCategorySerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     name = serializers.CharField()
     currency = serializers.CharField()
     total_estimated_cost = serializers.DecimalField(max_digits=15, decimal_places=2)
@@ -13,7 +13,7 @@ class BudgetCategorySerializer(serializers.Serializer):
 
 
 class BudgetExpenseSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     name = serializers.CharField()
     currency = serializers.CharField()
     estimated_cost = serializers.DecimalField(max_digits=15, decimal_places=2)
@@ -24,7 +24,7 @@ class BudgetExpenseSerializer(serializers.Serializer):
 
 
 class ExpensePaymentSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     paid_by = serializers.CharField()
     currency = serializers.CharField()
     payment_method = serializers.CharField()
