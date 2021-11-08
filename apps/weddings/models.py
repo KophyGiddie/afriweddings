@@ -76,7 +76,7 @@ class WeddingMedia(models.Model):
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='wallpost',
+        related_name='media',
         on_delete=models.CASCADE,
         null=True,
         blank=True
