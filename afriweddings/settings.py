@@ -13,10 +13,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['afriweddings-api.herokuapp.com',
-                 'localhost',
-                 '127.0.0.1'
-                 ]
+ALLOWED_HOSTS = [*]
 
 DJANGO_APPS = [
     'django.contrib.admin',
