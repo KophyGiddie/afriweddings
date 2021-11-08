@@ -113,10 +113,16 @@ class ValidateEmail(APIView):
             checklist_schedules = DefaultChecklistSchedule.objects.all()
 
             for item in checklist_categories:
-                ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier)
+                try:
+                    ChecklistCategory.objects.get(created_by=theuser, name=item.name, identifier=item.identifier)
+                except ChecklistCategory.DoesNotExist:
+                    ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier)
 
             for item in checklist_schedules:
-                ChecklistSchedule.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
+                try:
+                    ChecklistSchedule.objects.get(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
+                except ChecklistSchedule.DoesNotExist:
+                    ChecklistSchedule.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
 
             myschedules = ChecklistSchedule.objects.filter(created_by=theuser)
             for item in myschedules:

@@ -21,10 +21,10 @@ from apps.checklists.models import ChecklistCategory, ChecklistSchedule, Checkli
 class ChecklistCategoryViewSet(viewsets.ModelViewSet):
     model = ChecklistCategory
     serializer_class = ChecklistCategorySerializer
-    queryset = ChecklistCategory.objects.all().order_by('-id')
+    queryset = ChecklistCategory.objects.all().order_by('?')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = ChecklistCategory.objects.filter(wedding_id=request.user.wedding_id)
+        myqueryset = ChecklistCategory.objects.filter(wedding_id=request.user.wedding_id).order_by('?')
         serializer = ChecklistCategorySerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
