@@ -8,7 +8,7 @@ from apps.weddings.models import Wedding
 
 
 def get_wedding(request):
-    mywedding = Wedding.objects.get(id=request.user.id)
+    mywedding = Wedding.objects.get(id=request.user.wedding_id)
     return mywedding
 
 
