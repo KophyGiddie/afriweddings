@@ -35,11 +35,11 @@ class InvitationViewSet(viewsets.ModelViewSet):
         user_role = request.data.get('user_role', None)
         first_name = request.data.get('first_name', None)
         last_name = request.data.get('last_name', None)
-
+        mywedding = get_wedding(request)
         if invitation_type == 'Partner':
-            myrole = WeddingRole.objects.get(role=user_role)
+            myrole = WeddingRole.objects.get(role=user_role, wedding=mywedding)
         else:
-            myrole = WeddingRole.objects.get(id=user_role)
+            myrole = WeddingRole.objects.get(id=user_role, wedding=mywedding)
 
         try:
             Invitation.objects.get(email=email, wedding=Wedding.objects.get(id=request.user.wedding_id))

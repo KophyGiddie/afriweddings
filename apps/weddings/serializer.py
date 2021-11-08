@@ -3,7 +3,7 @@ from apps.users.serializer import UserSerializer
 
 
 class WeddingSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     author = UserSerializer(many=False)
     partner = UserSerializer(many=False)
     hashtag = serializers.CharField()
@@ -25,13 +25,13 @@ class WeddingSerializer(serializers.Serializer):
 
 
 class WallPostSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     author = UserSerializer(many=False)
     post = serializers.CharField()
     image = serializers.URLField(source='get_image')
 
 
 class WeddingMediaSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     post = serializers.CharField()
     image = serializers.URLField(source='get_image')

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 class InvitationSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.CharField()
     email = serializers.CharField()
     invitation_code = serializers.CharField()
     first_name = serializers.CharField()
