@@ -236,6 +236,6 @@ class FilterChecklist(APIView):
             serializer = MasterChecklistScheduleSerializer(result_page, context={'request': request}, many=True)
             return paginator.get_paginated_response(serializer.data)
         else:
-            serializer = MasterChecklistScheduleSerializer(myqueryset, context={'request': request})
+            serializer = MasterChecklistScheduleSerializer(myqueryset, context={'request': request}, many=True)
             return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
