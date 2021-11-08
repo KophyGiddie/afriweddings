@@ -14,7 +14,7 @@ def get_wedding(request):
 
 def generate_invitation_code():
     CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwwxyz'
-    LENGTH = 16
+    LENGTH = 32
     new_code = ''
     for i in range(LENGTH):
         new_code += CHARSET[randrange(0, len(CHARSET))]

@@ -22,3 +22,5 @@ urlpatterns = [
 handler500 = 'afriweddings.views.handler500'
 
 handler404 = 'afriweddings.views.handler404'
+
+admin.site.site_header = 'Afriweddings Backend'
