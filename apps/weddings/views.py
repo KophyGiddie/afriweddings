@@ -142,13 +142,13 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WeddingMediaSerializer(result_page, context={'request': request}, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-    @action(methods=['post'], detail=False, url_path='post_to_wall')
+    @action(methods=['post'], detail=False, url_path='add_wedding_media')
     def add_wedding_media(self, request):
         image = request.FILES.get('image')
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
-        mypost = WeddingMedia.objects.create(author=request.user,
+        mypost = WeddingMedia.objects.create(created_by=request.user,
                                              wedding=mywedding,
                                              image=image)
 
@@ -161,7 +161,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mypost = WallPost.objects.get(id=post_id)
 
-        if mypost.author == request.user:
+        if mypost.created_by == request.user:
             mypost.delete()
         return Response(success_response('Post Deleted Successfully'), status=HTTP_200_OK)
 
@@ -171,7 +171,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mymedia = WeddingMedia.objects.get(id=media_id)
 
-        if mymedia.author == request.user:
+        if mymedia.created_by == request.user:
             mymedia.delete()
 
         return Response(success_response('Image Deleted Successfully'), status=HTTP_200_OK)
