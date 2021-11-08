@@ -97,7 +97,7 @@ class AFUser(AbstractBaseUser):
         return True
 
     def get_avatar_full(self):
-        if self.profile_picture :
+        if self.profile_picture:
             myimage = self.profile_picture.url
         elif self.social_media_avatar:
             myimage = self.social_media_avatar
