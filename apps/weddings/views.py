@@ -116,7 +116,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
-        mypost = WallPost.objects.create(created_by=request.user,
+        mypost = WallPost.objects.create(author=request.user,
                                          wedding=mywedding,
                                          post=post,
                                          image=image)
@@ -148,7 +148,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
-        mypost = WeddingMedia.objects.create(created_by=request.user,
+        mypost = WeddingMedia.objects.create(author=request.user,
                                              wedding=mywedding,
                                              image=image)
 
@@ -161,7 +161,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mypost = WallPost.objects.get(id=post_id)
 
-        if mypost.created_by == request.user:
+        if mypost.author == request.user:
             mypost.delete()
         return Response(success_response('Post Deleted Successfully'), status=HTTP_200_OK)
 
@@ -171,7 +171,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mymedia = WeddingMedia.objects.get(id=media_id)
 
-        if mymedia.created_by == request.user:
+        if mymedia.author == request.user:
             mymedia.delete()
 
         return Response(success_response('Image Deleted Successfully'), status=HTTP_200_OK)

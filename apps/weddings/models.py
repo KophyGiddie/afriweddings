@@ -74,6 +74,13 @@ class WeddingMedia(models.Model):
         null=True,
         blank=True
     )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='wallpost',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     image = models.ImageField(upload_to=constants.PROFILE_PIC_DIR,
                               blank=True,
                               null=True,
