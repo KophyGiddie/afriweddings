@@ -321,14 +321,14 @@ class LoginUser(APIView):
 class UpdateProfilePicture(APIView):
 
     def post(self, request, *args, **kwargs):
-        user = request.user
-        avatar = request.FILES.get('avatar', None)
-        if avatar is not None:
+        try:
+            user = request.user
+            avatar = request.FILES.get('avatar', None)
             user.profile_picture = avatar
             user.save()
             serializer = UserSerializer(user, context={'request': request})
             # compress_image_choice(user.avatar)
             return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
-        else:
+        except ValueError:
             return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
 
