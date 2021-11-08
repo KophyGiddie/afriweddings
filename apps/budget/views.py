@@ -56,7 +56,7 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
         return Response(success_response('Category Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     @action(methods=['get'], detail=True, url_path='get_expenses')
-    def get_expenses(self, request):
+    def get_expenses(self, request, *args, **kwargs):
         mycategory = self.get_object()
         myqueryset = mycategory.budget_expense.select_related('category').all()
         serializer = BudgetExpenseSerializer(myqueryset, context={'request': request}, many=True)
@@ -127,7 +127,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         return Response(success_response('Category Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     @action(methods=['get'], detail=True, url_path='get_expense_payments')
-    def get_expense_payments(self, request):
+    def get_expense_payments(self, request, *args, **kwargs):
         mycategory = self.get_object()
         myqueryset = mycategory.payments.all()
         serializer = ExpensePaymentSerializer(myqueryset, context={'request': request}, many=True)
