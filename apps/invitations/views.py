@@ -33,6 +33,8 @@ class InvitationViewSet(viewsets.ModelViewSet):
         email = request.data.get('email', None)
         invitation_type = request.data.get('invitation_type', None)
         user_role = request.data.get('user_role', None)
+        first_name = request.data.get('first_name', None)
+        last_name = request.data.get('last_name', None)
 
         if invitation_type == 'Partner':
             myrole = WeddingRole.objects.get(role=user_role)
@@ -46,6 +48,8 @@ class InvitationViewSet(viewsets.ModelViewSet):
             myinvitation = Invitation.objects.create(
                                       invitation_type=invitation_type,
                                       invitation_code=generate_invitation_code(),
+                                      first_name=first_name,
+                                      last_name=last_name,
                                       invitee_role=myrole,
                                       user_role=myrole.role,
                                       email=email,
@@ -76,4 +80,5 @@ class AcceptInvite(APIView):
             return Response(error_response("Invalid Invitation", '122'), status=HTTP_400_BAD_REQUEST)
         myinvitation.status = 'ACCEPTED'
         myinvitation.save()
-        return Response(success_response('Invite Accepted Successfully'), status=HTTP_200_OK)
+        serializer = InvitationSerializer(myinvitation, context={'request': request})
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
