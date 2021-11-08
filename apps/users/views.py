@@ -75,6 +75,7 @@ class SignupUser(APIView):
 
                     user.wedding_id = mywedding.id
                     user.is_active = True
+                    user.has_onboarded = True
                     user.save()
                 except Invitation.DoesNotExist:
                     # ignore

@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -275,3 +277,11 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')
 
 BROKER_URL = os.environ['CLOUDAMQP_URL']
+
+
+sentry_sdk.init(
+    dsn="https://2f9f16bcb6934e6cbbee0fb472375185@o1063492.ingest.sentry.io/6053896",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
