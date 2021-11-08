@@ -60,6 +60,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         myuser = request.user
         myuser.wedding_id = mywedding.id
+        myuser.has_onboarded = True
         myuser.save()
 
         assign_wedding_checklists.delay(myuser.id, mywedding.id)
@@ -96,6 +97,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         if request.FILES.get('partner_picture'):
             mywedding.partner_picture = request.FILES.get('picture')
+
+        if request.FILES.get('couple_picture'):
+            mywedding.couple_picture = request.FILES.get('couple_picture')
 
         mywedding.save()
 

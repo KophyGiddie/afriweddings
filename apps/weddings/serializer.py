@@ -13,6 +13,7 @@ class WeddingSerializer(serializers.Serializer):
     budget = serializers.DecimalField(max_digits=15, decimal_places=2)
     partner_email = serializers.CharField()
     partner_picture = serializers.URLField(source='get_partner_picture')
+    couple_picture = serializers.URLField(source='get_couple_picture')
     partner_role = serializers.CharField()
     expected_guests = serializers.CharField()
     wedding_date = serializers.DateField()

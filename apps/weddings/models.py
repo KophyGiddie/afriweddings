@@ -28,6 +28,7 @@ class Wedding(models.Model):
     partner_last_name = models.CharField(max_length=200, blank=True, null=True)
     budget = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     partner_picture = models.ImageField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
+    couple_picture = models.ImageField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     currency = models.CharField(blank=True, null=True, max_length=128, default="GHS")
     country = models.CharField(blank=True, null=True, max_length=128, default="Ghana")
     city = models.CharField(blank=True, null=True, max_length=128)
@@ -45,6 +46,13 @@ class Wedding(models.Model):
     def get_partner_picture(self):
         if self.partner_picture:
             myimage = self.partner_picture.url
+        else:
+            myimage = ''
+        return myimage
+
+    def get_couple_picture(self):
+        if self.couple_picture:
+            myimage = self.couple_picture.url
         else:
             myimage = ''
         return myimage
