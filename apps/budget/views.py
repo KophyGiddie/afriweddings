@@ -37,7 +37,7 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
         mycategory = BudgetCategory.objects.create(
                                   name=name,
                                   wedding=mywedding,
-                                  currency=get_currency(),
+                                  currency=get_currency(request),
                                   created_by=request.user
                                 )
 
@@ -84,7 +84,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         name = request.data.get('name', None)
         category_id = request.data.get('category_id', None)
-        currency = get_currency()
+        currency = get_currency(request)
         estimated_cost = request.data.get('estimated_cost', None)
         final_cost = request.data.get('final_cost', None)
 
@@ -141,7 +141,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         is_paid = request.data.get('is_paid', False)
         payment_amount = request.data.get('payment_amount', None)
         payment_method = request.data.get('payment_method', None)
-        currency = get_currency()
+        currency = get_currency(request)
 
         myexpense = self.get_object()
 
