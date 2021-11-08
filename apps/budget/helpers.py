@@ -24,7 +24,7 @@ def update_budget_category(mybudget):
 
 
 def get_currency(request):
-    mywedding = Wedding.objects.get(id=request.user.id)
+    mywedding = Wedding.objects.get(id=request.user.wedding_id)
     return mywedding.currency
 
 
