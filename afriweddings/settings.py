@@ -156,7 +156,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 if 'DATABASE_URL' in os.environ:
     DATABASES['default'] = dj_database_url.config()
     DATABASES['default']['CONN_MAX_AGE'] = 960
-    DEBUG = True
+    DEBUG = False
 
     SECURE_SSL_REDIRECT = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
