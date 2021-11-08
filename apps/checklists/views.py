@@ -83,8 +83,8 @@ class ChecklistScheduleViewSet(viewsets.ModelViewSet):
                                   created_by=request.user
                                 )
 
-        serializer = ChecklistCategorySerializer(myschedule, context={'request': request})
-        return Response(success_response('Category Created Successfully', serializer.data), status=HTTP_200_OK)
+        serializer = ChecklistScheduleSerializer(myschedule, context={'request': request})
+        return Response(success_response('schedule Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         myschedule = self.get_object()
