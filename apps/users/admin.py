@@ -59,7 +59,7 @@ class MyUserAdmin(UserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal information', {'fields': ('first_name', 'last_name', 'username', 'phone_number', 'wedding_id', 'temporal_login_fails', 'permanent_login_fails', 'user_type', 'user_role')}),
+        ('Personal information', {'fields': ('first_name', 'last_name', 'username', 'phone_number', 'temporal_login_fails', 'permanent_login_fails', 'user_type', 'user_role')}),
         ('Permissions', {'fields': ('is_admin', 'is_active', 'is_blocked', 'activation_token')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
