@@ -27,12 +27,13 @@ def hash_string(mystring):
     return hashed
 
 
-def send_invitation_email(myinvitation):
+def send_invitation_email(myinvitation, first_name):
     title = 'Afriweddings Invitations'
     context = {
         'title': title,
+        'first_name': first_name,
         'first_name': myinvitation.invited_by.first_name,
-        'user_role': myinvitation.user_role.role,
+        'user_role': myinvitation.invitee_role.role,
         'button_url': '%saccept-invite/%s' % (WEB_APP_URL, myinvitation.invitation_code)
     }
     msg_html = render_to_string('email_templates/invitation_email.html', context)

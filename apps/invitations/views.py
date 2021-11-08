@@ -58,7 +58,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                       invited_by=request.user,
                                     )
 
-        send_invitation_email(myinvitation)
+        send_invitation_email(myinvitation, first_name)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
