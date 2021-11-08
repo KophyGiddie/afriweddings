@@ -136,7 +136,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
                                   title=title,
                                   wedding=mywedding,
                                   category=mycategory,
-                                  myschedule=myschedule,
+                                  schedule=myschedule,
                                   note=note,
                                   is_essential=is_essential,
                                   created_by=request.user
