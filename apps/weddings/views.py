@@ -15,6 +15,15 @@ from utils.pagination import PageNumberPagination
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
 from apps.celerytasks.tasks import assign_wedding_checklists
+from django.db.models import Q
+
+
+class AllWeddings(APIView):
+
+    def get(self, request, *args, **kwargs):
+        myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user))
+        serializer = WeddingSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
 
 class WeddingViewSet(viewsets.ModelViewSet):

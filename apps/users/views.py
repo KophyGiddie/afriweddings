@@ -77,6 +77,10 @@ class SignupUser(APIView):
                         user.is_wedding_admin = False
                         user.save()
 
+                    if user_role == 'Wedding Planner':
+                        mywedding.admins.add(user)
+                        mywedding.save()
+
                     user.wedding_id = mywedding.id
                     user.is_active = True
                     user.has_onboarded = True
