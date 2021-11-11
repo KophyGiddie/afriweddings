@@ -5,6 +5,8 @@ from utils import sendgrid
 from utils.constants import WEB_APP_URL
 from django.template.loader import render_to_string
 from apps.weddings.models import Wedding
+from dateutil.parser._parser import ParserError
+from dateutil.parser import parse
 
 
 def get_wedding(request):
@@ -74,3 +76,9 @@ def get_client_ip(request):
     return ip
 
 
+def validate_date(date):
+    try:
+        mydate = parse(date)
+        return mydate
+    except ParserError:
+        return None

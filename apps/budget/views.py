@@ -12,8 +12,8 @@ from rest_framework.status import (HTTP_201_CREATED,
                                    HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
 from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer
 from utils.pagination import PageNumberPagination
-from utils.utilities import get_wedding
-from apps.budget.helpers import update_expense, update_budget_category, get_currency
+from utils.utilities import get_wedding, validate_date
+from apps.budget.helpers import update_expense, update_budget_category, get_currency, validate_decimal
 from dateutil.parser import parse
 from decimal import Decimal
 from apps.budget.models import ExpensePayment, BudgetCategory, BudgetExpense
@@ -31,6 +31,9 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         name = request.data.get('name', None)
+
+        if not name:
+            return Response(error_response("Please provide the name value", '140'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
 
@@ -85,16 +88,27 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         name = request.data.get('name', None)
         category_id = request.data.get('category_id', None)
         currency = get_currency(request)
-        estimated_cost = request.data.get('estimated_cost', None)
-        final_cost = request.data.get('final_cost', None)
+        estimated_cost = request.data.get('estimated_cost', 0)
+        final_cost = request.data.get('final_cost', 0)
 
-        mywedding = get_wedding(request)
+        if not name:
+            return Response(error_response("Please provide the name value", '141'), status=HTTP_400_BAD_REQUEST)
+
+        if not category_id:
+            return Response(error_response("Please provide a category", '142'), status=HTTP_400_BAD_REQUEST)
+
+        myresults = validate_decimal(final_cost)
+        if not myresults:
+            return Response(error_response("Invalid Final Cost", '143'), status=HTTP_400_BAD_REQUEST)
+
+        myresults = validate_decimal(estimated_cost)
+        if not myresults:
+            return Response(error_response("Invalid Estimated cost", '144'), status=HTTP_400_BAD_REQUEST)
 
         mycategory = BudgetCategory.objects.get(id=category_id)
 
         myexpense = BudgetExpense.objects.create(
                                   name=name,
-                                  wedding=mywedding,
                                   category=mycategory,
                                   currency=currency,
                                   estimated_cost=Decimal(estimated_cost),
@@ -110,13 +124,13 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         myexpense = self.get_object()
 
-        if request.data.get('estimated_cost') and request.data.get('estimated_cost'):
+        if request.data.get('estimated_cost') and request.data.get('estimated_cost') != '':
             myexpense.estimated_cost = Decimal(request.data.get("estimated_cost"))
 
-        if request.data.get('final_cost') and request.data.get('final_cost'):
+        if request.data.get('final_cost') and request.data.get('final_cost') != '':
             myexpense.estimated_cost = Decimal(request.data.get("final_cost"))
 
-        if request.data.get('note') and request.data.get('note'):
+        if request.data.get('note') and request.data.get('note') != '':
             myexpense.note = request.data.get("note")
 
         myexpense.save()
@@ -143,6 +157,22 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         payment_method = request.data.get('payment_method', None)
         currency = get_currency(request)
 
+        if not payment_date:
+            return Response(error_response("Please provide a payment date", '145'), status=HTTP_400_BAD_REQUEST)
+
+        if payment_due and payment_due != '':
+            payment_due = validate_date(payment_due)
+            if payment_due is None:
+                return Response(error_response("Please provide a valid payment due date", '146'), status=HTTP_400_BAD_REQUEST)
+
+        payment_date = validate_date(payment_date)
+        if payment_date is None:
+            return Response(error_response("Please provide a valid payment date", '147'), status=HTTP_400_BAD_REQUEST)
+
+        payment_amount = validate_decimal(payment_amount)
+        if not payment_amount:
+            return Response(error_response("Invalid Payment Amount", '148'), status=HTTP_400_BAD_REQUEST)
+
         myexpense = self.get_object()
 
         mypayment = ExpensePayment.objects.create(
@@ -153,9 +183,9 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
                                   currency=currency,
                                   is_paid=is_paid,
                                   payment_amount=Decimal(payment_amount),
-								  payment_method=payment_method,
+                                  payment_method=payment_method,
                                   created_by=request.user
-                                )
+                                  )
 
         update_expense(myexpense)
 

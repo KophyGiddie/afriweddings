@@ -1,6 +1,6 @@
 from django.db.models import Sum
 from apps.weddings.models import Wedding
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 
 def update_budget_category(mybudget):
@@ -21,6 +21,14 @@ def update_budget_category(mybudget):
     mybudget.total_estimated_cost = total_estimated_cost
     mybudget.total_paid = total_paid
     mybudget.save()
+
+
+def validate_decimal(value):
+    try:
+        Decimal(value)
+        return True
+    except InvalidOperation:
+        return False
 
 
 def get_currency(request):

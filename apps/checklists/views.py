@@ -31,6 +31,9 @@ class ChecklistCategoryViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         name = request.data.get('name', None)
 
+        if not name:
+            return Response(error_response("Please provide the name value", '150'), status=HTTP_400_BAD_REQUEST)
+
         mywedding = get_wedding(request)
 
         mycategory = ChecklistCategory.objects.create(
@@ -73,6 +76,12 @@ class ChecklistScheduleViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         name = request.data.get('name', None)
         priority = request.data.get('priority', None)
+
+        if not name:
+            return Response(error_response("Please provide the name value", '155'), status=HTTP_400_BAD_REQUEST)
+
+        if not priority:
+            return Response(error_response("Please provide the priority value", '156'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
 
@@ -124,13 +133,14 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         category_id = request.data.get('category_id', None)
         schedule_id = request.data.get('schedule_id', None)
         note = request.data.get('note', None)
-        is_essential = request.data.get('is_essential', None)
+        is_essential = request.data.get('is_essential', False)
+
+        if not title:
+            return Response(error_response("Please provide title", '150'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
         myschedule = get_checklist_schedule(schedule_id)
         mycategory = get_checklist_category(category_id)
-
-        mycategory = ChecklistCategory.objects.get(id=category_id)
 
         mychecklist = Checklist.objects.create(
                                   title=title,
@@ -211,7 +221,7 @@ class FilterChecklist(APIView):
         schedule_id = request.data.get('schedule_id')
         category_id = request.data.get('category_id')
         is_essential = request.data.get('is_essential')
-        is_done = request.data.get('is_done')
+        is_done = request.data.get('is_done', False)
         paginate = request.data.get('paginate', True)
 
         myqueryset = ChecklistSchedule.objects.prefetch_related('checklists', 'checklists__category').filter(wedding__id=request.user.wedding_id).order_by('priority')

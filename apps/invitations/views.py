@@ -74,6 +74,7 @@ class AcceptInvite(APIView):
 
     def post(self, request, *args, **kwargs):
         invitation_code = request.data.get('invitation_code', None)
+
         try:
             myinvitation = Invitation.objects.get(invitation_code=invitation_code)
         except Invitation.DoesNotExist:
