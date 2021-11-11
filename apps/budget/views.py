@@ -82,7 +82,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
     queryset = BudgetExpense.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = BudgetExpense.objects.select_related('category').filter(wedding__id=request.user.wedding_id)
+        myqueryset = BudgetExpense.objects.select_related('category').filter(category__wedding__id=request.user.wedding_id)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
         serializer = self.get_serializer(result_page, context={'request': request}, many=True)
