@@ -151,7 +151,14 @@ class ChecklistViewSet(viewsets.ModelViewSet):
 
         mywedding = get_wedding(request)
         myschedule = get_checklist_schedule(schedule_id)
+
+        if not myschedule:
+            return Response(error_response("Invalid schedule", '160'), status=HTTP_400_BAD_REQUEST)
+
         mycategory = get_checklist_category(category_id)
+
+        if not mycategory:
+            return Response(error_response("Invalid category", '160'), status=HTTP_400_BAD_REQUEST)
 
         mychecklist = Checklist.objects.create(
                                   title=title,

@@ -12,7 +12,7 @@ def get_checklist_category(id):
 def get_checklist_schedule(id):
     try:
         return ChecklistSchedule.objects.get(id=id)
-    except (ChecklistCategory.DoesNotExist, ValidationError):
+    except (ChecklistSchedule.DoesNotExist, ValidationError):
         return None
 
 
