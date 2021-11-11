@@ -1,6 +1,8 @@
 from django.db.models import Sum
-from apps.budget.models import BudgetCategory
+from apps.weddings.models import Wedding
 from decimal import Decimal, InvalidOperation
+from apps.budget.models import BudgetCategory
+
 
 
 def update_budget_category(mybudget):
@@ -31,12 +33,16 @@ def validate_decimal(value):
         return False
 
 
+def get_currency(request):
+    mywedding = Wedding.objects.get(id=request.user.wedding_id)
+    return mywedding.currency
+
+
 def get_budget_category(id):
     try:
         return BudgetCategory.objects.get(id=id)
     except BudgetCategory.DoesNotExist:
         return None
-
 
 def update_expense(myexpense):
     total_paid = myexpense.payments.filter(is_paid=True).aggregate(Sum('payment_amount'))['payment_amount__sum']
