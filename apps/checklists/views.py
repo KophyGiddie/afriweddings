@@ -220,7 +220,7 @@ class FilterChecklist(APIView):
     def post(self, request, *args, **kwargs):
         schedule_id = request.data.get('schedule_id')
         category_id = request.data.get('category_id')
-        is_essential = request.data.get('is_essential')
+        is_essential = request.data.get('is_essential', False)
         is_done = request.data.get('is_done', False)
         paginate = request.data.get('paginate', True)
 
@@ -238,7 +238,7 @@ class FilterChecklist(APIView):
             myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
 
         if is_done and is_done != '':
-            myqueryset = myqueryset.filter(checklists__is_done=is_essential)
+            myqueryset = myqueryset.filter(checklists__is_done=is_done)
 
         if paginate:
             paginator = PageNumberPagination()
