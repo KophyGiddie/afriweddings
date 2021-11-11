@@ -13,8 +13,11 @@ from rest_framework.status import (HTTP_201_CREATED,
 from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
-from apps.budget.helpers import update_expense, update_budget_category, get_currency, validate_decimal, get_budget_category, get_expense_payment
-from dateutil.parser import parse
+from apps.budget.helpers import (
+    update_expense, update_budget_category, get_currency,
+    validate_decimal, get_budget_category, get_expense_payment,
+    get_budget_category_by_name, get_budget_expense_by_name
+)
 from decimal import Decimal
 from apps.budget.models import ExpensePayment, BudgetCategory, BudgetExpense
 
@@ -36,6 +39,11 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
             return Response(error_response("Please provide the name value", '140'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
+
+        existing_category = get_budget_category_by_name(name, mywedding)
+
+        if existing_category:
+            return Response(error_response("A category with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
         mycategory = BudgetCategory.objects.create(
                                   name=name,
@@ -112,6 +120,13 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         mycategory = get_budget_category(category_id)
         if not mycategory:
             return Response(error_response("Invalid Budget Category", '149'), status=HTTP_400_BAD_REQUEST)
+
+
+        existing_category = get_budget_expense_by_name(name, mycategory)
+
+        if existing_category:
+            return Response(error_response("An expense with this name already exist for this category", '139'), status=HTTP_400_BAD_REQUEST)
+
 
         myexpense = BudgetExpense.objects.create(
                                   name=name,

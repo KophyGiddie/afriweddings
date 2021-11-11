@@ -58,8 +58,6 @@ class Guest(models.Model):
     events = models.ManyToManyField(
         GuestEvent,
         related_name='guests',
-        on_delete=models.CASCADE,
-        null=True,
         blank=True
     )
     created_by = models.ForeignKey(

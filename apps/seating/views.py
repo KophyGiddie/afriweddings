@@ -16,6 +16,7 @@ from utils.utilities import get_wedding
 from dateutil.parser import parse
 from decimal import Decimal
 from apps.seating.models import SeatingTable, SeatingChart
+from apps.seating.helpers import get_seating_table_by_name
 
 
 class SeatingTableViewSet(viewsets.ModelViewSet):
@@ -33,6 +34,11 @@ class SeatingTableViewSet(viewsets.ModelViewSet):
         table_capacity = request.data.get('table_capacity', None)
 
         mywedding = get_wedding(request)
+
+        existing_table = get_seating_table_by_name(name, mywedding)
+
+        if existing_table:
+            return Response(error_response("A table with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
         mytable = SeatingTable.objects.create(
                                   name=name,
