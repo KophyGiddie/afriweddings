@@ -204,6 +204,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
     def mark_as_done(self, request, *args, **kwargs):
         mychecklist = self.get_object()
         mychecklist.is_done = True
+        mychecklist.time_done = timezone.now()
         mychecklist.save()
 
         mywedding = get_wedding(request)
@@ -215,8 +216,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=True, url_path='mark_as_not_done')
     def mark_as_not_done(self, request, *args, **kwargs):
         mychecklist = self.get_object()
-        mychecklist.is_done = True
-        mychecklist.time_done = timezone.now()
+        mychecklist.is_done = False
         mychecklist.save()
 
         mywedding = get_wedding(request)

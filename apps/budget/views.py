@@ -223,7 +223,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
             mypayment.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
-    def delete(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         mycategory = self.get_object()
         if mycategory.created_by == request.user:
             mycategory.delete()
