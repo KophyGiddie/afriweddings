@@ -66,7 +66,7 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
         mycategory = self.get_object()
         if mycategory.created_by == request.user:
             mycategory.delete()
-        return Response(success_response('Image Deleted Successfully'), status=HTTP_200_OK)
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
 
 class BudgetExpenseViewSet(viewsets.ModelViewSet):

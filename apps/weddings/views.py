@@ -174,7 +174,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if mymedia.author == request.user:
             mymedia.delete()
 
-        return Response(success_response('Image Deleted Successfully'), status=HTTP_200_OK)
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         return Response(error_response("Invalid Operation", '123'), status=HTTP_400_BAD_REQUEST)

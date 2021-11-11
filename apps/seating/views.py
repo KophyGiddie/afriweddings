@@ -62,4 +62,4 @@ class SeatingTableViewSet(viewsets.ModelViewSet):
         mytable = self.get_object()
         if mytable.created_by == request.user:
             mytable.delete()
-        return Response(success_response('Image Deleted Successfully'), status=HTTP_200_OK)
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
