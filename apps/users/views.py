@@ -86,8 +86,7 @@ class SignupUser(APIView):
                     user.has_onboarded = True
                     user.save()
                 except Invitation.DoesNotExist:
-                    # ignore
-                    pass
+                    return Response(error_response("Invalid Invitation Code", '102'), status=HTTP_400_BAD_REQUEST)
 
             else:
                 mytoken = account_activation_token.make_token(user)
