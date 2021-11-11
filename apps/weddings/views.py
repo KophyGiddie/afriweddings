@@ -12,6 +12,7 @@ from rest_framework.status import (HTTP_201_CREATED,
                                    HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
 from apps.weddings.serializer import WeddingSerializer, WallPostSerializer, WeddingMediaSerializer
 from utils.pagination import PageNumberPagination
+from utils.utilities import get_admin_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
 from apps.celerytasks.tasks import assign_wedding_checklists
@@ -118,6 +119,21 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mywedding.couple_picture = request.FILES.get('couple_picture')
 
         mywedding.save()
+
+        serializer = WeddingSerializer(mywedding, context={'request': request})
+        return Response(success_response('Wedding Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='switch')
+    def switch(self, request):
+        wedding_id = request.data.get('wedding_id')
+
+        mywedding = get_admin_wedding(wedding_id, request)
+        if not mywedding:
+            return Response(error_response("You do not have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
+
+        myuser = request.user
+        myuser.wedding_id = mywedding.id
+        myuser.save()
 
         serializer = WeddingSerializer(mywedding, context={'request': request})
         return Response(success_response('Wedding Updated Successfully', serializer.data), status=HTTP_200_OK)

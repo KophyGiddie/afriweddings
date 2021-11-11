@@ -9,6 +9,25 @@ from dateutil.parser._parser import ParserError
 from dateutil.parser import parse
 
 
+def get_admin_wedding(wedding_id, request):
+    is_admin = False
+    try:
+        mywedding = Wedding.objects.get(id=wedding_id)
+
+        if mywedding.author == request.user:
+            is_admin = True
+
+        if request.user in mywedding.admins.all():
+            is_admin = True
+
+        if is_admin:
+            return mywedding
+
+        return None
+    except Wedding.DoesNotExist:
+        return None
+
+
 def get_wedding(request):
     try:
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
