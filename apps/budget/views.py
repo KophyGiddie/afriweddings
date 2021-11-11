@@ -40,6 +40,10 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
         mycategory = BudgetCategory.objects.create(
                                   name=name,
                                   wedding=mywedding,
+                                  total_estimated_cost=Decimal(0),
+                                  total_final_cost=Decimal(0),
+                                  total_paid=Decimal(0),
+                                  total_pending=Decimal(0),
                                   currency=get_currency(request),
                                   created_by=request.user
                                 )
@@ -113,6 +117,9 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
                                   currency=currency,
                                   estimated_cost=Decimal(estimated_cost),
                                   final_cost=Decimal(final_cost),
+                                  paid=Decimal(0),
+                                  pending=Decimal(0),
+                                  pending=pending,
                                   created_by=request.user
                                 )
 
