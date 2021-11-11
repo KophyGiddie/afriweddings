@@ -28,7 +28,7 @@ def update_checklist_done(mywedding):
     print (total_done)
     total_checklist = mywedding.checklist.all().count()
 
-    mywedding.checklist_done = total_done
+    mywedding.checklist_completed = total_done
     mywedding.total_checklist = total_checklist
     mywedding.save()
 
