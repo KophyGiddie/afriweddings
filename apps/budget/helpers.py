@@ -2,7 +2,7 @@ from django.db.models import Sum
 from apps.weddings.models import Wedding
 from decimal import Decimal, InvalidOperation
 from apps.budget.models import BudgetCategory
-
+from django.core.exceptions import ValidationError
 
 
 def update_budget_category(mybudget):
@@ -41,8 +41,9 @@ def get_currency(request):
 def get_budget_category(id):
     try:
         return BudgetCategory.objects.get(id=id)
-    except BudgetCategory.DoesNotExist:
+    except (BudgetCategory.DoesNotExist, ValidationError):
         return None
+
 
 def update_expense(myexpense):
     total_paid = myexpense.payments.filter(is_paid=True).aggregate(Sum('payment_amount'))['payment_amount__sum']

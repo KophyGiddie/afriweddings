@@ -1,24 +1,25 @@
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule, Checklist
+from django.core.exceptions import ValidationError
 
 
 def get_checklist_category(id):
     try:
         return ChecklistCategory.objects.get(id=id)
-    except ChecklistCategory.DoesNotExist:
+    except (ChecklistCategory.DoesNotExist, ValidationError):
         return None
 
 
 def get_checklist_schedule(id):
     try:
         return ChecklistSchedule.objects.get(id=id)
-    except ChecklistCategory.DoesNotExist:
+    except (ChecklistCategory.DoesNotExist, ValidationError):
         return None
 
 
 def get_checklist(id):
     try:
         return Checklist.objects.get(id=id)
-    except Checklist.DoesNotExist:
+    except (Checklist.DoesNotExist, ValidationError):
         return None
 
 
