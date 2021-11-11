@@ -42,6 +42,13 @@ class Wedding(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     hashtag = models.CharField(blank=True, max_length=1028, null=True)
+    admin = models.ManyToManyField(
+            settings.AUTH_USER_MODEL,
+            related_name='wedding_admins',
+            on_delete=models.CASCADE,
+            null=True,
+            blank=True
+        )
 
     def get_partner_picture(self):
         if self.partner_picture:

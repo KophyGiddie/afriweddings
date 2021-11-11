@@ -55,7 +55,7 @@ class Guest(models.Model):
         null=True,
         blank=True
     )
-    events = models.ForeignKey(
+    events = models.ManyToManyField(
         GuestEvent,
         related_name='guests',
         on_delete=models.CASCADE,
