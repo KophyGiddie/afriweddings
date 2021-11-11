@@ -96,7 +96,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mywedding.currency = request.data.get('currency')
 
         if request.FILES.get('partner_picture'):
-            mywedding.partner_picture = request.FILES.get('picture')
+            mywedding.partner_picture = request.FILES.get('partner_picture')
 
         if request.FILES.get('couple_picture'):
             mywedding.couple_picture = request.FILES.get('couple_picture')
