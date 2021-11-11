@@ -15,6 +15,7 @@ from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
 from apps.weddings.models import WeddingRole, Wedding
+from django.utils import timezone
 
 
 class InvitationViewSet(viewsets.ModelViewSet):

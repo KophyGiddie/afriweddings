@@ -16,6 +16,7 @@ from utils.utilities import get_wedding
 from django.utils import timezone
 from apps.checklists.helpers import update_checklist_done, get_checklist_category, get_checklist_schedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule, Checklist
+from apps.checklists.helpers import get_checklist_category_by_name, get_checklist_schedule_by_name
 
 
 class ChecklistCategoryViewSet(viewsets.ModelViewSet):
@@ -35,6 +36,11 @@ class ChecklistCategoryViewSet(viewsets.ModelViewSet):
             return Response(error_response("Please provide the name value", '150'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
+
+        existing_category = get_checklist_category_by_name(name, mywedding)
+
+        if existing_category:
+            return Response(error_response("A category with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
         mycategory = ChecklistCategory.objects.create(
                                   name=name,
@@ -85,11 +91,16 @@ class ChecklistScheduleViewSet(viewsets.ModelViewSet):
 
         mywedding = get_wedding(request)
 
+        existing_schedule = get_checklist_schedule_by_name(name, mywedding)
+
+        if existing_schedule:
+            return Response(error_response("A Schedule with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
+
         myschedule = ChecklistSchedule.objects.create(
-                                  name=name,
-                                  priority=priority,
-                                  wedding=mywedding,
-                                  created_by=request.user
+                                    name=name,
+                                    priority=priority,
+                                    wedding=mywedding,
+                                    created_by=request.user
                                 )
 
         serializer = ChecklistScheduleSerializer(myschedule, context={'request': request})
