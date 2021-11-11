@@ -36,5 +36,4 @@ class WallPostSerializer(serializers.Serializer):
 
 class WeddingMediaSerializer(serializers.Serializer):
     id = serializers.CharField()
-    post = serializers.CharField()
     image = serializers.URLField(source='get_image')
