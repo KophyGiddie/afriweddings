@@ -327,7 +327,7 @@ class UpdateProfilePicture(APIView):
     def post(self, request, *args, **kwargs):
         try:
             user = request.user
-            avatar = request.FILES.get('avatar', None)
+            avatar = request.FILES.get('profile_picture', None)
             user.profile_picture = avatar
             user.save()
             serializer = UserSerializer(user, context={'request': request})

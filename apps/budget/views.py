@@ -121,12 +121,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         if not mycategory:
             return Response(error_response("Invalid Budget Category", '149'), status=HTTP_400_BAD_REQUEST)
 
-
         existing_category = get_budget_expense_by_name(name, mycategory)
 
         if existing_category:
             return Response(error_response("An expense with this name already exist for this category", '139'), status=HTTP_400_BAD_REQUEST)
-
 
         myexpense = BudgetExpense.objects.create(
                                   name=name,
