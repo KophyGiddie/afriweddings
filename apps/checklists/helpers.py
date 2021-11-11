@@ -32,6 +32,10 @@ def update_checklist_done(mywedding):
     mywedding.total_checklist = total_checklist
     mywedding.save()
 
+    print (mywedding.checklist_done)
+
+    return True
+
 
 def get_checklist_category_by_name(name, wedding):
     try:
