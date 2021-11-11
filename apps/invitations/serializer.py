@@ -8,6 +8,7 @@ class InvitationSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     user_role = serializers.CharField()
+    user_type = serializers.CharField()
     email = serializers.CharField()
     invitation_type = serializers.CharField()
     status = serializers.CharField()

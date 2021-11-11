@@ -30,3 +30,11 @@ def update_checklist_done(mywedding):
     mywedding.checklist_done = total_done
     mywedding.total_checklist = total_checklist
     mywedding.save()
+
+
+def get_checklist_category_by_name(name, wedding):
+    try:
+        ChecklistCategory.objects.get(name=name, wedding=wedding)
+        return True
+    except ChecklistCategory.DoesNotExist:
+        return None

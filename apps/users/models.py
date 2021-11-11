@@ -66,7 +66,7 @@ class AFUser(AbstractBaseUser):
     is_blocked = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    is_wedding_admin = models.BooleanField(default=False)
+    is_wedding_admin = models.BooleanField(default=True)
     is_social_user = models.BooleanField(default=False)
     invitation_code = models.CharField(max_length=500, blank=True, null=True)
     address = models.CharField(max_length=500, blank=True, null=True)
