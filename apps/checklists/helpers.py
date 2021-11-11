@@ -25,6 +25,7 @@ def get_checklist(id):
 
 def update_checklist_done(mywedding):
     total_done = mywedding.checklist.filter(is_done=True).count()
+    print (total_done)
     total_checklist = mywedding.checklist.all().count()
 
     mywedding.checklist_done = total_done

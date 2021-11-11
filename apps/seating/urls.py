@@ -5,6 +5,7 @@ from apps.seating.views import SeatingTableViewSet
 
 router = DefaultRouter()
 router.register(r'seating_tables', SeatingTableViewSet)
+# router.register(r'seating_chart', SeatingChartViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

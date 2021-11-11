@@ -60,6 +60,13 @@ class Guest(models.Model):
         related_name='guests',
         blank=True
     )
+    group = models.ForeignKey(
+        GuestGroup,
+        related_name='guests',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='guests',
