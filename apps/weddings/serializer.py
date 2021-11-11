@@ -8,6 +8,7 @@ class WeddingSerializer(serializers.Serializer):
     partner = UserSerializer(many=False)
     hashtag = serializers.CharField()
     partner_first_name = serializers.CharField()
+    currency = serializers.CharField()
     partner_last_name = serializers.CharField()
     venue = serializers.CharField()
     budget = serializers.DecimalField(max_digits=15, decimal_places=2)
