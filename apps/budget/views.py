@@ -202,7 +202,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         serializer = ExpensePaymentSerializer(mypayment, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['delete'], detail=True, url_path='get_expense_payments')
+    @action(methods=['delete'], detail=True, url_path='delete_expense_payments')
     def delete_expense_payment(self, request, *args, **kwargs):
         payment_id = request.data.get('payment_id')
         mypayment = ExpensePayment.objects.get(id=payment_id)
