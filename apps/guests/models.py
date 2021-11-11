@@ -74,6 +74,7 @@ class Guest(models.Model):
         null=True,
         blank=True
     )
+    has_confirmed = models.BooleanField(default=False)
     first_name = models.CharField(max_length=2000, blank=True, null=True)
     last_name = models.CharField(max_length=2000, blank=True, null=True)
     age = models.CharField(max_length=2000, blank=True, null=True)
