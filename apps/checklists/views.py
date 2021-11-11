@@ -226,11 +226,10 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         serializer = ChecklistSerializer(mychecklist, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
-    def delete(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         mychecklist = self.get_object()
         if mychecklist.created_by == request.user:
             mychecklist.delete()
-        print ('check one tow')
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
 
