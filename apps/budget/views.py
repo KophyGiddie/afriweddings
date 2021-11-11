@@ -13,7 +13,7 @@ from rest_framework.status import (HTTP_201_CREATED,
 from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
-from apps.budget.helpers import update_expense, update_budget_category, get_currency, validate_decimal, get_budget_category
+from apps.budget.helpers import update_expense, update_budget_category, get_currency, validate_decimal, get_budget_category, get_expense_payment
 from dateutil.parser import parse
 from decimal import Decimal
 from apps.budget.models import ExpensePayment, BudgetCategory, BudgetExpense
@@ -202,10 +202,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         serializer = ExpensePaymentSerializer(mypayment, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['delete'], detail=True, url_path='delete_expense_payments')
+    @action(methods=['delete'], detail=False, url_path='delete_expense_payments')
     def delete_expense_payment(self, request, *args, **kwargs):
         payment_id = request.data.get('payment_id')
-        mypayment = ExpensePayment.objects.get(id=payment_id)
+        mypayment = get_expense_payment(payment_id)
         if mypayment.created_by == request.user:
             mypayment.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)

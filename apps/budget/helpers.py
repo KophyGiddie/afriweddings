@@ -1,7 +1,7 @@
 from django.db.models import Sum
 from apps.weddings.models import Wedding
 from decimal import Decimal, InvalidOperation
-from apps.budget.models import BudgetCategory
+from apps.budget.models import BudgetCategory, ExpensePayment
 from django.core.exceptions import ValidationError
 
 
@@ -42,6 +42,14 @@ def get_budget_category(id):
     try:
         return BudgetCategory.objects.get(id=id)
     except (BudgetCategory.DoesNotExist, ValidationError):
+        return None
+
+
+
+def get_expense_payment(id):
+    try:
+        return ExpensePayment.objects.get(id=id)
+    except (ExpensePayment.DoesNotExist, ValidationError):
         return None
 
 
