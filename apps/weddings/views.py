@@ -74,11 +74,17 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if request.data.get('partner_role') and request.data.get('partner_role') != '':
             mywedding.partner_role = request.data.get('partner_role')
 
-        if request.data.get('partner_first_name') and request.data.get('partner_first_name'):
+        if request.data.get('partner_first_name') and request.data.get('partner_first_name') != "":
             mywedding.partner_first_name = request.data.get("partner_first_name")
 
-        if request.data.get('hashtag') and request.data.get('hashtag'):
+        if request.data.get('hashtag') and request.data.get('hashtag') != "":
             mywedding.hashtag = request.data.get("hashtag")
+
+        if request.data.get('country') and request.data.get('country') != "":
+            mywedding.country = request.data.get("country")
+
+        if request.data.get('city') and request.data.get('city') != "":
+            mywedding.country = request.data.get("country")
 
         if request.data.get('partner_last_name') and request.data.get('partner_last_name') != '':
             mywedding.partner_last_name = request.data.get("partner_last_name")
