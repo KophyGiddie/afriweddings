@@ -2,6 +2,10 @@ from rest_framework import serializers
 from apps.users.serializer import UserSerializer
 
 
+class WeddingRoleSerializer(serializers.Serializer):
+    role = serializers.CharField()
+
+
 class WeddingSerializer(serializers.Serializer):
     id = serializers.CharField()
     author = UserSerializer(many=False)

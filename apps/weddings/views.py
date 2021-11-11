@@ -10,11 +10,12 @@ from rest_framework.status import (HTTP_201_CREATED,
                                    HTTP_200_OK,
                                    HTTP_304_NOT_MODIFIED,
                                    HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
-from apps.weddings.serializer import WeddingSerializer, WallPostSerializer, WeddingMediaSerializer
+from apps.weddings.serializer import WeddingSerializer, WallPostSerializer, WeddingMediaSerializer, WeddingRoleSerializer
 from utils.pagination import PageNumberPagination
-from utils.utilities import get_admin_wedding
+from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
+from apps.weddings.helpers import get_role_by_name
 from apps.celerytasks.tasks import assign_wedding_checklists
 from django.db.models import Q
 
@@ -210,3 +211,54 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         return Response(error_response("Invalid Operation", '123'), status=HTTP_400_BAD_REQUEST)
+
+
+class WeddingRoleViewSet(viewsets.ModelViewSet):
+    model = WeddingRole
+    serializer_class = WeddingRoleSerializer
+    queryset = WeddingRole.objects.all().order_by('?')
+
+    def list(self, request, *args, **kwargs):
+        myqueryset = WeddingRole.objects.filter(wedding__id=request.user.wedding_id).order_by('?')
+        serializer = WeddingRoleSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        role = request.data.get('role', None)
+
+        if not role:
+            return Response(error_response("Please provide the name value", '150'), status=HTTP_400_BAD_REQUEST)
+
+        mywedding = get_wedding(request)
+
+        existing_role = get_role_by_name(role, mywedding)
+
+        if existing_role:
+            return Response(error_response("A role with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
+
+        mycategory = WeddingRole.objects.create(
+                                  role=role,
+                                  is_default=False,
+                                  wedding=mywedding,
+                                  created_by=request.user
+                                )
+
+        serializer = WeddingRoleSerializer(mycategory, context={'request': request})
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        myrole = self.get_object()
+
+        if request.data.get('role') and request.data.get('role') != '':
+            myrole.role = request.data.get('role')
+
+        myrole.save()
+
+        serializer = WeddingRoleSerializer(myrole, context={'request': request})
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        myrole = self.get_object()
+        if myrole.created_by == request.user:
+            myrole.delete()
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
