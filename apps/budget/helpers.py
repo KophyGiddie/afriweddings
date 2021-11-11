@@ -27,8 +27,8 @@ def update_budget_category(mybudget):
 
 def validate_decimal(value):
     try:
-        Decimal(value)
-        return True
+        myvalue = Decimal(value)
+        return myvalue
     except InvalidOperation:
         return False
 

@@ -43,7 +43,7 @@ class ChecklistCategoryViewSet(viewsets.ModelViewSet):
                                 )
 
         serializer = ChecklistCategorySerializer(mycategory, context={'request': request})
-        return Response(success_response('Category Created Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         mycategory = self.get_object()
@@ -54,7 +54,7 @@ class ChecklistCategoryViewSet(viewsets.ModelViewSet):
         mycategory.save()
 
         serializer = ChecklistCategorySerializer(mycategory, context={'request': request})
-        return Response(success_response('Category Updated Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         mycategory = self.get_object()
@@ -107,7 +107,7 @@ class ChecklistScheduleViewSet(viewsets.ModelViewSet):
         myschedule.save()
 
         serializer = ChecklistScheduleSerializer(myschedule, context={'request': request})
-        return Response(success_response('Category Updated Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         myschedule = self.get_object()
@@ -155,7 +155,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         update_checklist_done(mywedding)
 
         serializer = ChecklistSerializer(mychecklist, context={'request': request})
-        return Response(success_response('Category Created Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         mychecklist = self.get_object()
@@ -180,7 +180,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         mychecklist.save()
 
         serializer = ChecklistSerializer(mychecklist, context={'request': request})
-        return Response(success_response('Category Updated Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     @action(methods=['post'], detail=True, url_path='mark_as_done')
     def mark_as_done(self, request, *args, **kwargs):

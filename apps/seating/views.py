@@ -42,7 +42,7 @@ class SeatingTableViewSet(viewsets.ModelViewSet):
                                 )
 
         serializer = SeatingTableSerializer(mytable, context={'request': request})
-        return Response(success_response('Category Created Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         mytable = self.get_object()
@@ -56,7 +56,7 @@ class SeatingTableViewSet(viewsets.ModelViewSet):
         mytable.save()
 
         serializer = SeatingTableSerializer(mytable, context={'request': request})
-        return Response(success_response('Category Updated Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         mytable = self.get_object()
