@@ -9,5 +9,5 @@ router.register(r'invitations', InvitationViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('invitations/accept_invite/', AcceptInvite.as_view()),
+    path('accept_invite/', AcceptInvite.as_view()),
 ]
