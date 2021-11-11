@@ -13,7 +13,7 @@ from rest_framework.status import (HTTP_201_CREATED,
 from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
-from apps.budget.helpers import update_expense, update_budget_category, get_currency, validate_decimal
+from apps.budget.helpers import update_expense, update_budget_category, get_currency, validate_decimal, get_budget_category
 from dateutil.parser import parse
 from decimal import Decimal
 from apps.budget.models import ExpensePayment, BudgetCategory, BudgetExpense
@@ -109,7 +109,9 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         if not myresults:
             return Response(error_response("Invalid Estimated cost", '144'), status=HTTP_400_BAD_REQUEST)
 
-        mycategory = BudgetCategory.objects.get(id=category_id)
+        mycategory = get_budget_category(category_id)
+        if not mycategory:
+            return Response(error_response("Invalid Budget Category", '149'), status=HTTP_400_BAD_REQUEST)
 
         myexpense = BudgetExpense.objects.create(
                                   name=name,

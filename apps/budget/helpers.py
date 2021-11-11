@@ -1,5 +1,5 @@
 from django.db.models import Sum
-from apps.weddings.models import Wedding
+from apps.budget.models import BudgetCategory
 from decimal import Decimal, InvalidOperation
 
 
@@ -31,9 +31,11 @@ def validate_decimal(value):
         return False
 
 
-def get_currency(request):
-    mywedding = Wedding.objects.get(id=request.user.wedding_id)
-    return mywedding.currency
+def get_budget_category(id):
+    try:
+        return BudgetCategory.objects.get(id=id)
+    except BudgetCategory.DoesNotExist:
+        return None
 
 
 def update_expense(myexpense):
