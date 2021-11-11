@@ -227,9 +227,9 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        mycategory = self.get_object()
-        if mycategory.created_by == request.user:
-            mycategory.delete()
+        mychecklist = self.get_object()
+        if mychecklist.created_by == request.user:
+            mychecklist.delete()
         print ('check one tow')
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
