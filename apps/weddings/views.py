@@ -57,6 +57,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         WeddingRole.objects.create(role='Groom', is_default=True, wedding=mywedding)
         WeddingRole.objects.create(role='Bride', is_default=True, wedding=mywedding)
         WeddingRole.objects.create(role='Other', is_default=True, wedding=mywedding)
+        WeddingRole.objects.create(role='Wedding Planner', is_default=True, wedding=mywedding)
 
         myuser = request.user
         myuser.wedding_id = mywedding.id
@@ -139,7 +140,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         serializer = WallPostSerializer(result_page, context={'request': request}, many=True)
         return paginator.get_paginated_response(serializer.data)
 
-    @action(methods=['get'], detail=False, url_path='get_wallposts')
+    @action(methods=['get'], detail=False, url_path='get_wedding_media')
     def get_wedding_media(self, request):
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
         myqueryset = mywedding.media.all()
