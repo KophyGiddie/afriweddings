@@ -119,7 +119,6 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
                                   final_cost=Decimal(final_cost),
                                   paid=Decimal(0),
                                   pending=Decimal(0),
-                                  pending=pending,
                                   created_by=request.user
                                 )
 
