@@ -247,15 +247,15 @@ class FilterChecklist(APIView):
         if schedule_id and schedule_id != '':
             myqueryset = myqueryset.filter(id=schedule_id)
 
-        if category_id and category_id != '':
-            mycategory = get_checklist_category(category_id)
-            myqueryset = myqueryset.filter(checklists__category=mycategory)
+        # if category_id and category_id != '':
+        #     mycategory = get_checklist_category(category_id)
+        #     myqueryset = myqueryset.filter(checklists__category=mycategory)
 
-        if is_essential and is_essential != '':
-            myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
+        # if is_essential and is_essential != '':
+        #     myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
 
-        if is_done and is_done != '':
-            myqueryset = myqueryset.filter(checklists__is_done=is_done)
+        # if is_done and is_done != '':
+        #     myqueryset = myqueryset.filter(checklists__is_done=is_done)
 
         if paginate:
             paginator = PageNumberPagination()
