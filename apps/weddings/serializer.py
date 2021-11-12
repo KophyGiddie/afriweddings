@@ -13,6 +13,7 @@ class WeddingSerializer(serializers.Serializer):
     hashtag = serializers.CharField()
     partner_first_name = serializers.CharField()
     currency = serializers.CharField()
+    public_url = serializers.CharField()
     country = serializers.CharField()
     city = serializers.CharField()
     partner_last_name = serializers.CharField()

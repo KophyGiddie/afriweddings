@@ -11,7 +11,7 @@ from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
-from apps.weddings.helpers import get_role_by_name
+from apps.weddings.helpers import get_role_by_name, generate_slug
 from apps.celerytasks.tasks import assign_wedding_checklists
 from django.db.models import Q
 
@@ -60,6 +60,8 @@ class WeddingViewSet(viewsets.ModelViewSet):
                                     budget=budget,
                                     city=city
                                 )
+
+        generate_slug(mywedding)
 
         WeddingRole.objects.create(role='Groom', is_default=True, wedding=mywedding)
         WeddingRole.objects.create(role='Bride', is_default=True, wedding=mywedding)
@@ -114,6 +116,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         if request.data.get('budget') and request.data.get('budget') != "":
             mywedding.budget = request.data.get('budget')
+
+        if request.data.get('public_url') and request.data.get('public_url') != "":
+            mywedding.public_url = request.data.get('public_url')
 
         if request.data.get('currency') and request.data.get('currency') != "":
             mywedding.currency = request.data.get('currency')

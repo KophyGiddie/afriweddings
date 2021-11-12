@@ -28,6 +28,7 @@ class ChecklistSerializer(serializers.Serializer):
 class LimitedChecklistSerializer(serializers.Serializer):
     id = serializers.CharField()
     category = ChecklistCategorySerializer(many=False)
+    schedule = ChecklistScheduleSerializer(many=False)
     note = serializers.CharField()
     description = serializers.CharField()
     priority = serializers.IntegerField()

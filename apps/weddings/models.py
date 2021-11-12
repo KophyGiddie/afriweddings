@@ -25,6 +25,7 @@ class Wedding(models.Model):
     partner_last_name = models.CharField(max_length=200, blank=True, null=True)
     partner_email = models.CharField(max_length=200, blank=True, null=True)
     partner_role = models.CharField(max_length=200, blank=True, null=True)
+    public_url = models.CharField(max_length=200, blank=True, null=True)
     partner_last_name = models.CharField(max_length=200, blank=True, null=True)
     budget = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     partner_picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)

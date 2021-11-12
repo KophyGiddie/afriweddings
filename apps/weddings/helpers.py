@@ -7,3 +7,7 @@ def get_role_by_name(role, wedding):
         return True
     except WeddingRole.DoesNotExist:
         return None
+
+
+def generate_slug(mywedding):
+    print ('slug')
