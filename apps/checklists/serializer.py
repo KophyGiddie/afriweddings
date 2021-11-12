@@ -42,9 +42,8 @@ class MasterChecklistScheduleSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     priority = serializers.IntegerField()
-    checklists = serializers.SerializerMethodField('get_two_sharers')
+    checklists = serializers.SerializerMethodField('get_checklists')
 
-        
     def get_checklists(self, obj):
         is_done = self.context['request'].data.get('is_done')
         myusers = obj.checklists.filter(is_done=is_done)
