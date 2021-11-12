@@ -76,3 +76,17 @@ def get_budget_category_by_name(name, wedding):
         return True
     except BudgetCategory.DoesNotExist:
         return None
+
+
+def create_budget_category(name, mywedding, currency, myuser):
+    mycategory = BudgetCategory.objects.create(
+                                  name=name,
+                                  wedding=mywedding,
+                                  total_estimated_cost=Decimal(0),
+                                  total_final_cost=Decimal(0),
+                                  total_paid=Decimal(0),
+                                  total_pending=Decimal(0),
+                                  currency=currency,
+                                  created_by=myuser
+                                )
+    return mycategory

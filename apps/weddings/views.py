@@ -52,17 +52,17 @@ class WeddingViewSet(viewsets.ModelViewSet):
         partner_last_name = request.data.get('partner_last_name', None)
 
         mywedding = Wedding.objects.create(
-                                  wedding_date=wedding_date,
-                                  expected_guests=expected_guests,
-                                  country=country,
-                                  currency=currency,
-                                  partner_role=partner_role,
-                                  partner_last_name=partner_last_name,
-                                  partner_first_name=partner_first_name,
-                                  start_time=start_time,
-                                  end_time=end_time,
-                                  budget=budget,
-                                  city=city
+                                    wedding_date=wedding_date,
+                                    expected_guests=expected_guests,
+                                    country=country,
+                                    currency=currency,
+                                    partner_role=partner_role,
+                                    partner_last_name=partner_last_name,
+                                    partner_first_name=partner_first_name,
+                                    start_time=start_time,
+                                    end_time=end_time,
+                                    budget=budget,
+                                    city=city
                                 )
 
         WeddingRole.objects.create(role='Groom', is_default=True, wedding=mywedding)
