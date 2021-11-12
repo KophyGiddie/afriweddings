@@ -250,11 +250,21 @@ class FilterChecklist(APIView):
 
         if category_id and category_id != '':
             mycategory = get_checklist_category(category_id)
-            myqueryset = myqueryset.filter(checklists__category=mycategory)
-
+            # myqueryset = myqueryset.filter(checklists__category=mycategory)
+            myqueryset = myqueryset.prefetch_related(Prefetch(
+                    "checklists",
+                    queryset=Checklist.objects.filter(category=mycategory),
+                    to_attr="mychecklists"
+                )
+            )
         if is_essential and is_essential != '':
-            myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
-
+            # myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
+            myqueryset = myqueryset.prefetch_related(Prefetch(
+                    "checklists",
+                    queryset=Checklist.objects.filter(is_essential=is_essential),
+                    to_attr="mychecklists"
+                )
+            )
         if is_done and is_done != '':
             # myqueryset = myqueryset.filter(checklists__is_done=is_done)
             myqueryset = myqueryset.prefetch_related(Prefetch(
