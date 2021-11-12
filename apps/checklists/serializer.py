@@ -42,4 +42,4 @@ class MasterChecklistScheduleSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     priority = serializers.IntegerField()
-    checklists = LimitedChecklistSerializer(many=True)
+    mychecklists = LimitedChecklistSerializer(many=True)

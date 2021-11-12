@@ -260,7 +260,7 @@ class FilterChecklist(APIView):
             myqueryset = myqueryset.prefetch_related(Prefetch(
                     "checklists",
                     queryset=Checklist.objects.filter(is_done=is_done),
-                    to_attr="checklists"
+                    to_attr="mychecklists"
                 )
             )
 
