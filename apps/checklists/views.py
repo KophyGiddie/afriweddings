@@ -14,6 +14,7 @@ from django.utils import timezone
 from apps.checklists.helpers import update_checklist_done, get_checklist_category, get_checklist_schedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule, Checklist
 from apps.checklists.helpers import get_checklist_category_by_name, get_checklist_schedule_by_name
+from django.db.models import Prefetch
 
 
 class ChecklistCategoryViewSet(viewsets.ModelViewSet):
@@ -255,7 +256,13 @@ class FilterChecklist(APIView):
             myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
 
         if is_done and is_done != '':
-            myqueryset = myqueryset.filter(checklists__is_done=is_done)
+            # myqueryset = myqueryset.filter(checklists__is_done=is_done)
+            myqueryset = myqueryset.prefetch_related(Prefetch(
+                    "checklists",
+                    queryset=Checklist.objects.filter(is_done=is_done),
+                    to_attr="checklists"
+                )
+            )
 
         if paginate:
             paginator = PageNumberPagination()
