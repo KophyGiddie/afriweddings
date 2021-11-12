@@ -5,6 +5,10 @@ import uuid
 
 
 class Invitation(models.Model):
+    """
+    Model for all invitations sent out of the platform
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,

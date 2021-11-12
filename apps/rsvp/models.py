@@ -5,6 +5,10 @@ import uuid
 
 
 class RSVPQuestion(models.Model):
+    """
+    Model for RSVP Questions displayed on the wedding page
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -27,6 +31,10 @@ class RSVPQuestion(models.Model):
 
 
 class RSVP(models.Model):
+    """
+    Model for answers provided by guests on rsvp questions
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     rsvp_question = models.ForeignKey(
         RSVPQuestion,

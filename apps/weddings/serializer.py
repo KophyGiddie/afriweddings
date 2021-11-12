@@ -23,7 +23,7 @@ class WeddingSerializer(serializers.Serializer):
     couple_picture = serializers.URLField(source='get_couple_picture')
     partner_role = serializers.CharField()
     expected_guests = serializers.CharField()
-    wedding_date = serializers.DateField()
+    wedding_date = serializers.CharField()
     start_time = serializers.CharField()
     end_time = serializers.CharField()
     created_at = serializers.DateTimeField()

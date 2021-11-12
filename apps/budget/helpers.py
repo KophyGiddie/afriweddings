@@ -6,6 +6,10 @@ from django.core.exceptions import ValidationError
 
 
 def update_budget_category(mybudget):
+    """
+    Updates budget category after a new expense is added
+
+    """
     total_final_cost = mybudget.budget_expense.all().aggregate(Sum('final_cost'))['final_cost__sum']
     total_estimated_cost = mybudget.budget_expense.all().aggregate(Sum('final_cost'))['final_cost__sum']
     total_paid = mybudget.budget_expense.all().aggregate(Sum('final_cost'))['final_cost__sum']
@@ -26,6 +30,10 @@ def update_budget_category(mybudget):
 
 
 def validate_decimal(value):
+    """
+    Validates any number field if it is a valid decimal
+
+    """
     try:
         myvalue = Decimal(value)
         return myvalue
@@ -34,11 +42,19 @@ def validate_decimal(value):
 
 
 def get_currency(request):
+    """
+    Returns the currency as set when creating the wedding
+
+    """
     mywedding = Wedding.objects.get(id=request.user.wedding_id)
     return mywedding.currency
 
 
 def get_budget_category(id):
+    """
+    Returns budget category using the primary key
+
+    """
     try:
         return BudgetCategory.objects.get(id=id)
     except (BudgetCategory.DoesNotExist, ValidationError):
@@ -46,6 +62,10 @@ def get_budget_category(id):
 
 
 def get_expense_payment(id):
+    """
+    Returns expense payment using the primary key
+
+    """
     try:
         return ExpensePayment.objects.get(id=id)
     except (ExpensePayment.DoesNotExist, ValidationError):
@@ -53,6 +73,10 @@ def get_expense_payment(id):
 
 
 def update_expense(myexpense):
+    """
+    Update expenses total_paid when a payment is made
+
+    """
     total_paid = myexpense.payments.filter(is_paid=True).aggregate(Sum('payment_amount'))['payment_amount__sum']
 
     if total_paid is None or total_paid == 'None':
@@ -63,6 +87,10 @@ def update_expense(myexpense):
 
 
 def get_budget_expense_by_name(name, mycategory):
+    """
+    Returns budget expense using the name
+
+    """
     try:
         BudgetExpense.objects.get(name=name, category=mycategory)
         return True
@@ -71,6 +99,10 @@ def get_budget_expense_by_name(name, mycategory):
 
 
 def get_budget_category_by_name(name, wedding):
+    """
+    Returns budget category using the name
+
+    """
     try:
         BudgetCategory.objects.get(name=name, wedding=wedding)
         return True
@@ -79,6 +111,10 @@ def get_budget_category_by_name(name, wedding):
 
 
 def create_budget_category(name, mywedding, currency, myuser):
+    """
+    Creates a budget category with the parameters supplied
+
+    """
     mycategory = BudgetCategory.objects.create(
         name=name,
         wedding=mywedding,
@@ -93,6 +129,10 @@ def create_budget_category(name, mywedding, currency, myuser):
 
 
 def create_budget_expense(name, mycategory, currency, estimated_cost, final_cost, myuser):
+    """
+    Creates a budget expense with the parameters supplied
+
+    """
     myexpense = BudgetExpense.objects.create(
         name=name,
         category=mycategory,

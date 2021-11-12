@@ -2,10 +2,11 @@ from utils.responses import error_response, success_response
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.views import APIView
-from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from apps.weddings.serializer import WeddingSerializer, WallPostSerializer, WeddingMediaSerializer, WeddingRoleSerializer
+from apps.weddings.serializer import (
+    WeddingSerializer, WallPostSerializer, WeddingMediaSerializer, WeddingRoleSerializer
+)
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
@@ -232,11 +233,11 @@ class WeddingRoleViewSet(viewsets.ModelViewSet):
             return Response(error_response("A role with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
         mycategory = WeddingRole.objects.create(
-                                  role=role,
-                                  is_default=False,
-                                  wedding=mywedding,
-                                  created_by=request.user
-                                )
+            role=role,
+            is_default=False,
+            wedding=mywedding,
+            created_by=request.user
+        )
 
         serializer = WeddingRoleSerializer(mycategory, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)

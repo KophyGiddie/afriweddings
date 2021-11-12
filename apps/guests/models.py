@@ -5,6 +5,10 @@ import uuid
 
 
 class GuestEvent(models.Model):
+    """
+    Model for Guest events
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -26,6 +30,10 @@ class GuestEvent(models.Model):
 
 
 class GuestGroup(models.Model):
+    """
+    Model for guest groups
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -47,6 +55,12 @@ class GuestGroup(models.Model):
 
 
 class Guest(models.Model):
+    """
+    Model for Guests
+
+    # These are guests who will attend the wedding which is different from GUEST as a user type
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,

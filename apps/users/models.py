@@ -10,7 +10,10 @@ from rest_framework.authtoken.models import Token
 
 
 class AFUserManager(BaseUserManager):
+    """
+    User Base manager for the user model
 
+    """
     def create_user(self, email, first_name, last_name, password=None):
         if not email:
             raise ValueError('Users must have a email')
@@ -37,6 +40,11 @@ class AFUserManager(BaseUserManager):
 
 
 class AFUser(AbstractBaseUser):
+    """
+    Model for Users
+    This model overrides the default django user model for enhanced customisation instead of using a one to one mapping
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
         verbose_name=_('email address'),
@@ -126,17 +134,31 @@ class AFUser(AbstractBaseUser):
 
 @receiver(post_save, sender=AFUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """
+    Model for Users
+    This model overrides the default django user model for enhanced customisation instead of using a one to one mapping
+
+    """
     if created:
         Token.objects.create(user=instance)
 
 
 class StoredPass(models.Model):
+    """
+    Model for storing hashed passwords used by users.
+    This is used to prevent users from using their last five passwords for maximum security as a standard practice
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     hashed = models.CharField(max_length=1000, blank=True, null=True)
     author = models.ForeignKey(AFUser, related_name='my_hashes', on_delete=models.CASCADE)
 
 
 class FailedLogin(models.Model):
+    """
+    Model for guest groups
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(AFUser, related_name='failed_login_attempts', on_delete=models.CASCADE)
     ip_address = models.CharField(max_length=1000, blank=True, null=True)
@@ -144,6 +166,10 @@ class FailedLogin(models.Model):
 
 
 class UserActivity(models.Model):
+    """
+    Model for saving all user activities
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     module = models.CharField(max_length=1000, blank=True, null=True)
     action = models.CharField(max_length=1000, blank=True, null=True)

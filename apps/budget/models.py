@@ -5,6 +5,10 @@ import uuid
 
 
 class BudgetCategory(models.Model):
+    """
+    Model for budget categories
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -38,6 +42,10 @@ class BudgetCategory(models.Model):
 
 
 class BudgetExpense(models.Model):
+    """
+    Model for budget expenses
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.ForeignKey(
         BudgetCategory,
@@ -72,6 +80,10 @@ class BudgetExpense(models.Model):
 
 
 class ExpensePayment(models.Model):
+    """
+    Model for expense payments
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     expense = models.ForeignKey(
         BudgetExpense,

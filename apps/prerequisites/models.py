@@ -3,6 +3,10 @@ import uuid
 
 
 class Country(models.Model):
+    """
+    Model for saving all the allowed countries
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=2000, blank=True, null=True)
     identifier = models.CharField(max_length=2000, blank=True, null=True)
@@ -18,6 +22,10 @@ class Country(models.Model):
 
 
 class DefaultChecklistCategory(models.Model):
+    """
+    Model for storing the default checklist categories used in prepopulating the couples checklist
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,6 +41,10 @@ class DefaultChecklistCategory(models.Model):
 
 
 class DefaultChecklistSchedule(models.Model):
+    """
+    Model for storing the default checklist schedules used in prepopulating the couples checklist
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=2000, blank=True, null=True)
     priority = models.IntegerField(default=1)
@@ -49,6 +61,10 @@ class DefaultChecklistSchedule(models.Model):
 
 
 class DefaultChecklist(models.Model):
+    """
+    Model for storing the default checklist used in prepopulating the couples checklist
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     identifier = models.CharField(max_length=2000, blank=True, null=True)
     category = models.ForeignKey(
@@ -83,6 +99,10 @@ class DefaultChecklist(models.Model):
 
 
 class DefaultWeddingRole(models.Model):
+    """
+    Model for storing the default roles for prepopulation
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -5,6 +5,10 @@ import uuid
 
 
 class ChecklistCategory(models.Model):
+    """
+    Model for Checklist Categories
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -34,6 +38,10 @@ class ChecklistCategory(models.Model):
 
 
 class ChecklistSchedule(models.Model):
+    """
+    Model for Checklist schedules
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -64,6 +72,10 @@ class ChecklistSchedule(models.Model):
 
 
 class Checklist(models.Model):
+    """
+    Model for checklists
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     identifier = models.CharField(max_length=2000, blank=True, null=True)
     wedding = models.ForeignKey(

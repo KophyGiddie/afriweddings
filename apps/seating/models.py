@@ -6,6 +6,10 @@ import uuid
 
 
 class SeatingTable(models.Model):
+    """
+    Model for seating tables
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
@@ -36,6 +40,10 @@ class SeatingTable(models.Model):
 
 
 class SeatingChart(models.Model):
+    """
+    Model for seating chart configuration
+
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     table = models.ForeignKey(
         SeatingTable,
