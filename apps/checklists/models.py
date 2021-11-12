@@ -119,7 +119,7 @@ class Checklist(models.Model):
 
     class Meta:
         verbose_name_plural = 'Checklist'
-        ordering = ('-created_at',)
+        ordering = ('priority',)
 
     def __str__(self):
         return '%s' % (self.title)
