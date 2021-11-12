@@ -181,6 +181,9 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         if request.data.get('note') and request.data.get('note'):
             mychecklist.note = request.data.get("note")
 
+        if request.data.get('description') and request.data.get('description'):
+            mychecklist.description = request.data.get("description")
+
         if request.data.get('is_essential') and request.data.get('is_essential'):
             mychecklist.is_essential = request.data.get("is_essential")
 
