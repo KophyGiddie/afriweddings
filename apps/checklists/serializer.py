@@ -49,6 +49,8 @@ class MasterChecklistScheduleSerializer(serializers.Serializer):
         is_essential = self.context['request'].data.get('is_essential')
         category_id = self.context['request'].data.get('category_id')
 
+        myusers = obj.checklists.all()
+
         if is_done and is_done != '':
             myusers = obj.checklists.filter(is_done=is_done)
 
