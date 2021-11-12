@@ -1,20 +1,10 @@
 from utils.responses import error_response, success_response
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from django.contrib.auth import authenticate, login
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.status import (HTTP_201_CREATED,
-                                   HTTP_200_OK,
-                                   HTTP_304_NOT_MODIFIED,
-                                   HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.seating.serializer import SeatingTableSerializer
-from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding
-from dateutil.parser import parse
-from decimal import Decimal
 from apps.seating.models import SeatingTable, SeatingChart
 from apps.seating.helpers import get_seating_table_by_name
 

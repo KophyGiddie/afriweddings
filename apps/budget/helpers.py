@@ -80,13 +80,43 @@ def get_budget_category_by_name(name, wedding):
 
 def create_budget_category(name, mywedding, currency, myuser):
     mycategory = BudgetCategory.objects.create(
-                                  name=name,
-                                  wedding=mywedding,
-                                  total_estimated_cost=Decimal(0),
-                                  total_final_cost=Decimal(0),
-                                  total_paid=Decimal(0),
-                                  total_pending=Decimal(0),
-                                  currency=currency,
-                                  created_by=myuser
-                                )
+        name=name,
+        wedding=mywedding,
+        total_estimated_cost=Decimal(0),
+        total_final_cost=Decimal(0),
+        total_paid=Decimal(0),
+        total_pending=Decimal(0),
+        currency=currency,
+        created_by=myuser
+    )
     return mycategory
+
+
+def create_budget_expense(name, mycategory, currency, estimated_cost, final_cost, myuser):
+    myexpense = BudgetExpense.objects.create(
+        name=name,
+        category=mycategory,
+        currency=currency,
+        estimated_cost=Decimal(estimated_cost),
+        final_cost=Decimal(final_cost),
+        paid=Decimal(0),
+        pending=Decimal(0),
+        created_by=myuser
+    )
+    return myexpense
+
+
+def create_expense_payment(payment_date, payment_due, paid_by, myexpense, currency, is_paid, payment_amount, payment_method, myuser):
+    mypayment = ExpensePayment.objects.create(
+        payment_date=payment_date,
+        payment_due=payment_due,
+        paid_by=paid_by,
+        expense=myexpense,
+        currency=currency,
+        is_paid=is_paid,
+        payment_amount=Decimal(payment_amount),
+        payment_method=payment_method,
+        created_by=myuser
+    )
+    return mypayment
+

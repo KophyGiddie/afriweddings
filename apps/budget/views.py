@@ -1,15 +1,8 @@
 from utils.responses import error_response, success_response
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from django.contrib.auth import authenticate, login
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.status import (HTTP_201_CREATED,
-                                   HTTP_200_OK,
-                                   HTTP_304_NOT_MODIFIED,
-                                   HTTP_400_BAD_REQUEST, HTTP_400_BAD_REQUEST)
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
@@ -17,10 +10,10 @@ from apps.budget.helpers import (
     update_expense, update_budget_category, get_currency,
     validate_decimal, get_budget_category, get_expense_payment,
     get_budget_category_by_name, get_budget_expense_by_name,
-    create_budget_category
+    create_budget_category, create_budget_expense, create_expense_payment
 )
 from decimal import Decimal
-from apps.budget.models import ExpensePayment, BudgetCategory, BudgetExpense
+from apps.budget.models import BudgetCategory, BudgetExpense
 
 
 class BudgetCategoryViewSet(viewsets.ModelViewSet):
@@ -117,16 +110,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         if existing_category:
             return Response(error_response("An expense with this name already exist for this category", '139'), status=HTTP_400_BAD_REQUEST)
 
-        myexpense = BudgetExpense.objects.create(
-                                  name=name,
-                                  category=mycategory,
-                                  currency=currency,
-                                  estimated_cost=Decimal(estimated_cost),
-                                  final_cost=Decimal(final_cost),
-                                  paid=Decimal(0),
-                                  pending=Decimal(0),
-                                  created_by=request.user
-                                )
+        myexpense = create_budget_expense(name, mycategory, currency, estimated_cost, final_cost, request.user)
 
         update_budget_category(mycategory)
 
@@ -187,17 +171,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
         myexpense = self.get_object()
 
-        mypayment = ExpensePayment.objects.create(
-                                  payment_date=payment_date,
-                                  payment_due=payment_due,
-                                  paid_by=paid_by,
-                                  expense=myexpense,
-                                  currency=currency,
-                                  is_paid=is_paid,
-                                  payment_amount=Decimal(payment_amount),
-                                  payment_method=payment_method,
-                                  created_by=request.user
-                                  )
+        mypayment = create_expense_payment(payment_date, payment_due, paid_by, myexpense, currency, is_paid, payment_amount, payment_method, request.user)
 
         update_expense(myexpense)
 
@@ -219,4 +193,3 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         if mycategory.created_by == request.user:
             mycategory.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
-
