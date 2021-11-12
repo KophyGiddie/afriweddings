@@ -52,13 +52,13 @@ class MasterChecklistScheduleSerializer(serializers.Serializer):
         myusers = obj.checklists.all()
 
         if is_done and is_done != '':
-            myusers = obj.checklists.filter(is_done=is_done)
+            myusers = myusers.filter(is_done=is_done)
 
         if is_essential and is_essential != '':
-            myusers = obj.checklists.filter(is_essential=is_essential)
+            myusers = myusers.filter(is_essential=is_essential)
 
         if category_id and category_id != '':
-            myusers = obj.checklists.filter(category__id=category_id)
+            myusers = myusers.filter(category__id=category_id)
 
         serializer = LimitedChecklistSerializer(instance=myusers, many=True)
         return serializer.data
