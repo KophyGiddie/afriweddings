@@ -88,6 +88,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if request.data.get('hashtag') and request.data.get('hashtag') != "":
             mywedding.hashtag = request.data.get("hashtag")
 
+        if request.data.get('venue') and request.data.get('venue') != "":
+            mywedding.venue = request.data.get("venue")
+
         if request.data.get('country') and request.data.get('country') != "":
             mywedding.country = request.data.get("country")
 
@@ -102,6 +105,12 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         if request.data.get('expected_guests') and request.data.get('expected_guests') != "":
             mywedding.expected_guests = request.data.get('expected_guests')
+
+        if request.data.get('end_time') and request.data.get('end_time') != "":
+            mywedding.end_time = request.data.get('end_time')
+
+        if request.data.get('start_time') and request.data.get('start_time') != "":
+            mywedding.start_time = request.data.get('start_time')
 
         if request.data.get('budget') and request.data.get('budget') != "":
             mywedding.budget = request.data.get('budget')
