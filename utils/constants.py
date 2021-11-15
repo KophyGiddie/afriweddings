@@ -7,9 +7,9 @@ PROFILE_PIC_DIR = 'PROFILE/' + TODAY_PATH + '/'
 WALLPOST_PIC_DIR = 'WALLPOST/' + TODAY_PATH + '/'
 
 if "LIVE" in os.environ:
-    WEB_APP_URL = 'https://afriweddings.netlify.app/'
+    WEB_APP_URL = 'https://afriweddingsweb.herokuapp.com/'
 else:
-    WEB_APP_URL = 'https://afriweddings.netlify.app/'
+    WEB_APP_URL = 'https://afriweddingsweb.herokuapp.com/'
 
 
 #DEFAULT ROLES
