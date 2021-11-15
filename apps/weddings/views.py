@@ -11,7 +11,7 @@ from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
-from apps.weddings.helpers import get_role_by_name, generate_slug, create_wedding_roles
+from apps.weddings.helpers import get_role_by_name, generate_slug, create_wedding_roles, create_wedding
 from apps.celerytasks.tasks import assign_wedding_checklists
 from django.db.models import Q
 
@@ -49,19 +49,18 @@ class WeddingViewSet(viewsets.ModelViewSet):
         partner_first_name = request.data.get('partner_first_name', None)
         partner_last_name = request.data.get('partner_last_name', None)
 
-        mywedding = Wedding.objects.create(
-                                    wedding_date=wedding_date,
-                                    expected_guests=expected_guests,
-                                    country=country,
-                                    currency=currency,
-                                    partner_role=partner_role,
-                                    partner_last_name=partner_last_name,
-                                    partner_first_name=partner_first_name,
-                                    start_time=start_time,
-                                    end_time=end_time,
-                                    budget=budget,
-                                    city=city
-                                )
+        mywedding = create_wedding(wedding_date,
+                                   expected_guests,
+                                   country,
+                                   currency,
+                                   partner_role,
+                                   partner_last_name,
+                                   start_time,
+                                   end_time,
+                                   request.user,
+                                   city,
+                                   budget,
+                                   partner_first_name)
 
         generate_slug(mywedding)
 

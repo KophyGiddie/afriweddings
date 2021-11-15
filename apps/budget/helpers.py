@@ -147,6 +147,10 @@ def create_budget_expense(name, mycategory, currency, estimated_cost, final_cost
 
 
 def create_expense_payment(payment_date, payment_due, paid_by, myexpense, currency, is_paid, payment_amount, payment_method, myuser):
+    """
+    Creates an expense payment
+
+    """
     mypayment = ExpensePayment.objects.create(
         payment_date=payment_date,
         payment_due=payment_due,
