@@ -11,7 +11,7 @@ from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
-from apps.weddings.helpers import get_role_by_name, generate_slug
+from apps.weddings.helpers import get_role_by_name, generate_slug, create_wedding_roles
 from apps.celerytasks.tasks import assign_wedding_checklists
 from django.db.models import Q
 
@@ -65,10 +65,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         generate_slug(mywedding)
 
-        WeddingRole.objects.create(role='Groom', is_default=True, wedding=mywedding)
-        WeddingRole.objects.create(role='Bride', is_default=True, wedding=mywedding)
-        WeddingRole.objects.create(role='Other', is_default=True, wedding=mywedding)
-        WeddingRole.objects.create(role='Wedding Planner', is_default=True, wedding=mywedding)
+        create_wedding_roles(mywedding)
 
         myuser = request.user
         myuser.wedding_id = mywedding.id

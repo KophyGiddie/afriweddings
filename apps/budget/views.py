@@ -22,11 +22,19 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
     queryset = BudgetCategory.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
+        """
+        Returns a list of created budget categories
+
+        """
         myqueryset = BudgetCategory.objects.filter(wedding__id=request.user.wedding_id)
         serializer = BudgetCategorySerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
+        """
+        Creates a budget category
+
+        """
         name = request.data.get('name', None)
 
         if not name:
@@ -44,6 +52,10 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
+        """
+        edits a budget category
+
+        """
         mycategory = self.get_object()
 
         if request.data.get('name') and request.data.get('name') != '':
@@ -56,12 +68,20 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True, url_path='get_expenses')
     def get_expenses(self, request, *args, **kwargs):
+        """
+        returns a list of expenses of a single category whose pk is passed in the URL
+
+        """
         mycategory = self.get_object()
         myqueryset = mycategory.budget_expense.select_related('category').all()
         serializer = BudgetExpenseSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
+        """
+        Deletes a budget category
+
+        """
         mycategory = self.get_object()
         if mycategory.created_by == request.user:
             mycategory.delete()
@@ -74,6 +94,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
     queryset = BudgetExpense.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
+        """
+        Returns a list of created budget expenses
+
+        """
         myqueryset = BudgetExpense.objects.select_related('category').filter(category__wedding__id=request.user.wedding_id)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
@@ -81,6 +105,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         return paginator.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
+        """
+        creates a budget expense and updates budget category with the details of the expense
+
+        """
         name = request.data.get('name', None)
         category_id = request.data.get('category_id', None)
         currency = get_currency(request)
@@ -112,12 +140,17 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
         myexpense = create_budget_expense(name, mycategory, currency, estimated_cost, final_cost, request.user)
 
+        # update total values of budget category
         update_budget_category(mycategory)
 
         serializer = BudgetExpenseSerializer(myexpense, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
+        """
+        Edits a budget a expense
+
+        """
         myexpense = self.get_object()
 
         if request.data.get('estimated_cost') and request.data.get('estimated_cost') != '':
@@ -131,6 +164,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
         myexpense.save()
 
+        # update total values of budget category
         update_budget_category(myexpense.category)
 
         serializer = BudgetCategorySerializer(myexpense, context={'request': request})
@@ -138,6 +172,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=True, url_path='get_expense_payments')
     def get_expense_payments(self, request, *args, **kwargs):
+        """
+        Returns expense payments create under a budget expense
+
+        """
         mycategory = self.get_object()
         myqueryset = mycategory.payments.all()
         serializer = ExpensePaymentSerializer(myqueryset, context={'request': request}, many=True)
@@ -145,6 +183,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=True, url_path='create_expense_payment')
     def create_expense_payment(self, request, *args, **kwargs):
+        """
+        creates an expense payment under a budget expense
+
+        """
         payment_date = request.data.get('payment_date', None)
         payment_due = request.data.get('payment_due', None)
         paid_by = request.data.get('paid_by', None)
@@ -173,8 +215,10 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
         mypayment = create_expense_payment(payment_date, payment_due, paid_by, myexpense, currency, is_paid, payment_amount, payment_method, request.user)
 
+        # update total values of expense
         update_expense(myexpense)
 
+        # update total values of budget category
         update_budget_category(myexpense.category)
 
         serializer = ExpensePaymentSerializer(mypayment, context={'request': request})
@@ -182,14 +226,35 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
 
     @action(methods=['delete'], detail=False, url_path='delete_expense_payments')
     def delete_expense_payment(self, request, *args, **kwargs):
+        """
+        Deletes an expense payment
+
+        """
         payment_id = request.data.get('payment_id')
         mypayment = get_expense_payment(payment_id)
+
+        myexpense = mypayment.expense
+
         if mypayment.created_by == request.user:
             mypayment.delete()
+
+        # update total values of expense
+        update_expense(myexpense)
+
+        # update total values of budget category
+        update_budget_category(myexpense.category)
+
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
-        mycategory = self.get_object()
-        if mycategory.created_by == request.user:
-            mycategory.delete()
+        """
+        Deletes a budget expense
+
+        """
+        myexpense = self.get_object()
+        budget_category = myexpense.category
+        if myexpense.created_by == request.user:
+            myexpense.delete()
+        # update total values of budget category
+        update_budget_category(budget_category)
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
