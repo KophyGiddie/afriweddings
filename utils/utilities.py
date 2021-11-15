@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from apps.weddings.models import Wedding
 from dateutil.parser._parser import ParserError
 from dateutil.parser import parse
+from django.core.exceptions import ValidationError
 
 
 def get_admin_wedding(wedding_id, request):
@@ -32,7 +33,7 @@ def get_wedding(request):
     try:
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
         return mywedding
-    except Wedding.DoesNotExist:
+    except (Wedding.DoesNotExist, ValidationError):
         return None
 
 

@@ -30,9 +30,11 @@ class WeddingViewSet(viewsets.ModelViewSet):
     queryset = Wedding.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = Wedding.objects.get(id=request.user.wedding_id)
-        serializer = WeddingSerializer(myqueryset, context={'request': request})
-        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+        myqueryset = get_wedding(request)
+        if myqueryset:
+            serializer = WeddingSerializer(myqueryset, context={'request': request})
+            return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+        return Response(error_response("You have not created a wedding yet", '168'), status=HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         wedding_date = request.data.get('wedding_date', None)

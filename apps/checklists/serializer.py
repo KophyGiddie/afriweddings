@@ -62,4 +62,3 @@ class MasterChecklistScheduleSerializer(serializers.Serializer):
 
         serializer = LimitedChecklistSerializer(instance=myusers, many=True)
         return serializer.data
-
