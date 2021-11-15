@@ -230,6 +230,10 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         mychecklist = self.get_object()
         if mychecklist.created_by == request.user:
             mychecklist.delete()
+
+        mywedding = get_wedding(request)
+        update_checklist_done(mywedding)
+
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
 
@@ -237,25 +241,12 @@ class FilterChecklist(APIView):
 
     def post(self, request, *args, **kwargs):
         schedule_id = request.data.get('schedule_id')
-        category_id = request.data.get('category_id')
-        is_essential = request.data.get('is_essential', False)
-        is_done = request.data.get('is_done', False)
         paginate = request.data.get('paginate', True)
 
         myqueryset = ChecklistSchedule.objects.prefetch_related('checklists', 'checklists__category', 'checklists__schedule').filter(wedding__id=request.user.wedding_id).order_by('priority')
 
         if schedule_id and schedule_id != '':
             myqueryset = myqueryset.filter(id=schedule_id)
-
-        # if category_id and category_id != '':
-        #     mycategory = get_checklist_category(category_id)
-        #     myqueryset = myqueryset.filter(checklists__category=mycategory)
-
-        # if is_essential and is_essential != '':
-        #     myqueryset = myqueryset.filter(checklists__is_essential=is_essential)
-
-        # if is_done and is_done != '':
-        #     myqueryset = myqueryset.filter(checklists__is_done=is_done)
 
         if paginate:
             paginator = PageNumberPagination()
