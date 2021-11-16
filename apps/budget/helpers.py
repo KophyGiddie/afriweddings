@@ -94,7 +94,7 @@ def get_budget_expense_by_name(name, mycategory):
     try:
         BudgetExpense.objects.get(name=name, category=mycategory)
         return True
-    except BudgetCategory.DoesNotExist:
+    except BudgetExpense.DoesNotExist:
         return None
 
 
