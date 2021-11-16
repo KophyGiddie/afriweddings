@@ -32,9 +32,10 @@ class InvitationViewSet(viewsets.ModelViewSet):
         last_name = request.data.get('last_name', None)
         mywedding = get_wedding(request)
 
-
-        myrole = WeddingRole.objects.get(role=user_role, wedding=mywedding)
-
+        try:
+            myrole = WeddingRole.objects.get(role=user_role, wedding=mywedding)
+        except WeddingRole.DoesNotExist:
+            return Response(error_response("Invalid Wedding Role", '123'), status=HTTP_400_BAD_REQUEST)
 
         try:
             Invitation.objects.get(email=email, wedding=Wedding.objects.get(id=request.user.wedding_id))
