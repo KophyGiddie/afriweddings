@@ -18,8 +18,16 @@ class GuestEvent(models.Model):
         blank=True
     )
     name = models.CharField(max_length=2000, blank=True, null=True)
+    num_of_guests = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='guest_event',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name_plural = 'Guest Events'
@@ -43,8 +51,16 @@ class GuestGroup(models.Model):
         blank=True
     )
     name = models.CharField(max_length=2000, blank=True, null=True)
+    num_of_guests = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='guest_group',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name_plural = 'Guest Groups'
