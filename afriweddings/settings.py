@@ -68,7 +68,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'afriweddings.urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
