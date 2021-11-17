@@ -1,7 +1,5 @@
-def success_response(message="Data returned successfully", data=None):
-    if data:
-        return {"response_code": "100", "message": message, "results": data}
-    return {"response_code": "100", "message": message}
+def success_response(message="Data returned successfully", data=[]):
+    return {"response_code": "100", "message": message, "results": data}
 
 
 def error_response(message="An error occurred", response_code='101'):
