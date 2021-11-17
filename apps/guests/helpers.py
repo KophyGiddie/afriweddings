@@ -26,7 +26,7 @@ def get_guest_group_by_name(name, wedding):
         return None
 
 
-def create_guest_event(name, mywedding, currency, myuser):
+def create_guest_event(name, mywedding, myuser):
     """
     Creates a guest event with the parameters supplied
 
@@ -40,7 +40,7 @@ def create_guest_event(name, mywedding, currency, myuser):
     return myevent
 
 
-def create_guest_group(name, mywedding, currency, myuser):
+def create_guest_group(name, mywedding, myuser):
     """
     Creates a guest group with the parameters supplied
 
