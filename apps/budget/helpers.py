@@ -12,7 +12,7 @@ def update_budget_category(mybudget):
     """
     total_final_cost = mybudget.budget_expense.all().aggregate(Sum('final_cost'))['final_cost__sum']
     total_estimated_cost = mybudget.budget_expense.all().aggregate(Sum('final_cost'))['final_cost__sum']
-    total_paid = mybudget.budget_expense.all().aggregate(Sum('final_cost'))['final_cost__sum']
+    total_paid = mybudget.budget_expense.all().aggregate(Sum('paid'))['paid__sum']
 
     if total_final_cost is None or total_final_cost == 'None':
         total_final_cost = Decimal(0)
