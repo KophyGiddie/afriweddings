@@ -42,9 +42,6 @@ class WeddingViewSet(viewsets.ModelViewSet):
         country = request.data.get('country', None)
         currency = request.data.get('currency', 'GHS')
         city = request.data.get('city', None)
-        budget = request.data.get('budget', None)
-        start_time = request.data.get('start_time', None)
-        end_time = request.data.get('end_time', None)
         partner_role = request.data.get('partner_role', None)
         partner_first_name = request.data.get('partner_first_name', None)
         partner_last_name = request.data.get('partner_last_name', None)
@@ -55,11 +52,8 @@ class WeddingViewSet(viewsets.ModelViewSet):
                                    currency,
                                    partner_role,
                                    partner_last_name,
-                                   start_time,
-                                   end_time,
                                    request.user,
                                    city,
-                                   budget,
                                    partner_first_name)
 
         # Create Default stuff
