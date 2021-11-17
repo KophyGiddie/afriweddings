@@ -38,14 +38,14 @@ class GuestEventViewSet(viewsets.ModelViewSet):
             return Response(error_response("Please provide the name value", '140'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
-        existing_category = get_guest_event_by_name(name, mywedding)
+        existing_event = get_guest_event_by_name(name, mywedding)
 
-        if existing_category:
+        if existing_event:
             return Response(error_response("An event with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        mycategory = create_guest_event(name, mywedding, request.user)
+        myevent = create_guest_event(name, mywedding, request.user)
 
-        serializer = GuestEventSerializer(mycategory, context={'request': request})
+        serializer = GuestEventSerializer(myevent, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
@@ -53,14 +53,14 @@ class GuestEventViewSet(viewsets.ModelViewSet):
         edits a guest event
 
         """
-        mycategory = self.get_object()
+        myevent = self.get_object()
 
         if request.data.get('name') and request.data.get('name') != '':
-            mycategory.name = request.data.get('name')
+            myevent.name = request.data.get('name')
 
-        mycategory.save()
+        myevent.save()
 
-        serializer = GuestEventSerializer(mycategory, context={'request': request})
+        serializer = GuestEventSerializer(myevent, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):

@@ -2,13 +2,13 @@ from apps.guests.models import GuestGroup, GuestEvent
 from django.core.exceptions import ValidationError
 
 
-def get_guest_event_by_name(name, mycategory):
+def get_guest_event_by_name(name, wedding):
     """
     Returns budget expense using the name
 
     """
     try:
-        GuestEvent.objects.get(name=name, category=mycategory)
+        GuestEvent.objects.get(name=name, wedding=wedding)
         return True
     except GuestEvent.DoesNotExist:
         return None
