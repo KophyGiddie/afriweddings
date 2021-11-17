@@ -72,7 +72,7 @@ def create_default_budget_categories(mywedding, request):
         BudgetCategory.objects.create(
             name=category,
             wedding=mywedding,
-            total_estimated_cost=Decimal(0),
+            total_estimated_cost=Decimal(1000),
             total_final_cost=Decimal(0),
             total_paid=Decimal(0),
             total_pending=Decimal(0),
