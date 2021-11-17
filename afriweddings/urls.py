@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1.0/', include('apps.budget.urls',)),
     path('api/v1.0/', include('apps.checklists.urls',)),
-    path('api/v1.0/guests/', include('apps.guests.urls',)),
+    path('api/v1.0/', include('apps.guests.urls',)),
     path('api/v1.0/', include('apps.invitations.urls',)),
     path('api/v1.0/prerequisites/', include('apps.prerequisites.urls',)),
     path('api/v1.0/rsvp/', include('apps.rsvp.urls',)),
