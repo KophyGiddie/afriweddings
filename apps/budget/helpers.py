@@ -84,7 +84,11 @@ def update_expense(myexpense):
     if total_paid is None or total_paid == 'None':
         total_paid = Decimal(0)
 
+    final_cost = myexpense.final_cost
+    pending = final_cost - total_paid
+
     myexpense.paid = total_paid
+    myexpense.pending = pending
     myexpense.save()
 
 
