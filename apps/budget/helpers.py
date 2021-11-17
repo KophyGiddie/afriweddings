@@ -23,9 +23,11 @@ def update_budget_category(mybudget):
     if total_paid is None or total_paid == 'None':
         total_paid = Decimal(0)
 
+    total_pending = total_final_cost - total_paid
     mybudget.total_final_cost = total_final_cost
     mybudget.total_estimated_cost = total_estimated_cost
     mybudget.total_paid = total_paid
+    mybudget.total_pending = total_pending
     mybudget.save()
 
 
