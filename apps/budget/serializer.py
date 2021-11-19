@@ -24,6 +24,17 @@ class BudgetExpenseSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField()
 
 
+class LimitedBudgetExpenseSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    name = serializers.CharField()
+    currency = serializers.CharField()
+    estimated_cost = serializers.DecimalField(max_digits=15, decimal_places=2)
+    final_cost = serializers.DecimalField(max_digits=15, decimal_places=2)
+    paid = serializers.DecimalField(max_digits=15, decimal_places=2)
+    pending = serializers.DecimalField(max_digits=15, decimal_places=2)
+    created_at = serializers.DateTimeField()
+
+
 class ExpensePaymentSerializer(serializers.Serializer):
     id = serializers.CharField()
     paid_by = serializers.CharField()
@@ -36,3 +47,14 @@ class ExpensePaymentSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField()
 
 
+class ExtendedExpensePaymentSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    expense = LimitedBudgetExpenseSerializer(many=False)
+    paid_by = serializers.CharField()
+    currency = serializers.CharField()
+    payment_method = serializers.CharField()
+    payment_due = serializers.CharField()
+    payment_date = serializers.CharField()
+    payment_amount = serializers.DecimalField(max_digits=15, decimal_places=2)
+    is_paid = serializers.BooleanField()
+    created_at = serializers.DateTimeField()

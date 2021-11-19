@@ -1,9 +1,10 @@
 from utils.responses import error_response, success_response
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer
+from apps.budget.serializer import BudgetCategorySerializer, BudgetExpenseSerializer, ExpensePaymentSerializer, ExtendedExpensePaymentSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
 from apps.budget.helpers import (
@@ -13,7 +14,7 @@ from apps.budget.helpers import (
     create_budget_category, create_budget_expense, create_expense_payment
 )
 from decimal import Decimal
-from apps.budget.models import BudgetCategory, BudgetExpense
+from apps.budget.models import BudgetCategory, BudgetExpense, ExpensePayment
 
 
 class BudgetCategoryViewSet(viewsets.ModelViewSet):
@@ -258,3 +259,14 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         # update total values of budget category
         update_budget_category(budget_category)
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class ExpensePayments(APIView):
+
+    def get(self, request, *args, **kwargs):
+        myqueryset = ExpensePayment.objects.select_related('expense').filter(expense__category__wedding__id=request.user.wedding_id).order_by('-created_at')
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = ExtendedExpensePaymentSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
