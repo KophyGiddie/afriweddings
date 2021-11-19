@@ -56,7 +56,19 @@ def create_guest_group(name, mywedding, myuser):
     return mygroup
 
 
-def update_guests(myevent):
+def update_group_guests(mygroup):
+    """
+    Update expenses total_paid when a payment is made
+
+    """
+    mywedding = mygroup.wedding
+
+    total_guests = mywedding.guests_invitations.filter(group=mygroup).count()
+    mygroup.num_of_guests = total_guests
+    mygroup.save()
+
+
+def update_event_guests(myevent):
     """
     Update expenses total_paid when a payment is made
 

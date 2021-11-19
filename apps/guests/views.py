@@ -134,3 +134,80 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         if myobject.created_by == request.user:
             myobject.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class GuestViewSet(viewsets.ModelViewSet):
+    model = Guest
+    serializer_class = GuestSerializer
+    queryset = Guest.objects.all().order_by('-id')
+
+    def list(self, request, *args, **kwargs):
+        """
+        Returns a list of created guest
+
+        """
+        myqueryset = Guest.objects.filter(wedding__id=request.user.wedding_id)
+        serializer = GuestSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Creates a guest
+
+        """
+        first_name = request.data.get('first_name', None)
+        last_name = request.data.get('last_name', None)
+        event_ids = request.data.get('event_ids', None)
+        group_id = request.data.get('group_id', None)
+        email = request.data.get('email', None)
+        phone = request.data.get('phone', None)
+
+        if not first_name:
+            return Response(error_response("Please provide the first name value", '140'), status=HTTP_400_BAD_REQUEST)
+
+        if not group_id:
+            return Response(error_response("Please provide a group", '140'), status=HTTP_400_BAD_REQUEST)
+
+        mywedding = get_wedding(request)
+
+        mycategory = create_guest(name, mywedding, request.user, first_name, last_name, event_ids, group_id, email, phone)
+
+        serializer = GuestSerializer(mycategory, context={'request': request})
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        """
+        edits a guest
+
+        """
+        mycategory = self.get_object()
+
+        if request.data.get('name') and request.data.get('name') != '':
+            mycategory.name = request.data.get('name')
+
+        mycategory.save()
+
+        serializer = GuestSerializer(mycategory, context={'request': request})
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+
+    @action(methods=['post'], detail=False, url_path='guests_invitations')
+    def filter_guests_invitations(self, request, *args, **kwargs):
+        """
+        Returns expense payments create under a budget expense
+
+        """
+        event_id = request.data.get('event_id', None)
+        myqueryset = GuestGroup.objects.filter(wedding__id=request.user.wedding_id)
+        serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Deletes a guest
+
+        """
+        myobject = self.get_object()
+        if myobject.created_by == request.user:
+            myobject.delete()
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
