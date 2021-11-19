@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from apps.guests.serializer import GuestGroupSerializer, GuestEventSerializer
+from apps.guests.serializer import GuestGroupSerializer, GuestEventSerializer, GuestSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
 from apps.guests.models import GuestGroup, GuestEvent, Guest
@@ -198,6 +198,18 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         """
         event_id = request.data.get('event_id', None)
+        myqueryset = GuestGroup.objects.filter(wedding__id=request.user.wedding_id)
+        serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+    @action(methods=['post'], detail=False, url_path='guests_invitations')
+    def update_guests_invitation(self, request, *args, **kwargs):
+        """
+        Update guest invitation by changing its status to confirmed or declined or pending
+
+        """
+        guest_invitation_id = request.data.get('guest_invitation_id', None)
         myqueryset = GuestGroup.objects.filter(wedding__id=request.user.wedding_id)
         serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
