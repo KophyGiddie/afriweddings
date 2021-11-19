@@ -16,7 +16,7 @@ class GuestGroupSerializer(serializers.Serializer):
     num_of_guests = serializers.IntegerField()
 
 
-class ExpenseGuestGroupSerializer(serializers.Serializer):
+class ExtendedGuestGroupSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField(source='get_name')
     num_of_guests = serializers.IntegerField()
@@ -26,4 +26,3 @@ class GuestSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     num_of_guests = serializers.IntegerField()
-    
