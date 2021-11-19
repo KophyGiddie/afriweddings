@@ -50,6 +50,11 @@ class GuestGroup(models.Model):
         null=True,
         blank=True
     )
+    is_wedding_creator = models.CharField(max_length=2000, blank=True, null=True)
+    wedding_creator_name = models.CharField(max_length=2000, blank=True, null=True)
+    wedding_partner_name = models.CharField(max_length=2000, blank=True, null=True)
+    is_partner = models.CharField(max_length=2000, blank=True, null=True)
+    full_group_name = models.CharField(max_length=2000, blank=True, null=True)
     name = models.CharField(max_length=2000, blank=True, null=True)
     num_of_guests = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -65,6 +70,9 @@ class GuestGroup(models.Model):
     class Meta:
         verbose_name_plural = 'Guest Groups'
         ordering = ('-created_at',)
+
+    def get_name(self):
+        return '%s' % (self.full_group_name)
 
     def __str__(self):
         return '%s' % (self.title)
@@ -85,11 +93,6 @@ class Guest(models.Model):
         null=True,
         blank=True
     )
-    events = models.ManyToManyField(
-        GuestEvent,
-        related_name='guests',
-        blank=True
-    )
     group = models.ForeignKey(
         GuestGroup,
         related_name='guests',
@@ -106,6 +109,7 @@ class Guest(models.Model):
     )
     has_confirmed = models.BooleanField(default=False)
     first_name = models.CharField(max_length=2000, blank=True, null=True)
+    status = models.CharField(max_length=2000, blank=True, null=True)
     last_name = models.CharField(max_length=2000, blank=True, null=True)
     age = models.CharField(max_length=2000, blank=True, null=True)
     address = models.CharField(max_length=2000, blank=True, null=True)

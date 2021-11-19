@@ -32,9 +32,13 @@ class Wedding(models.Model):
     couple_picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     currency = models.CharField(blank=True, null=True, max_length=128, default="GHS")
     country = models.CharField(blank=True, null=True, max_length=128, default="Ghana")
+    partner_accepted_invite = models.BooleanField(default=False)
     city = models.CharField(blank=True, null=True, max_length=128)
     venue = models.CharField(blank=True, max_length=1028, null=True)
     expected_guests = models.IntegerField(default=0)
+    invited_guests = models.IntegerField(default=0)
+    confirmed_guests = models.IntegerField(default=0)
+    guests_cancelled = models.IntegerField(default=0)
     checklist_completed = models.IntegerField(default=0)
     total_checklist = models.IntegerField(default=0)
     wedding_date = models.DateField(blank=True, null=True)
@@ -43,6 +47,8 @@ class Wedding(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     hashtag = models.CharField(blank=True, max_length=1028, null=True)
+    our_story = models.TextField(blank=True, max_length=9028, null=True)
+    video_url = models.CharField(max_length=200, blank=True, null=True)
     admins = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='wedding_admins',

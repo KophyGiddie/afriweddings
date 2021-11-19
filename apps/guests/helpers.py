@@ -47,6 +47,7 @@ def create_guest_group(name, mywedding, myuser):
     """
     mygroup = GuestGroup.objects.create(
         name=name,
+        full_group_name=name,
         wedding=mywedding,
         num_of_guests=0,
         created_by=myuser

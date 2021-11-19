@@ -2,6 +2,7 @@ from apps.weddings.models import WeddingRole, Wedding
 from django.core.exceptions import ValidationError
 from apps.budget.models import BudgetCategory
 from decimal import Decimal
+import random
 
 
 def get_role_by_name(role, wedding):
@@ -52,19 +53,21 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
 
 
 def create_default_budget_categories(mywedding, request):
-    categories = ["Band",
+    categories = ["Planning",
                   "Ceremony",
+                  "Reception",
+                  "Photography and Video",
                   "Music",
-                  "Invitations",
-                  "Wedding Favours",
-                  "Flowers and Decoration",
-                  "Photos and Video",
-                  "Transport",
+                  "Bride accessories",
+                  "Wedding Invitations",
+                  "Health and Beauty",
+                  "Legal processes",
                   "Jewellery",
-                  "Bridal accessories",
-                  "Groom's accessories",
-                  "Health & Beauty",
                   "Honeymoon",
+                  "Flowers and Decoration",
+                  "Gift list",
+                  "Transport",
+                  "Groom accessories",
                   "Other"
                  ]
 
@@ -72,7 +75,7 @@ def create_default_budget_categories(mywedding, request):
         BudgetCategory.objects.create(
             name=category,
             wedding=mywedding,
-            total_estimated_cost=Decimal(1000),
+            total_estimated_cost=Decimal(random.randint(500, 5000)),
             total_final_cost=Decimal(0),
             total_paid=Decimal(0),
             total_pending=Decimal(0),
