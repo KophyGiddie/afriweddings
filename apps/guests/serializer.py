@@ -26,3 +26,4 @@ class GuestSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     num_of_guests = serializers.IntegerField()
+    

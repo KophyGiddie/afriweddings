@@ -4,13 +4,14 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from apps.guests.serializer import GuestGroupSerializer, GuestEventSerializer, GuestSerializer
+from apps.guests.serializer import GuestGroupSerializer, GuestEventSerializer, GuestSerializer, ExtendedGuestGroupSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding, validate_date
 from apps.guests.models import GuestGroup, GuestEvent, Guest
 from apps.guests.helpers import (
     create_guest_event, get_guest_event_by_name,
-    create_guest_group, get_guest_group_by_name
+    create_guest_group, get_guest_group_by_name,
+    create_guest
 )
 
 
@@ -170,9 +171,9 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         mywedding = get_wedding(request)
 
-        mycategory = create_guest(name, mywedding, request.user, first_name, last_name, event_ids, group_id, email, phone)
+        myguest = create_guest(mywedding, request.user, first_name, last_name, event_ids, group_id, email, phone)
 
-        serializer = GuestSerializer(mycategory, context={'request': request})
+        serializer = GuestSerializer(myguest, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
@@ -180,28 +181,26 @@ class GuestViewSet(viewsets.ModelViewSet):
         edits a guest
 
         """
-        mycategory = self.get_object()
+        myobject = self.get_object()
 
-        if request.data.get('name') and request.data.get('name') != '':
-            mycategory.name = request.data.get('name')
+        if request.data.get('first_name') and request.data.get('first_name') != '':
+            myobject.first_name = request.data.get('first_name')
 
-        mycategory.save()
+        myobject.save()
 
-        serializer = GuestSerializer(mycategory, context={'request': request})
+        serializer = GuestSerializer(myobject, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
-
 
     @action(methods=['post'], detail=False, url_path='guests_invitations')
     def filter_guests_invitations(self, request, *args, **kwargs):
         """
-        Returns expense payments create under a budget expense
+        Returns guests invitations
 
         """
         event_id = request.data.get('event_id', None)
         myqueryset = GuestGroup.objects.filter(wedding__id=request.user.wedding_id)
         serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
-
 
     @action(methods=['post'], detail=False, url_path='guests_invitations')
     def update_guests_invitation(self, request, *args, **kwargs):
@@ -216,7 +215,7 @@ class GuestViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         """
-        Deletes a guest
+        Deletes a guest, it also deletes the guest invitation
 
         """
         myobject = self.get_object()
