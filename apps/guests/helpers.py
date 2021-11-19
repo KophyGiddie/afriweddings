@@ -92,3 +92,23 @@ def update_event_guests(myevent):
     myevent.pending_guests = mywedding.guests_invitations.filter(status='CANCELLED', event=myevent).count()
     myevent.guests_cancelled = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
     myevent.save()
+
+
+def create_guest(name, mywedding, myuser):
+    """
+    Creates a guest event with the parameters supplied
+
+    """
+    myguest = GuestEvent.objects.create(
+        name=name,
+        wedding=mywedding,
+        num_of_guests=0,
+        created_by=myuser
+    )
+
+    update_group_guests(mygroup)
+
+    update_event_guests(myevent)
+
+    return myguest
+
