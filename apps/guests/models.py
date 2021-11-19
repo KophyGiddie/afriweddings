@@ -18,7 +18,10 @@ class GuestEvent(models.Model):
         blank=True
     )
     name = models.CharField(max_length=2000, blank=True, null=True)
-    num_of_guests = models.IntegerField(default=0)
+    invited_guests = models.IntegerField(default=0)
+    confirmed_guests = models.IntegerField(default=0)
+    pending_guests = models.IntegerField(default=0)
+    guests_cancelled = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
@@ -125,3 +128,51 @@ class Guest(models.Model):
 
     def __str__(self):
         return '%s' % (self.first_name)
+
+
+class GuestInvitation(models.Model):
+    """
+    Model for Guests
+
+    # These are guests who will attend the wedding which is different from GUEST as a user type
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    wedding = models.ForeignKey(
+        Wedding,
+        related_name='guests_invitations',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    guest = models.ForeignKey(
+        Guest,
+        related_name='guests_invitations',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    group = models.ForeignKey(
+        GuestGroup,
+        related_name='guests_invitations',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='guests_invitations',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    status = models.CharField(max_length=2000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Guests Invitations'
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return '%s' % (self.status)

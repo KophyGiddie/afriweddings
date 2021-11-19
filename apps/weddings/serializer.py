@@ -16,6 +16,7 @@ class WeddingSerializer(serializers.Serializer):
     invited_guests = serializers.CharField()
     confirmed_guests = serializers.CharField()
     guests_cancelled = serializers.CharField()
+    pending_guests = serializers.CharField()
     partner_first_name = serializers.CharField()
     currency = serializers.CharField()
     public_url = serializers.CharField()

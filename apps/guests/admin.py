@@ -8,3 +8,4 @@ Register your models here to appear in Admin Backend
 admin.site.register(Guest)
 admin.site.register(GuestEvent)
 admin.site.register(GuestGroup)
+admin.site.register(GuestInvitation)

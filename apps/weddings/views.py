@@ -74,6 +74,12 @@ class WeddingViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         mywedding = self.get_object()
 
+        if request.data.get('our_story') and request.data.get('our_story') != '':
+            mywedding.our_story = request.data.get('our_story')
+
+        if request.data.get('video_url') and request.data.get('video_url') != '':
+            mywedding.video_url = request.data.get('video_url')
+ 
         if request.data.get('partner_role') and request.data.get('partner_role') != '':
             mywedding.partner_role = request.data.get('partner_role')
 

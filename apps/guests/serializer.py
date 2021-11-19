@@ -7,6 +7,8 @@ class GuestEventSerializer(serializers.Serializer):
     invited_guests = serializers.CharField()
     confirmed_guests = serializers.CharField()
     guests_cancelled = serializers.CharField()
+    guests_pending = serializers.CharField()
+
 
 class GuestGroupSerializer(serializers.Serializer):
     id = serializers.CharField()

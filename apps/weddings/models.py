@@ -38,6 +38,7 @@ class Wedding(models.Model):
     expected_guests = models.IntegerField(default=0)
     invited_guests = models.IntegerField(default=0)
     confirmed_guests = models.IntegerField(default=0)
+    pending_guests = models.IntegerField(default=0)
     guests_cancelled = models.IntegerField(default=0)
     checklist_completed = models.IntegerField(default=0)
     total_checklist = models.IntegerField(default=0)

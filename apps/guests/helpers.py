@@ -1,5 +1,6 @@
 from apps.guests.models import GuestGroup, GuestEvent
 from django.core.exceptions import ValidationError
+from django.db.models import Sum
 
 
 def get_guest_event_by_name(name, wedding):
@@ -54,3 +55,28 @@ def create_guest_group(name, mywedding, myuser):
     )
     return mygroup
 
+
+def update_guests(myevent):
+    """
+    Update expenses total_paid when a payment is made
+
+    """
+    mywedding = myevent.wedding
+
+    total_guests_invited = mywedding.guests_invitations.all().count()
+    guests_confirmed = mywedding.guests_invitations.filter(status='CONFIRMED').count()
+    guests_cancelled = mywedding.guests_invitations.filter(status='CANCELLED').count()
+    guests_pending = mywedding.guests_invitations.filter(status='PENDING').count()
+
+    mywedding.invited_guests = total_guests_invited
+    mywedding.confirmed_guests = guests_confirmed
+    mywedding.pending_guests = guests_pending
+    mywedding.guests_cancelled = guests_cancelled
+
+    mywedding.save()
+
+    myevent.invited_guests = mywedding.guests_invitations.filter(event=myevent).count()
+    myevent.confirmed_guests = mywedding.guests_invitations.filter(status='CONFIRMED', event=myevent).count()
+    myevent.pending_guests = mywedding.guests_invitations.filter(status='CANCELLED', event=myevent).count()
+    myevent.guests_cancelled = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
+    myevent.save()

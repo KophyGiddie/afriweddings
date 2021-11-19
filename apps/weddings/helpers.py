@@ -5,6 +5,14 @@ from decimal import Decimal
 import random
 
 
+def validate_slug(myslug):
+    try:
+        Wedding.objects.get(public_url=myslug)
+        return True
+    except (Wedding.DoesNotExist, ValidationError):
+        return False
+
+
 def get_role_by_name(role, wedding):
     try:
         WeddingRole.objects.get(role=role, wedding=wedding)
@@ -14,7 +22,17 @@ def get_role_by_name(role, wedding):
 
 
 def generate_slug(mywedding):
-    print ('slug')
+    first_name = mywedding.author.first_name
+    partner_name = mywedding.partner_first_name
+
+    determiner = True
+    while determiner:
+        myslug = '%s-%s%s' % (first_name, partner_name, random.randint(5, 1000))
+        myresponse = validate_slug(myslug)
+        if not myresponse:
+            determiner = False
+            mywedding.public_url = myslug
+            mywedding.save()
 
 
 def create_wedding_roles(mywedding):

@@ -14,6 +14,7 @@ class BudgetCategorySerializer(serializers.Serializer):
 
 class BudgetExpenseSerializer(serializers.Serializer):
     id = serializers.CharField()
+    category = BudgetCategorySerializer(many=False)
     name = serializers.CharField()
     currency = serializers.CharField()
     estimated_cost = serializers.DecimalField(max_digits=15, decimal_places=2)
@@ -33,3 +34,5 @@ class ExpensePaymentSerializer(serializers.Serializer):
     payment_amount = serializers.DecimalField(max_digits=15, decimal_places=2)
     is_paid = serializers.BooleanField()
     created_at = serializers.DateTimeField()
+
+
