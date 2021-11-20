@@ -4,14 +4,19 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from apps.guests.serializer import GuestGroupSerializer, GuestEventSerializer, GuestSerializer, ExtendedGuestGroupSerializer
+from apps.guests.serializer import (
+    GuestGroupSerializer, GuestEventSerializer,
+    GuestSerializer, ExtendedGuestGroupSerializer,
+    GuestInvitationSerializer
+)
 from utils.pagination import PageNumberPagination
-from utils.utilities import get_wedding, validate_date
+from utils.utilities import get_wedding
 from apps.guests.models import GuestGroup, GuestEvent, Guest
 from apps.guests.helpers import (
     create_guest_event, get_guest_event_by_name,
     create_guest_group, get_guest_group_by_name,
-    create_guest
+    create_guest, get_guest_group_by_id,
+    update_event_guests, get_guest_invitation_by_id
 )
 
 
@@ -186,6 +191,21 @@ class GuestViewSet(viewsets.ModelViewSet):
         if request.data.get('first_name') and request.data.get('first_name') != '':
             myobject.first_name = request.data.get('first_name')
 
+        if request.data.get('last_name') and request.data.get('last_name') != '':
+            myobject.last_name = request.data.get('last_name')
+
+        if request.data.get('group_id') and request.data.get('group_id') != '':
+            mywedding = get_wedding(request)
+            group = get_guest_group_by_id(request.data.get('group_id'), mywedding)
+            if group:
+                myobject.group = group
+
+        if request.data.get('email') and request.data.get('email') != '':
+            myobject.email = request.data.get('email')
+
+        if request.data.get('phone') and request.data.get('phone') != '':
+            myobject.phone = request.data.get('phone')
+
         myobject.save()
 
         serializer = GuestSerializer(myobject, context={'request': request})
@@ -197,8 +217,7 @@ class GuestViewSet(viewsets.ModelViewSet):
         Returns guests invitations
 
         """
-        event_id = request.data.get('event_id', None)
-        myqueryset = GuestGroup.objects.filter(wedding__id=request.user.wedding_id)
+        myqueryset = GuestGroup.objects.prefetch_related('guests_invitations', 'guests_invitations__event', 'guests_invitations__guest').filter(wedding__id=request.user.wedding_id)
         serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
@@ -209,8 +228,15 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         """
         guest_invitation_id = request.data.get('guest_invitation_id', None)
-        myqueryset = GuestGroup.objects.filter(wedding__id=request.user.wedding_id)
-        serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
+        status = request.data.get('status', None)
+
+        myobject = get_guest_invitation_by_id(guest_invitation_id)
+        myobject.status = status
+        myobject.save()
+
+        update_event_guests(myobject.event)
+
+        serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):

@@ -1,6 +1,29 @@
-from apps.guests.models import GuestGroup, GuestEvent
+from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
 from django.core.exceptions import ValidationError
-from django.db.models import Sum
+
+
+def get_guest_invitation_by_id(id, wedding):
+    """
+    Returns budget expense using the name
+
+    """
+    try:
+        myguestinvite = GuestInvitation.objects.get(id=id, wedding=wedding)
+        return myguestinvite
+    except (GuestInvitation.DoesNotExist, ValidationError):
+        return None
+
+
+def get_guest_event_by_id(id, wedding):
+    """
+    Returns budget expense using the name
+
+    """
+    try:
+        myguestevent = GuestEvent.objects.get(id=id, wedding=wedding)
+        return myguestevent
+    except (GuestEvent.DoesNotExist, ValidationError):
+        return None
 
 
 def get_guest_event_by_name(name, wedding):
@@ -9,9 +32,21 @@ def get_guest_event_by_name(name, wedding):
 
     """
     try:
-        GuestEvent.objects.get(name=name, wedding=wedding)
-        return True
+        myguestevent = GuestEvent.objects.get(name=name, wedding=wedding)
+        return myguestevent
     except GuestEvent.DoesNotExist:
+        return None
+
+
+def get_guest_group_by_id(myid, wedding):
+    """
+    Returns budget category using the name
+
+    """
+    try:
+        GuestGroup.objects.get(id=myid, wedding=wedding)
+        return True
+    except (GuestGroup.DoesNotExist, ValidationError):
         return None
 
 
@@ -94,21 +129,39 @@ def update_event_guests(myevent):
     myevent.save()
 
 
-def create_guest(name, mywedding, myuser):
+def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, email, phone):
     """
     Creates a guest event with the parameters supplied
 
     """
-    myguest = GuestEvent.objects.create(
-        name=name,
+    mygroup = None
+
+    if group_id and group_id != '':
+        mygroup = get_guest_group_by_id(group_id, mywedding)
+
+    myguest = Guest.objects.create(
+        first_name=first_name,
+        last_name=last_name,
         wedding=mywedding,
-        num_of_guests=0,
+        group=mygroup,
+        email=email,
+        phone=phone,
         created_by=myuser
     )
 
+    if event_ids:
+        for item in event_ids:
+            myevent = get_guest_event_by_id(item, mywedding)
+
+            GuestInvitation.objects.create(wedding=mywedding,
+                                           event=myevent,
+                                           guest=myguest,
+                                           created_by=myuser,
+                                           status='PENDING',
+                                           group=mygroup)
+
+            update_event_guests(myevent)
+
     update_group_guests(mygroup)
 
-    update_event_guests(myevent)
-
     return myguest
-

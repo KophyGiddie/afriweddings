@@ -37,7 +37,7 @@ class GuestEvent(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return '%s' % (self.title)
+        return '%s' % (self.name)
 
 
 class GuestGroup(models.Model):
@@ -53,10 +53,11 @@ class GuestGroup(models.Model):
         null=True,
         blank=True
     )
-    is_wedding_creator = models.CharField(max_length=2000, blank=True, null=True)
+    is_wedding_creator = models.BooleanField(default=False)
     wedding_creator_name = models.CharField(max_length=2000, blank=True, null=True)
     wedding_partner_name = models.CharField(max_length=2000, blank=True, null=True)
-    is_partner = models.CharField(max_length=2000, blank=True, null=True)
+    is_partner = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
     full_group_name = models.CharField(max_length=2000, blank=True, null=True)
     name = models.CharField(max_length=2000, blank=True, null=True)
     num_of_guests = models.IntegerField(default=0)
@@ -75,10 +76,18 @@ class GuestGroup(models.Model):
         ordering = ('-created_at',)
 
     def get_name(self):
-        return '%s' % (self.full_group_name)
+        myname = self.name
+
+        if self.is_partner:
+            myname = "%s's %s" % (self.wedding_partner_name, self.name)
+
+        if self.is_wedding_creator:
+            myname = "%s's %s" % (self.wedding_creator_name, self.name)
+
+        return myname
 
     def __str__(self):
-        return '%s' % (self.title)
+        return '%s' % (self.name)
 
 
 class Guest(models.Model):
@@ -110,7 +119,6 @@ class Guest(models.Model):
         null=True,
         blank=True
     )
-    has_confirmed = models.BooleanField(default=False)
     first_name = models.CharField(max_length=2000, blank=True, null=True)
     status = models.CharField(max_length=2000, blank=True, null=True)
     last_name = models.CharField(max_length=2000, blank=True, null=True)
@@ -140,6 +148,13 @@ class GuestInvitation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     wedding = models.ForeignKey(
         Wedding,
+        related_name='guests_invitations',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    event = models.ForeignKey(
+        GuestEvent,
         related_name='guests_invitations',
         on_delete=models.CASCADE,
         null=True,

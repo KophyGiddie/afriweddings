@@ -111,6 +111,7 @@ class Checklist(models.Model):
     is_default = models.BooleanField(default=False)
     is_done = models.BooleanField(default=False)
     title = models.CharField(max_length=2000, blank=True, null=True)
+    intent = models.CharField(max_length=2000, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)
     priority = models.IntegerField(default=1)

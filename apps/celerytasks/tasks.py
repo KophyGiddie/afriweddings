@@ -2,6 +2,7 @@ from celery.utils.log import get_task_logger
 from afriweddings.celery import app
 from apps.weddings.models import Wedding
 from apps.users.models import AFUser
+from apps.guests.models import GuestGroup
 from apps.checklists.models import Checklist, ChecklistCategory, ChecklistSchedule
 from apps.prerequisites.models import DefaultChecklist
 import time
@@ -57,3 +58,13 @@ def populate_wedding_checklist(schedule_identifier, author_id):
         )
     end = time.time()
     print('Time taken to run: ', end - start)
+
+
+@app.task()
+def update_guest_groups(mywedding):
+    mygroups = GuestGroup.objects.filter(is_default=True, wedding=mywedding)
+
+    for mygroup in mygroups:
+        mygroup.wedding_creator_name = mywedding.author.first_name
+        mygroup.wedding_partner_name = mywedding.partner_first_name
+        mygroup.save()

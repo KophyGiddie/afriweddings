@@ -1,4 +1,5 @@
 from apps.weddings.models import WeddingRole, Wedding
+from apps.guests.models import GuestGroup
 from django.core.exceptions import ValidationError
 from apps.budget.models import BudgetCategory
 from decimal import Decimal
@@ -100,3 +101,32 @@ def create_default_budget_categories(mywedding, request):
             currency=mywedding.currency,
             created_by=request.user
         )
+
+
+def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, request):
+    GuestGroup.objects.create(
+        name=name,
+        full_group_name=name,
+        is_partner=is_partner,
+        is_default=True,
+        is_wedding_creator=is_wedding_creator,
+        wedding_creator_name=mywedding.author.first_name,
+        wedding_partner_name=mywedding.partner_first_name,
+        wedding=mywedding,
+        created_by=request.user,
+        num_of_guests=0,
+    )
+
+
+def create_guest_groups(mywedding, request):
+    custom_create_guest_group(mywedding, 'Mutual Friends', False, False, request)
+
+    # Create Wedding Creators Groups
+    custom_create_guest_group(mywedding, 'Friends', True, False, request)
+    custom_create_guest_group(mywedding, 'Family', True, False, request)
+    custom_create_guest_group(mywedding, 'Co-Workers', True, False, request)
+
+    # Create Partner Groups
+    custom_create_guest_group(mywedding, 'Friends', False, True, request)
+    custom_create_guest_group(mywedding, 'Family', False, True, request)
+    custom_create_guest_group(mywedding, 'Co-Workers', False, True, request)
