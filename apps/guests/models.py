@@ -53,10 +53,10 @@ class GuestGroup(models.Model):
         null=True,
         blank=True
     )
-    is_wedding_creator = models.BooleanField(default=False)
+    is_wedding_author = models.BooleanField(default=False)
     wedding_creator_name = models.CharField(max_length=2000, blank=True, null=True)
     wedding_partner_name = models.CharField(max_length=2000, blank=True, null=True)
-    is_partner = models.BooleanField(default=False)
+    is_wedding_partner = models.BooleanField(default=False)
     is_default = models.BooleanField(default=False)
     full_group_name = models.CharField(max_length=2000, blank=True, null=True)
     name = models.CharField(max_length=2000, blank=True, null=True)
@@ -78,10 +78,10 @@ class GuestGroup(models.Model):
     def get_name(self):
         myname = self.name
 
-        if self.is_partner:
+        if self.is_wedding_partner:
             myname = "%s's %s" % (self.wedding_partner_name, self.name)
 
-        if self.is_wedding_creator:
+        if self.is_wedding_author:
             myname = "%s's %s" % (self.wedding_creator_name, self.name)
 
         return myname

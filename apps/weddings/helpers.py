@@ -107,9 +107,9 @@ def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, r
     GuestGroup.objects.create(
         name=name,
         full_group_name=name,
-        is_partner=is_partner,
+        is_wedding_partner=is_partner,
         is_default=True,
-        is_wedding_creator=is_wedding_creator,
+        is_wedding_author=is_wedding_creator,
         wedding_creator_name=mywedding.author.first_name,
         wedding_partner_name=mywedding.partner_first_name,
         wedding=mywedding,
