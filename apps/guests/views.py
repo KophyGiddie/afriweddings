@@ -211,7 +211,7 @@ class GuestViewSet(viewsets.ModelViewSet):
         serializer = GuestSerializer(myobject, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='guests_invitations')
+    @action(methods=['post'], detail=False, url_path='filter_guests_invitations')
     def filter_guests_invitations(self, request, *args, **kwargs):
         """
         Returns guests invitations
@@ -221,7 +221,7 @@ class GuestViewSet(viewsets.ModelViewSet):
         serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='guests_invitations')
+    @action(methods=['post'], detail=False, url_path='update_guests_invitation')
     def update_guests_invitation(self, request, *args, **kwargs):
         """
         Update guest invitation by changing its status to confirmed or declined or pending
