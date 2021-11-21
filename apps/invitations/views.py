@@ -77,7 +77,7 @@ class AcceptInvite(APIView):
             return Response(error_response("Invalid Invitation", '122'), status=HTTP_400_BAD_REQUEST)
         myinvitation.status = 'ACCEPTED'
         myinvitation.save()
-        myrole = myinvitation.user_role
+        myrole = myinvitation.invitee_role
         if myrole.role == 'Groom' or myrole.role == 'Bride':
             mywedding = myinvitation.wedding
             mywedding.partner_accepted_invite = True
