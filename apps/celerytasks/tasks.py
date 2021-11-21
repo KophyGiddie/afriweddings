@@ -61,7 +61,8 @@ def populate_wedding_checklist(schedule_identifier, author_id):
 
 
 @app.task()
-def update_guest_groups(mywedding):
+def update_guest_groups(mywedding_id):
+    mywedding = Wedding.objects.get(id=mywedding_id)
     mygroups = GuestGroup.objects.filter(is_default=True, wedding=mywedding)
 
     for mygroup in mygroups:

@@ -70,7 +70,6 @@ def create_guest_event(name, mywedding, myuser):
     myevent = GuestEvent.objects.create(
         name=name,
         wedding=mywedding,
-        num_of_guests=0,
         created_by=myuser
     )
     return myevent

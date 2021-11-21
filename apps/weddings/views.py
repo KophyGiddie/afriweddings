@@ -131,7 +131,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         mywedding.save()
 
-        update_guest_groups.delay(mywedding)
+        update_guest_groups.delay(mywedding.id)
 
         serializer = WeddingSerializer(mywedding, context={'request': request})
         return Response(success_response('Wedding Updated Successfully', serializer.data), status=HTTP_200_OK)
