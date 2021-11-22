@@ -14,13 +14,13 @@ def get_guest_invitation_by_id(id, wedding):
         return None
 
 
-def get_guest_event_by_id(id, wedding):
+def get_guest_event_by_id(myid, wedding):
     """
     Returns budget expense using the name
 
     """
     try:
-        myguestevent = GuestEvent.objects.get(id=id, wedding=wedding)
+        myguestevent = GuestEvent.objects.get(id=myid, wedding=wedding)
         return myguestevent
     except (GuestEvent.DoesNotExist, ValidationError):
         return None
@@ -159,7 +159,8 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
                                            status='PENDING',
                                            group=mygroup)
 
-            update_event_guests(myevent)
+            if myevent:
+                update_event_guests(myevent)
 
     update_group_guests(mygroup)
 
