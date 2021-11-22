@@ -44,8 +44,8 @@ def get_guest_group_by_id(myid, wedding):
 
     """
     try:
-        GuestGroup.objects.get(id=myid, wedding=wedding)
-        return True
+        mygroup = GuestGroup.objects.get(id=myid, wedding=wedding)
+        return mygroup
     except (GuestGroup.DoesNotExist, ValidationError):
         return None
 
@@ -56,8 +56,8 @@ def get_guest_group_by_name(name, wedding):
 
     """
     try:
-        GuestGroup.objects.get(name=name, wedding=wedding)
-        return True
+        mygroup = GuestGroup.objects.get(name=name, wedding=wedding)
+        return mygroup
     except GuestGroup.DoesNotExist:
         return None
 
