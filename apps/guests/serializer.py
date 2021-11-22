@@ -20,7 +20,7 @@ class GuestSerializer(serializers.Serializer):
     id = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    num_of_guests = serializers.IntegerField()
+    address = serializers.CharField()
     status = serializers.CharField()
     email = serializers.CharField()
     phone = serializers.CharField()
