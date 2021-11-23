@@ -95,6 +95,17 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         serializer = GuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
+    @action(methods=['post'], detail=False, url_path='filter_guests_invitations')
+    def get_guests(self, request, *args, **kwargs):
+        """
+        Returns guests invitations
+
+        """
+        mygroup = self.get_object()
+        myqueryset = Guest.objects.filter(wedding__id=request.user.wedding_id, group=mygroup)
+        serializer = GuestSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
     def create(self, request, *args, **kwargs):
         """
         Creates a guest group
@@ -251,3 +262,6 @@ class GuestViewSet(viewsets.ModelViewSet):
         if myobject.created_by == request.user:
             myobject.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+
