@@ -95,7 +95,7 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         serializer = GuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='filter_guests_invitations')
+    @action(methods=['get'], detail=True, url_path='get_guests')
     def get_guests(self, request, *args, **kwargs):
         """
         Returns guests invitations
