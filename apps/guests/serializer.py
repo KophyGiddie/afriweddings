@@ -37,9 +37,9 @@ class ExtendedGuestGroupSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField(source='get_name')
     num_of_guests = serializers.IntegerField()
-    guests_invitations = serializers.SerializerMethodField('get_checklists')
+    guests_invitations = serializers.SerializerMethodField('get_guests_invitations')
 
-    def guests_invitations(self, obj):
+    def get_guests_invitations(self, obj):
         category_id = self.context['request'].data.get('event_id')
 
         myusers = obj.guests_invitations.all()
