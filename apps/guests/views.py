@@ -80,8 +80,8 @@ class GuestEventViewSet(viewsets.ModelViewSet):
             myobject.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
-    @action(methods=['get'], detail=True, url_path='get_guests')
-    def get_guests(self, request, *args, **kwargs):
+    @action(methods=['get'], detail=True, url_path='get_guest_invitations')
+    def get_guest_invitations(self, request, *args, **kwargs):
         """
         Returns guests invitations
 
