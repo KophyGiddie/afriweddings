@@ -40,12 +40,12 @@ class ExtendedGuestGroupSerializer(serializers.Serializer):
     guests_invitations = serializers.SerializerMethodField('get_guests_invitations')
 
     def get_guests_invitations(self, obj):
-        category_id = self.context['request'].data.get('event_id')
+        event_id = self.context['request'].data.get('event_id')
 
         myusers = obj.guests_invitations.all()
 
-        if category_id and category_id != '':
-            myusers = myusers.filter(category__id=category_id)
+        if event_id and event_id != '':
+            myusers = myusers.filter(event__id=event_id)
 
         serializer = GuestInvitationSerializer(instance=myusers, many=True)
         return serializer.data
