@@ -217,7 +217,10 @@ class GuestViewSet(viewsets.ModelViewSet):
         Returns guests invitations
 
         """
+        group_id = request.data.get('group_id')
         myqueryset = GuestGroup.objects.prefetch_related('guests_invitations', 'guests_invitations__event', 'guests_invitations__guest').filter(wedding__id=request.user.wedding_id)
+        if group_id and group_id != '':
+            myqueryset = myqueryset.filter(id=group_id)
         serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
