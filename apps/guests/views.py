@@ -11,7 +11,7 @@ from apps.guests.serializer import (
 )
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_wedding
-from apps.guests.models import GuestGroup, GuestEvent, Guest
+from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
 from apps.guests.helpers import (
     create_guest_event, get_guest_event_by_name,
     create_guest_group, get_guest_group_by_name,
@@ -79,6 +79,17 @@ class GuestEventViewSet(viewsets.ModelViewSet):
         if myobject.created_by == request.user:
             myobject.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+    @action(methods=['get'], detail=True, url_path='get_guests')
+    def get_guests(self, request, *args, **kwargs):
+        """
+        Returns guests invitations
+
+        """
+        myevent = self.get_object()
+        myqueryset = GuestInvitation.objects.select_related('event', 'guest').filter(wedding__id=request.user.wedding_id, event=myevent)
+        serializer = GuestInvitationSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
 
 class GuestGroupViewSet(viewsets.ModelViewSet):
