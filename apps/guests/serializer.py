@@ -14,6 +14,7 @@ class GuestGroupSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField(source='get_name')
     num_of_guests = serializers.IntegerField()
+    is_default = serializers.BooleanField()
 
 
 class GuestSerializer(serializers.Serializer):
