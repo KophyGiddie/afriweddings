@@ -127,13 +127,13 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mywedding.partner_picture = request.FILES.get('partner_picture')
             mywedding.save()
 
-            compress_image.delay(mywedding.partner_picture)
+            compress_image.delay(str(mywedding.partner_picture))
 
         if request.FILES.get('couple_picture'):
             mywedding.couple_picture = request.FILES.get('couple_picture')
             mywedding.save()
 
-            compress_image.delay(mywedding.couple_picture)
+            compress_image.delay(str(mywedding.couple_picture))
 
         mywedding.save()
 

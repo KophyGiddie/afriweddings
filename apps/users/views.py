@@ -332,7 +332,7 @@ class UpdateProfilePicture(APIView):
             user.save()
             serializer = UserSerializer(user, context={'request': request})
             # compress_image_choice(user.avatar)
-            compress_image.delay(user.profile_picture)
+            compress_image.delay(str(user.profile_picture))
             return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
         except ValueError:
             return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
