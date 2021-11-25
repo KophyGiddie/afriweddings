@@ -11,6 +11,7 @@ class WeddingSerializer(serializers.Serializer):
     author = UserSerializer(many=False)
     partner = UserSerializer(many=False)
     hashtag = serializers.CharField()
+    schedule = serializers.CharField()
     our_story = serializers.CharField()
     video_url = serializers.CharField()
     invited_guests = serializers.CharField()

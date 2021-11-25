@@ -1,6 +1,6 @@
 from django.db import models
 from apps.weddings.models import Wedding
-from apps.guests.models import Guest
+from apps.guests.models import Guest, GuestEvent
 from django.conf import settings
 import uuid
 
@@ -54,6 +54,13 @@ class SeatingChart(models.Model):
     )
     guest = models.ForeignKey(
         Guest,
+        related_name='chart',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    guest_event = models.ForeignKey(
+        GuestEvent,
         related_name='chart',
         on_delete=models.CASCADE,
         null=True,

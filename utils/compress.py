@@ -1,7 +1,4 @@
-try:
-    import cStringIO
-except:
-    from io import StringIO
+from io import StringIO
 from PIL import Image as mypil
 import PIL
 from boto.s3.connection import S3Connection

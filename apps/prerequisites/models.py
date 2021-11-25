@@ -40,6 +40,23 @@ class DefaultChecklistCategory(models.Model):
         ordering = ('name',)
 
 
+class DefaultFAQ(models.Model):
+    """
+    Model for storing the default faqs
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    question = models.CharField(max_length=2000, blank=True, null=True)
+    answer = models.CharField(max_length=2000, blank=True, null=True)
+
+    def __str__(self):
+        return '%s' % (self.question)
+
+    class Meta:
+        verbose_name_plural = 'Default FAQ'
+        ordering = ('id',)
+
+
 class DefaultChecklistSchedule(models.Model):
     """
     Model for storing the default checklist schedules used in prepopulating the couples checklist

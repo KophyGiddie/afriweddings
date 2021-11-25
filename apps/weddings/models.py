@@ -23,6 +23,7 @@ class Wedding(models.Model):
     )
     partner_first_name = models.CharField(max_length=200, blank=True, null=True)
     partner_last_name = models.CharField(max_length=200, blank=True, null=True)
+    schedule = models.CharField(max_length=200, blank=True, null=True)
     partner_email = models.CharField(max_length=200, blank=True, null=True)
     partner_role = models.CharField(max_length=200, blank=True, null=True)
     public_url = models.CharField(max_length=200, blank=True, null=True)

@@ -1,6 +1,7 @@
 from celery.utils.log import get_task_logger
 from afriweddings.celery import app
 from apps.weddings.models import Wedding
+from utils.compress import start_compressing
 from apps.users.models import AFUser
 from apps.guests.models import GuestGroup
 from apps.checklists.models import Checklist, ChecklistCategory, ChecklistSchedule
@@ -69,3 +70,8 @@ def update_guest_groups(mywedding_id):
         mygroup.wedding_creator_name = mywedding.author.first_name
         mygroup.wedding_partner_name = mywedding.partner_first_name
         mygroup.save()
+
+
+@app.task()
+def compress_image(image_path):
+    start_compressing(image_path)

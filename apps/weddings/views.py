@@ -12,7 +12,7 @@ from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
 from apps.weddings.helpers import create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding, create_default_budget_categories
-from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups
+from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
 
 
@@ -125,9 +125,15 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         if request.FILES.get('partner_picture'):
             mywedding.partner_picture = request.FILES.get('partner_picture')
+            mywedding.save()
+
+            compress_image.delay(mywedding.partner_picture)
 
         if request.FILES.get('couple_picture'):
             mywedding.couple_picture = request.FILES.get('couple_picture')
+            mywedding.save()
+
+            compress_image.delay(mywedding.couple_picture)
 
         mywedding.save()
 
@@ -196,6 +202,8 @@ class WeddingViewSet(viewsets.ModelViewSet):
         mypost = WeddingMedia.objects.create(author=request.user,
                                              wedding=mywedding,
                                              image=image)
+
+        compress_image.delay(mypost.image)
 
         serializer = WeddingMediaSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Media Created Successfully', serializer.data), status=HTTP_200_OK)

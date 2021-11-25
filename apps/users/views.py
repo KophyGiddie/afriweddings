@@ -13,7 +13,7 @@ from utils.token import account_activation_token
 from django.utils import timezone
 from apps.weddings.models import WeddingTeam
 from dateutil.relativedelta import relativedelta
-from apps.celerytasks.tasks import populate_wedding_checklist
+from apps.celerytasks.tasks import populate_wedding_checklist, compress_image
 from apps.prerequisites.models import DefaultChecklistCategory, DefaultChecklistSchedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule
 
@@ -332,6 +332,7 @@ class UpdateProfilePicture(APIView):
             user.save()
             serializer = UserSerializer(user, context={'request': request})
             # compress_image_choice(user.avatar)
+            compress_image.delay(user.profile_picture)
             return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
         except ValueError:
             return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
