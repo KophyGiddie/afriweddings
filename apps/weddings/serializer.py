@@ -1,5 +1,24 @@
 from rest_framework import serializers
-from apps.users.serializer import UserSerializer
+from apps.users.serializer import LimitedUserSerializer
+
+
+class PublicWeddingSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    author = LimitedUserSerializer(many=False)
+    partner = LimitedUserSerializer(many=False)
+    hashtag = serializers.CharField()
+    schedule = serializers.CharField()
+    our_story = serializers.CharField()
+    video_url = serializers.CharField()
+    partner_first_name = serializers.CharField()
+    public_url = serializers.CharField()
+    partner_last_name = serializers.CharField()
+    venue = serializers.CharField()
+    partner_picture = serializers.URLField(source='get_partner_picture')
+    couple_picture = serializers.URLField(source='get_couple_picture')
+    wedding_date = serializers.CharField()
+    start_time = serializers.CharField()
+    end_time = serializers.CharField()
 
 
 class WeddingRoleSerializer(serializers.Serializer):
@@ -8,8 +27,8 @@ class WeddingRoleSerializer(serializers.Serializer):
 
 class WeddingSerializer(serializers.Serializer):
     id = serializers.CharField()
-    author = UserSerializer(many=False)
-    partner = UserSerializer(many=False)
+    author = LimitedUserSerializer(many=False)
+    partner = LimitedUserSerializer(many=False)
     hashtag = serializers.CharField()
     schedule = serializers.CharField()
     our_story = serializers.CharField()
@@ -21,6 +40,7 @@ class WeddingSerializer(serializers.Serializer):
     partner_first_name = serializers.CharField()
     currency = serializers.CharField()
     public_url = serializers.CharField()
+    is_public = serializers.BooleanField()
     country = serializers.CharField()
     city = serializers.CharField()
     partner_last_name = serializers.CharField()
@@ -41,7 +61,7 @@ class WeddingSerializer(serializers.Serializer):
 
 class WallPostSerializer(serializers.Serializer):
     id = serializers.CharField()
-    author = UserSerializer(many=False)
+    author = LimitedUserSerializer(many=False)
     post = serializers.CharField()
     image = serializers.URLField(source='get_image')
 

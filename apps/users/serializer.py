@@ -31,3 +31,11 @@ class UserSerializer(serializers.ModelSerializer):
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at'
                   )
+
+
+class LimitedUserSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    profile_picture = serializers.URLField(source='get_avatar_full')
+    user_role = serializers.CharField()

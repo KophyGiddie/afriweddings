@@ -2,16 +2,21 @@ from utils.responses import error_response, success_response
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.weddings.serializer import (
-    WeddingSerializer, WallPostSerializer, WeddingMediaSerializer, WeddingRoleSerializer
+    WeddingSerializer, WallPostSerializer, WeddingMediaSerializer, WeddingRoleSerializer,
+    PublicWeddingSerializer
 )
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
-from apps.weddings.helpers import create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding, create_default_budget_categories
+from apps.weddings.helpers import (
+    create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
+    create_default_budget_categories
+)
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
 
@@ -92,6 +97,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         if request.data.get('venue') and request.data.get('venue') != "":
             mywedding.venue = request.data.get("venue")
+
+        if request.data.get('is_public') and request.data.get('is_public') != "":
+            mywedding.is_public = request.data.get("is_public")
 
         if request.data.get('country') and request.data.get('country') != "":
             mywedding.country = request.data.get("country")
@@ -282,3 +290,27 @@ class WeddingRoleViewSet(viewsets.ModelViewSet):
         if myrole.created_by == request.user:
             myrole.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class SearchPublicWeddings(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        search_text = request.data.get('search_text', None)
+
+        if search_text is not None:
+            search = search_text.split(' ')
+            myqueryset = Wedding.objects.select_related('author').filter(make_public=True).order_by('-id')
+            for search_text in search:
+                myqueryset = myqueryset.filter(Q(partner_first_name__icontains=search_text)|
+                                               Q(partner_last_name__icontains=search_text)|
+                                               Q(author__last_name__icontains=search_text)|
+                                               Q(author__first_name__icontains=search_text)|
+                                               Q(public_url__icontains=search_text)|
+                                               Q(hashtag__icontains=search_text)
+                                               )
+            paginator = PageNumberPagination()
+            result_page = paginator.paginate_queryset(myqueryset, request)
+            serializer = PublicWeddingSerializer(result_page, context={'request': request}, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        return Response(error_response("Search Text is None", '160'), status=HTTP_400_BAD_REQUEST)

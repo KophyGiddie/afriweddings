@@ -44,6 +44,7 @@ class Wedding(models.Model):
     checklist_completed = models.IntegerField(default=0)
     total_checklist = models.IntegerField(default=0)
     wedding_date = models.DateField(blank=True, null=True)
+    is_public = models.BooleanField(default=False)
     start_time = models.CharField(max_length=200, blank=True, null=True)
     end_time = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -73,7 +74,7 @@ class Wedding(models.Model):
 
     class Meta:
         verbose_name_plural = 'Weddings'
-        ordering = ('-created_at',)
+        ordering = ('wedding_date', )
 
     def __str__(self):
         return '%s - %s' % (self.partner_first_name, self.partner_role)
