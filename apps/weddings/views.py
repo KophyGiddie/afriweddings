@@ -203,7 +203,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
                                              wedding=mywedding,
                                              image=image)
 
-        compress_image.delay(mypost.image)
+        compress_image.delay(str(mypost.image))
 
         serializer = WeddingMediaSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Media Created Successfully', serializer.data), status=HTTP_200_OK)
