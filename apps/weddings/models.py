@@ -221,3 +221,95 @@ class WallPost(models.Model):
 
     def __str__(self):
         return '%s' % (self.post)
+
+
+class WeddingFAQ(models.Model):
+    """
+    Model for wedding page faqs
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    wedding = models.ForeignKey(
+        Wedding,
+        related_name='faqs',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    question = models.CharField(max_length=2000, blank=True, null=True)
+    answer = models.CharField(max_length=2000, blank=True, null=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='faqs',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return '%s' % (self.question)
+
+    class Meta:
+        verbose_name_plural = 'FAQs'
+        ordering = ('id',)
+
+
+class WeddingScheduleEvent(models.Model):
+    """
+    Model for wedding page schedule events
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    wedding = models.ForeignKey(
+        Wedding,
+        related_name='schedule_events',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    name = models.CharField(max_length=2000, blank=True, null=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='schedule_events',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return '%s' % (self.name)
+
+    class Meta:
+        verbose_name_plural = 'Wedding Schedule Event'
+        ordering = ('id',)
+
+
+class WeddingSchedule(models.Model):
+    """
+    Model for wedding page schedule
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey(
+        WeddingScheduleEvent,
+        related_name='wedding_schedule',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    time = models.CharField(max_length=2000, blank=True, null=True)
+    activity = models.CharField(max_length=2000, blank=True, null=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='wedding_schedule',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return '%s' % (self.activity)
+
+    class Meta:
+        verbose_name_plural = 'Wedding Schedule'
+        ordering = ('id',)

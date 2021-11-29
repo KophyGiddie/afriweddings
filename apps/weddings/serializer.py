@@ -69,3 +69,26 @@ class WallPostSerializer(serializers.Serializer):
 class WeddingMediaSerializer(serializers.Serializer):
     id = serializers.CharField()
     image = serializers.URLField(source='get_image')
+
+
+class WeddingFAQSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    question = serializers.CharField()
+    answer = serializers.CharField()
+
+
+class WeddingScheduleEventSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    name = serializers.CharField()
+
+
+class WeddingScheduleSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    time = serializers.CharField()
+    activity = serializers.CharField()
+
+
+class ExtendedWeddingScheduleEventSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    name = serializers.CharField()
+    schedule = WeddingScheduleSerializer(many=True)

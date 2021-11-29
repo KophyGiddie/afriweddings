@@ -1,4 +1,4 @@
-from apps.weddings.models import WeddingRole, Wedding
+from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
 from apps.guests.models import GuestGroup
 from django.core.exceptions import ValidationError
 from apps.budget.models import BudgetCategory
@@ -19,6 +19,30 @@ def get_role_by_name(role, wedding):
         WeddingRole.objects.get(role=role, wedding=wedding)
         return True
     except (WeddingRole.DoesNotExist, ValidationError):
+        return None
+
+
+def get_wedding_schedule_event_by_id(myid):
+    try:
+        WeddingScheduleEvent.objects.get(id=myid)
+        return True
+    except (WeddingScheduleEvent.DoesNotExist, ValidationError):
+        return None
+
+
+def get_schedule_event_by_name(name, wedding):
+    try:
+        WeddingScheduleEvent.objects.get(name=name, wedding=wedding)
+        return True
+    except (WeddingScheduleEvent.DoesNotExist, ValidationError):
+        return None
+
+
+def get_faq_by_question(question, wedding):
+    try:
+        WeddingFAQ.objects.get(question=question, wedding=wedding)
+        return True
+    except (WeddingFAQ.DoesNotExist, ValidationError):
         return None
 
 
@@ -120,7 +144,7 @@ def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, r
 
 def create_guest_groups(mywedding, request):
     custom_create_guest_group(mywedding, 'Mutual Friends', False, False, request)
-
+    custom_create_guest_group(mywedding, 'Unassigned', False, False, request)
     # Create Wedding Creators Groups
     custom_create_guest_group(mywedding, 'Friends', True, False, request)
     custom_create_guest_group(mywedding, 'Family', True, False, request)

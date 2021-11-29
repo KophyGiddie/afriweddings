@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/v1.0/', include('apps.invitations.urls',)),
     path('api/v1.0/prerequisites/', include('apps.prerequisites.urls',)),
     path('api/v1.0/rsvp/', include('apps.rsvp.urls',)),
-    path('api/v1.0/seating/', include('apps.seating.urls',)),
+    path('api/v1.0/', include('apps.seating.urls',)),
     path('api/v1.0/users/', include('apps.users.urls',)),
     path('api/v1.0/', include('apps.weddings.urls',)),
     path('', home),

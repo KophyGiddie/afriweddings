@@ -7,15 +7,19 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.weddings.serializer import (
     WeddingSerializer, WallPostSerializer, WeddingMediaSerializer, WeddingRoleSerializer,
-    PublicWeddingSerializer
+    PublicWeddingSerializer, ExtendedWeddingScheduleEventSerializer, WeddingScheduleSerializer,
+    WeddingScheduleEventSerializer, WeddingFAQSerializer
 )
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
-from apps.weddings.models import Wedding, WeddingRole, WallPost, WeddingMedia
+from apps.weddings.models import (
+    Wedding, WeddingRole, WallPost, WeddingMedia, WeddingFAQ, WeddingSchedule, WeddingScheduleEvent
+)
 from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
-    create_default_budget_categories
+    create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
+    get_wedding_schedule_event_by_id
 )
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
@@ -314,3 +318,154 @@ class SearchPublicWeddings(APIView):
             serializer = PublicWeddingSerializer(result_page, context={'request': request}, many=True)
             return paginator.get_paginated_response(serializer.data)
         return Response(error_response("Search Text is None", '160'), status=HTTP_400_BAD_REQUEST)
+
+
+class WeddingFAQViewSet(viewsets.ModelViewSet):
+    model = WeddingFAQ
+    serializer_class = WeddingFAQSerializer
+    queryset = WeddingFAQ.objects.all().order_by('-id')
+
+    def list(self, request, *args, **kwargs):
+        myqueryset = WeddingFAQ.objects.filter(wedding__id=request.user.wedding_id)
+        serializer = WeddingFAQSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        question = request.data.get('question', None)
+        answer = request.data.get('answer', None)
+
+        mywedding = get_wedding(request)
+
+        existing_question = get_faq_by_question(question, mywedding)
+
+        if existing_question:
+            return Response(error_response("This question already exist", '139'), status=HTTP_400_BAD_REQUEST)
+
+        mytable = WeddingFAQ.objects.create(
+            question=question,
+            wedding=mywedding,
+            answer=answer,
+            created_by=request.user
+        )
+
+        serializer = WeddingFAQSerializer(mytable, context={'request': request})
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        myquestion = self.get_object()
+
+        if request.data.get('question') and request.data.get('question') != '':
+            myquestion.question = request.data.get('question')
+
+        if request.data.get('answer') and request.data.get('answer') != '':
+            myquestion.answer = request.data.get('answer')
+
+        myquestion.save()
+
+        serializer = WeddingFAQSerializer(myquestion, context={'request': request})
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        myquestion = self.get_object()
+        if myquestion.created_by == request.user:
+            myquestion.delete()
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
+    model = WeddingScheduleEvent
+    serializer_class = WeddingScheduleEventSerializer
+    queryset = WeddingScheduleEvent.objects.all().order_by('-id')
+
+    def list(self, request, *args, **kwargs):
+        myqueryset = WeddingScheduleEvent.objects.prefetch_related('schedule').filter(wedding__id=request.user.wedding_id)
+        serializer = ExtendedWeddingScheduleEventSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        name = request.data.get('name', None)
+
+        mywedding = get_wedding(request)
+
+        existing_name = get_schedule_event_by_name(name, mywedding)
+
+        if existing_name:
+            return Response(error_response("This event already exist", '139'), status=HTTP_400_BAD_REQUEST)
+
+        mytable = WeddingScheduleEvent.objects.create(
+            name=name,
+            wedding=mywedding,
+            created_by=request.user
+        )
+
+        serializer = WeddingScheduleEventSerializer(mytable, context={'request': request})
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        myname = self.get_object()
+
+        if request.data.get('name') and request.data.get('name') != '':
+            myname.name = request.data.get('name')
+
+        myname.save()
+
+        serializer = WeddingScheduleEventSerializer(myname, context={'request': request})
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        myname = self.get_object()
+        if myname.created_by == request.user:
+            myname.delete()
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class WeddingScheduleViewSet(viewsets.ModelViewSet):
+    model = WeddingSchedule
+    serializer_class = WeddingScheduleSerializer
+    queryset = WeddingSchedule.objects.all().order_by('-id')
+
+    def list(self, request, *args, **kwargs):
+        myqueryset = WeddingSchedule.objects.filter(wedding__id=request.user.wedding_id)
+        serializer = WeddingScheduleSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        time = request.data.get('time', None)
+        activity = request.data.get('activity', None)
+        event_id = request.data.get('event_id', None)
+
+        myevent = get_wedding_schedule_event_by_id(event_id)
+
+        mytable = WeddingSchedule.objects.create(
+            time=time,
+            activity=activity,
+            event=myevent,
+            created_by=request.user
+        )
+
+        serializer = WeddingScheduleSerializer(mytable, context={'request': request})
+        return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        myname = self.get_object()
+
+        if request.data.get('activity') and request.data.get('activity') != '':
+            myname.activity = request.data.get('activity')
+
+        if request.data.get('time') and request.data.get('time') != '':
+            myname.time = request.data.get('time')
+
+        if request.data.get('event_id') and request.data.get('event_id') != '':
+            myevent = get_wedding_schedule_event_by_id(request.data.get('event_id'))
+            myname.event = myevent
+
+        myname.save()
+
+        serializer = WeddingScheduleSerializer(myname, context={'request': request})
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        myname = self.get_object()
+        if myname.created_by == request.user:
+            myname.delete()
+        return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
