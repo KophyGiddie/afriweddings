@@ -255,7 +255,9 @@ class GuestViewSet(viewsets.ModelViewSet):
         guest_invitation_id = request.data.get('guest_invitation_id', None)
         status = request.data.get('status', None)
 
-        myobject = get_guest_invitation_by_id(guest_invitation_id)
+        mywedding = get_wedding(request)
+
+        myobject = get_guest_invitation_by_id(guest_invitation_id, mywedding)
         myobject.status = status
         myobject.save()
 
