@@ -3,7 +3,8 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from apps.weddings.views import (
     WeddingViewSet, AllWeddings, WeddingRoleViewSet, SearchPublicWeddings,
-    WeddingFAQViewSet, WeddingScheduleEventViewSet, WeddingScheduleViewSet
+    WeddingFAQViewSet, WeddingScheduleEventViewSet, WeddingScheduleViewSet,
+    GetPublicWedding
 )
 
 router = DefaultRouter()
@@ -16,5 +17,6 @@ router.register(r'wedding_schedule', WeddingScheduleViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('all_weddings/', AllWeddings.as_view()),
+    path('get_public_wedding/', GetPublicWedding.as_view()),
     path('search_public_weddings/', SearchPublicWeddings.as_view()),
 ]

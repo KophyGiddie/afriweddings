@@ -19,7 +19,7 @@ from apps.weddings.models import (
 from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
-    get_wedding_schedule_event_by_id
+    get_wedding_schedule_event_by_id, get_wedding_by_public_url
 )
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
@@ -469,3 +469,34 @@ class WeddingScheduleViewSet(viewsets.ModelViewSet):
         if myname.created_by == request.user:
             myname.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class GetPublicWedding(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        public_url = request.data.get('public_url', None)
+
+        mywedding = get_wedding_by_public_url(public_url)
+        wedding_serializer = WeddingSerializer(mywedding, context={'request': request}, many=False)
+
+        faqs = mywedding.faqs.all()
+        faq_serializer = WeddingFAQSerializer(faqs, context={'request': request}, many=True)
+
+        wedding_media = mywedding.media.all()
+        wedding_media_serializer = WeddingMediaSerializer(wedding_media, context={'request': request}, many=True)
+
+        schedules = mywedding.schedule_events.all()
+        schedule_serializer = ExtendedWeddingScheduleEventSerializer(schedules, context={'request': request}, many=True)
+
+        return Response({
+            "response_code": "100",
+            "message": "Data Returned Successfully",
+            "results": {
+                "wedding": wedding_serializer.data,
+                "faqs": faq_serializer.data,
+                "media": wedding_media_serializer.data,
+                "schedule": schedule_serializer.data
+            }
+        }, status=HTTP_200_OK)
+

@@ -14,6 +14,14 @@ def validate_slug(myslug):
         return False
 
 
+def get_wedding_by_public_url(public_url):
+    try:
+        mywedding = Wedding.objects.get(public_url=public_url)
+        return mywedding
+    except (Wedding.DoesNotExist, ValidationError):
+        return False
+
+
 def get_role_by_name(role, wedding):
     try:
         WeddingRole.objects.get(role=role, wedding=wedding)
