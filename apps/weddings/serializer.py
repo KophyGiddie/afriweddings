@@ -19,6 +19,7 @@ class PublicWeddingSerializer(serializers.Serializer):
     wedding_date = serializers.CharField()
     start_time = serializers.CharField()
     end_time = serializers.CharField()
+    is_public = serializers.BooleanField()
 
 
 class WeddingRoleSerializer(serializers.Serializer):
