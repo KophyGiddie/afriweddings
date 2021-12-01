@@ -304,7 +304,7 @@ class SearchPublicWeddings(APIView):
 
         if search_text is not None:
             search = search_text.split(' ')
-            myqueryset = Wedding.objects.select_related('author').filter(make_public=True).order_by('-id')
+            myqueryset = Wedding.objects.select_related('author').filter(is_public=True).order_by('-id')
             for search_text in search:
                 myqueryset = myqueryset.filter(Q(partner_first_name__icontains=search_text)|
                                                Q(partner_last_name__icontains=search_text)|
