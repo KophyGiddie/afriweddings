@@ -478,6 +478,8 @@ class GetPublicWedding(APIView):
         public_url = request.data.get('public_url', None)
 
         mywedding = get_wedding_by_public_url(public_url)
+        if not mywedding:
+            return Response(error_response("There is no wedding that matches your keyword", '139'), status=HTTP_400_BAD_REQUEST)
         wedding_serializer = WeddingSerializer(mywedding, context={'request': request}, many=False)
 
         faqs = mywedding.faqs.all()
