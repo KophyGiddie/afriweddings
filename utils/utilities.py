@@ -57,7 +57,7 @@ def send_invitation_email(myinvitation, first_name):
     context = {
         'title': title,
         'first_name': first_name,
-        'first_name': myinvitation.invited_by.first_name,
+        'inviter_first_name': myinvitation.invited_by.first_name,
         'user_role': myinvitation.invitee_role.role,
         'button_url': '%saccept-invite/%s' % (WEB_APP_URL, myinvitation.invitation_code)
     }
