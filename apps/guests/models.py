@@ -184,6 +184,7 @@ class GuestInvitation(models.Model):
     status = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    invite_sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Guests Invitations'

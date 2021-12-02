@@ -7,16 +7,17 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.guests.serializer import (
     GuestGroupSerializer, GuestEventSerializer,
     GuestSerializer, ExtendedGuestGroupSerializer,
-    GuestInvitationSerializer
+    GuestInvitationSerializer, PublicGuestInvitationSerializer
 )
-from utils.pagination import PageNumberPagination
-from utils.utilities import get_wedding
+from rest_framework.permissions import AllowAny
+from utils.utilities import get_wedding, send_online_invitation_email
 from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
 from apps.guests.helpers import (
     create_guest_event, get_guest_event_by_name,
     create_guest_group, get_guest_group_by_name,
     create_guest, get_guest_group_by_id,
-    update_event_guests, get_guest_invitation_by_id
+    update_event_guests, get_guest_invitation_by_id,
+    get_guest_public_invitation_by_id
 )
 
 
@@ -266,6 +267,25 @@ class GuestViewSet(viewsets.ModelViewSet):
         serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
+    @action(methods=['post'], detail=False, url_path='send_online_invitation')
+    def send_online_invitation(self, request, *args, **kwargs):
+        """
+        Update guest invitation by changing its status to confirmed or declined or pending
+
+        """
+        guest_invitation_id = request.data.get('guest_invitation_id', None)
+        mywedding = get_wedding(request)
+
+        myobject = get_guest_invitation_by_id(guest_invitation_id, mywedding)
+
+        if not myobject.guest.email:
+            return Response(error_response("This guest does not have an email address", '140'), status=HTTP_400_BAD_REQUEST)
+
+        send_online_invitation_email(guest_invitation_id, myobject.guest.first_name, mywedding.author.first_name, mywedding.wedding_date, mywedding.partner_first_name, myobject.guest.email)
+
+        serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        return Response(success_response('Invitation has been snet', serializer.data), status=HTTP_200_OK)
+
     def destroy(self, request, *args, **kwargs):
         """
         Deletes a guest, it also deletes the guest invitation
@@ -277,4 +297,28 @@ class GuestViewSet(viewsets.ModelViewSet):
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
 
+class FetchPublicInvitationDetail(APIView):
+    permission_classes = (AllowAny, )
 
+    def post(self, request, *args, **kwargs):
+        guest_invitation_id = request.data.get('guest_invitation_id', None)
+        myobject = get_guest_public_invitation_by_id(guest_invitation_id)
+        serializer = PublicGuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class UpdateOnlineGuestInvitation(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        guest_invitation_id = request.data.get('guest_invitation_id', None)
+        status = request.data.get('status', None)
+
+        myobject = get_guest_public_invitation_by_id(guest_invitation_id)
+        myobject.status = status
+        myobject.save()
+
+        update_event_guests(myobject.event)
+
+        serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)

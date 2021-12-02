@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from apps.weddings.serializer import PublicWeddingSerializer
 
 
 class GuestEventSerializer(serializers.Serializer):
@@ -32,6 +33,17 @@ class GuestInvitationSerializer(serializers.Serializer):
     guest = GuestSerializer(many=False)
     status = serializers.CharField()
     created_at = serializers.DateTimeField()
+    invite_sent = serializers.BooleanField()
+
+
+class PublicGuestInvitationSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    event = GuestEventSerializer(many=False)
+    guest = GuestSerializer(many=False)
+    status = serializers.CharField()
+    created_at = serializers.DateTimeField()
+    invite_sent = serializers.BooleanField()
+    wedding = PublicWeddingSerializer(many=False)
 
 
 class ExtendedGuestGroupSerializer(serializers.Serializer):

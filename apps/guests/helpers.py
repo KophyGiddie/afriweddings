@@ -2,13 +2,25 @@ from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
 from django.core.exceptions import ValidationError
 
 
-def get_guest_invitation_by_id(id, wedding):
+def get_guest_public_invitation_by_id(myid):
     """
     Returns budget expense using the name
 
     """
     try:
-        myguestinvite = GuestInvitation.objects.get(id=id, wedding=wedding)
+        myguestinvite = GuestInvitation.objects.get(id=myid)
+        return myguestinvite
+    except (GuestInvitation.DoesNotExist, ValidationError):
+        return None
+
+
+def get_guest_invitation_by_id(myid, wedding):
+    """
+    Returns budget expense using the name
+
+    """
+    try:
+        myguestinvite = GuestInvitation.objects.get(id=myid, wedding=wedding)
         return myguestinvite
     except (GuestInvitation.DoesNotExist, ValidationError):
         return None

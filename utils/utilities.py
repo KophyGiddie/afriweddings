@@ -52,6 +52,7 @@ def hash_string(mystring):
     return hashed
 
 
+# this invitation invites wedding team et al to the platform
 def send_invitation_email(myinvitation, first_name):
     title = 'Afriweddings Invitations'
     context = {
@@ -63,6 +64,21 @@ def send_invitation_email(myinvitation, first_name):
     }
     msg_html = render_to_string('email_templates/invitation_email.html', context)
     sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), myinvitation.email)
+
+
+# this invite takes guest to website to RSVP
+def send_online_invitation_email(token, first_name, invited_by, wedding_date, partner_first_name, email):
+    title = 'Afriweddings Invitations'
+    context = {
+        'title': title,
+        'wedding_date': wedding_date,
+        'first_name': first_name,
+        'inviter_first_name': invited_by,
+        'partner_first_name': partner_first_name,
+        'button_url': '%sguest-invitation/%s' % (WEB_APP_URL, token)
+    }
+    msg_html = render_to_string('email_templates/online_invitation.html', context)
+    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
 
 
 def send_activation_email(myuser, token, title):
