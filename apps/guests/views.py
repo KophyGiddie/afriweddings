@@ -301,7 +301,7 @@ class FetchPublicInvitationDetail(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request, *args, **kwargs):
-        guest_invitation_id = request.data.get('guest_invitation_id', None)
+        guest_invitation_id = request.data.get('token', None)
         myobject = get_guest_public_invitation_by_id(guest_invitation_id)
         serializer = PublicGuestInvitationSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
