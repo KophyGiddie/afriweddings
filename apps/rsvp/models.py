@@ -1,6 +1,6 @@
 from django.db import models
 from apps.weddings.models import Wedding
-from apps.guests.models import Guest
+from apps.guests.models import Guest, GuestInvitation
 import uuid
 
 
@@ -45,6 +45,13 @@ class RSVP(models.Model):
     )
     guest = models.ForeignKey(
         Guest,
+        related_name='rsvp',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    guest_invitation = models.ForeignKey(
+        GuestInvitation,
         related_name='rsvp',
         on_delete=models.CASCADE,
         null=True,

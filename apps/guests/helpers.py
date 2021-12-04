@@ -147,8 +147,8 @@ def update_event_guests(myevent):
 
     myevent.invited_guests = mywedding.guests_invitations.filter(event=myevent).count()
     myevent.confirmed_guests = mywedding.guests_invitations.filter(status='CONFIRMED', event=myevent).count()
-    myevent.pending_guests = mywedding.guests_invitations.filter(status='CANCELLED', event=myevent).count()
-    myevent.guests_cancelled = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
+    myevent.pending_guests = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
+    myevent.guests_cancelled = mywedding.guests_invitations.filter(status='CANCELLED', event=myevent).count()
     myevent.save()
 
 
