@@ -268,6 +268,8 @@ class WeddingScheduleEvent(models.Model):
         blank=True
     )
     name = models.CharField(max_length=2000, blank=True, null=True)
+    venue = models.CharField(max_length=2000, blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='schedule_events',

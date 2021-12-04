@@ -81,6 +81,8 @@ class WeddingFAQSerializer(serializers.Serializer):
 class WeddingScheduleEventSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
+    venue = serializers.CharField()
+    date = serializers.CharField()
 
 
 class WeddingScheduleSerializer(serializers.Serializer):
@@ -92,4 +94,6 @@ class WeddingScheduleSerializer(serializers.Serializer):
 class ExtendedWeddingScheduleEventSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
+    venue = serializers.CharField()
+    date = serializers.CharField()
     wedding_schedule = WeddingScheduleSerializer(many=True)

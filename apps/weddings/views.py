@@ -384,6 +384,8 @@ class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         name = request.data.get('name', None)
+        venue = request.data.get('venue', None)
+        date = request.data.get('date', None)
 
         mywedding = get_wedding(request)
 
@@ -394,6 +396,8 @@ class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
 
         mytable = WeddingScheduleEvent.objects.create(
             name=name,
+            venue=venue,
+            date=date,
             wedding=mywedding,
             created_by=request.user
         )
@@ -406,6 +410,12 @@ class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
 
         if request.data.get('name') and request.data.get('name') != '':
             myname.name = request.data.get('name')
+
+        if request.data.get('venue') and request.data.get('venue') != '':
+            myname.venue = request.data.get('venue')
+
+        if request.data.get('date') and request.data.get('date') != '':
+            myname.date = request.data.get('date')
 
         myname.save()
 
@@ -425,7 +435,7 @@ class WeddingScheduleViewSet(viewsets.ModelViewSet):
     queryset = WeddingSchedule.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = WeddingSchedule.objects.filter(wedding__id=request.user.wedding_id)
+        myqueryset = WeddingSchedule.objects.filter(event__wedding__id=request.user.wedding_id)
         serializer = WeddingScheduleSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
