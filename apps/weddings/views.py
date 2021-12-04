@@ -378,7 +378,7 @@ class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
     queryset = WeddingScheduleEvent.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = WeddingScheduleEvent.objects.prefetch_related('schedule').filter(wedding__id=request.user.wedding_id)
+        myqueryset = WeddingScheduleEvent.objects.prefetch_related('schedule_events').filter(wedding__id=request.user.wedding_id)
         serializer = ExtendedWeddingScheduleEventSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
