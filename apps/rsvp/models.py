@@ -2,6 +2,7 @@ from django.db import models
 from apps.weddings.models import Wedding
 from apps.guests.models import Guest, GuestInvitation
 import uuid
+from django.conf import settings
 
 
 class RSVPQuestion(models.Model):
@@ -21,6 +22,14 @@ class RSVPQuestion(models.Model):
     question_type = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='guest_event',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
 
     class Meta:
         verbose_name_plural = 'RSVP Question'
