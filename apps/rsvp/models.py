@@ -24,7 +24,7 @@ class RSVPQuestion(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='guest_event',
+        related_name='rsvp_question',
         on_delete=models.CASCADE,
         null=True,
         blank=True

@@ -11,7 +11,7 @@ from apps.rsvp.serializer import (
 from rest_framework.permissions import AllowAny
 from utils.utilities import get_wedding
 from apps.rsvp.models import RSVPQuestion
-from apps.helpers.models import get_rsvp_question_name, create_rsvp_question
+from apps.rsvp.helpers import get_rsvp_question_name, create_rsvp_question
 # Create your views here.
 
 class RSVPQuestionViewSet(viewsets.ModelViewSet):
