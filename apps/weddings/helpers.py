@@ -32,24 +32,24 @@ def get_role_by_name(role, wedding):
 
 def get_wedding_schedule_event_by_id(myid):
     try:
-        WeddingScheduleEvent.objects.get(id=myid)
-        return True
+        myevent = WeddingScheduleEvent.objects.get(id=myid)
+        return myevent
     except (WeddingScheduleEvent.DoesNotExist, ValidationError):
         return None
 
 
 def get_schedule_event_by_name(name, wedding):
     try:
-        WeddingScheduleEvent.objects.get(name=name, wedding=wedding)
-        return True
+        myevent = WeddingScheduleEvent.objects.get(name=name, wedding=wedding)
+        return myevent
     except (WeddingScheduleEvent.DoesNotExist, ValidationError):
         return None
 
 
 def get_faq_by_question(question, wedding):
     try:
-        WeddingFAQ.objects.get(question=question, wedding=wedding)
-        return True
+        myfaq = WeddingFAQ.objects.get(question=question, wedding=wedding)
+        return myfaq
     except (WeddingFAQ.DoesNotExist, ValidationError):
         return None
 
