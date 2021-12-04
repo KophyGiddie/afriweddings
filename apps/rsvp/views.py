@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from utils.responses import error_response, success_response
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -13,6 +12,7 @@ from utils.utilities import get_wedding
 from apps.rsvp.models import RSVPQuestion
 from apps.rsvp.helpers import get_rsvp_question_name, create_rsvp_question
 # Create your views here.
+
 
 class RSVPQuestionViewSet(viewsets.ModelViewSet):
     model = RSVPQuestion
