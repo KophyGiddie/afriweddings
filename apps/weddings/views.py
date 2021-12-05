@@ -10,6 +10,7 @@ from apps.weddings.serializer import (
     PublicWeddingSerializer, ExtendedWeddingScheduleEventSerializer, WeddingScheduleSerializer,
     WeddingScheduleEventSerializer, WeddingFAQSerializer
 )
+from apps.rsvp.serializer import RSVPQuestionSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
@@ -102,8 +103,8 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if request.data.get('venue') and request.data.get('venue') != "":
             mywedding.venue = request.data.get("venue")
 
-        if request.data.get('is_public') and request.data.get('is_public') != "":
-            mywedding.is_public = request.data.get("is_public")
+        if request.data.get("is_public") != '' and request.data.get("is_public") is not None:
+            mywedding.is_public = request.data.get("is_public", False)
 
         if request.data.get('country') and request.data.get('country') != "":
             mywedding.country = request.data.get("country")
@@ -502,8 +503,7 @@ class GetPublicWedding(APIView):
         schedule_serializer = ExtendedWeddingScheduleEventSerializer(schedules, context={'request': request}, many=True)
 
         rsvp_question = mywedding.rsvp.all()
-        rsvp_question_serializer = ExtendedWeddingScheduleEventSerializer(schedules, context={'request': request}, many=True)
-
+        rsvp_question_serializer = RSVPQuestionSerializer(rsvp_question, context={'request': request}, many=True)
 
         return Response({
             "response_code": "100",
