@@ -501,12 +501,17 @@ class GetPublicWedding(APIView):
         schedules = mywedding.schedule_events.all()
         schedule_serializer = ExtendedWeddingScheduleEventSerializer(schedules, context={'request': request}, many=True)
 
+        rsvp_question = mywedding.rsvp.all()
+        schedule_serializer = ExtendedWeddingScheduleEventSerializer(schedules, context={'request': request}, many=True)
+
+
         return Response({
             "response_code": "100",
             "message": "Data Returned Successfully",
             "results": {
                 "wedding": wedding_serializer.data,
                 "faqs": faq_serializer.data,
+                'rsvp_question': 
                 "media": wedding_media_serializer.data,
                 "schedule": schedule_serializer.data
             }
