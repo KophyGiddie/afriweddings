@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from apps.utils.utilities import generate_image_upload_prefix
+from utils.utilities import generate_image_upload_prefix
 
 TODAY = datetime.now()
 TODAY_PATH = TODAY.strftime("%Y/%m/%d/%H/%M/%S")
