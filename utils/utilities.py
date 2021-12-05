@@ -37,15 +37,6 @@ def get_wedding(request):
         return None
 
 
-def generate_image_upload_prefix():
-    CHARSET = '0123456789BCDFGHJKLMNPQRSTbcdfghjklmnpqrstvw'
-    LENGTH = 16
-    new_code = ''
-    for i in range(LENGTH):
-        new_code += CHARSET[randrange(0, len(CHARSET))]
-    return new_code
-
-
 def generate_invitation_code():
     CHARSET = '0123456789BCDFGHJKLMNPQRSTbcdfghjklmnpqrstvw-'
     LENGTH = 32

@@ -1,6 +1,16 @@
 from datetime import datetime
 import os
-from utils.utilities import generate_image_upload_prefix
+from random import randrange
+
+
+def generate_image_upload_prefix():
+    CHARSET = '0123456789BCDFGHJKLMNPQRSTbcdfghjklmnpqrstvw'
+    LENGTH = 16
+    new_code = ''
+    for i in range(LENGTH):
+        new_code += CHARSET[randrange(0, len(CHARSET))]
+    return new_code
+
 
 TODAY = datetime.now()
 TODAY_PATH = TODAY.strftime("%Y/%m/%d/%H/%M/%S")
