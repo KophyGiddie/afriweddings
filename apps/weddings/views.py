@@ -104,7 +104,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mywedding.venue = request.data.get("venue")
 
         if request.data.get("is_public") != '' and request.data.get("is_public") is not None:
-            mywedding.is_public = request.data.get("is_public", False)
+            mywedding.is_public = request.data.get("is_public")
 
         if request.data.get('country') and request.data.get('country') != "":
             mywedding.country = request.data.get("country")
