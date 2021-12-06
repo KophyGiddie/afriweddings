@@ -333,7 +333,7 @@ class SearchPublicGuest(APIView):
         last_name = request.data.get('last_name', None)
         public_url = request.data.get('public_url', None)
 
-        myqueryset = GuestInvitation.objects.select_related('author').filter(wedding__public_url=public_url).order_by('-id')
+        myqueryset = GuestInvitation.objects.select_related('wedding', 'event', 'guest').filter(wedding__public_url=public_url).order_by('-id')
 
         if first_name and first_name != '':
             myqueryset = myqueryset.filter(guest__first_name__icontains=first_name)
@@ -343,6 +343,6 @@ class SearchPublicGuest(APIView):
 
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
-        serializer = GuestInvitationSerializer(result_page, context={'request': request}, many=True)
+        serializer = PublicGuestInvitationSerializer(result_page, context={'request': request}, many=True)
         return paginator.get_paginated_response(serializer.data)
 
