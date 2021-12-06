@@ -50,7 +50,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                       user_role=myrole.role,
                                       email=email,
                                       wedding=get_wedding(request),
-                                      status='PENDING_ACCEPTANCE',
+                                      status='PENDING',
                                       invited_by=request.user,
                                     )
 

@@ -321,6 +321,17 @@ class SearchPublicWeddings(APIView):
         return Response(error_response("Search Text is None", '160'), status=HTTP_400_BAD_REQUEST)
 
 
+class PublicWeddings(APIView):
+    permission_classes = (AllowAny, )
+
+    def get(self, request, *args, **kwargs):
+        myqueryset = Wedding.objects.select_related('author').all().order_by('-id')
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = PublicWeddingSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+
 class WeddingFAQViewSet(viewsets.ModelViewSet):
     model = WeddingFAQ
     serializer_class = WeddingFAQSerializer
