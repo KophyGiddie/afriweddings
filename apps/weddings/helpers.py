@@ -1,9 +1,11 @@
 from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
 from apps.guests.models import GuestGroup
+from apps.prerequisites.models import DefaultRSVPQuestion
 from django.core.exceptions import ValidationError
 from apps.budget.models import BudgetCategory
 from decimal import Decimal
 import random
+from apps.rsvp.helpers import create_rsvp_question
 
 
 def validate_slug(myslug):
@@ -135,6 +137,12 @@ def create_default_budget_categories(mywedding, request):
         )
 
 
+def create_rsvp_questions(mywedding, request):
+    myquestions = DefaultRSVPQuestion.objects.all()
+    for item in myquestions:
+        create_rsvp_question(item.question, mywedding, request.user)
+
+
 def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, request):
     GuestGroup.objects.create(
         name=name,
@@ -148,6 +156,7 @@ def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, r
         created_by=request.user,
         num_of_guests=0,
     )
+    return True
 
 
 def create_guest_groups(mywedding, request):

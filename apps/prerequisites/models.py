@@ -40,6 +40,22 @@ class DefaultChecklistCategory(models.Model):
         ordering = ('name',)
 
 
+class DefaultRSVPQuestion(models.Model):
+    """
+    Model for storing the default faqs
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    question = models.CharField(max_length=2000, blank=True, null=True)
+
+    def __str__(self):
+        return '%s' % (self.question)
+
+    class Meta:
+        verbose_name_plural = 'Default RSVP Question'
+        ordering = ('id',)
+
+
 class DefaultFAQ(models.Model):
     """
     Model for storing the default faqs

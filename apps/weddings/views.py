@@ -21,7 +21,7 @@ from apps.weddings.models import (
 from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
-    get_wedding_schedule_event_by_id, get_wedding_by_public_url
+    get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions
 )
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
@@ -72,6 +72,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         create_wedding_roles(mywedding)
         create_default_budget_categories(mywedding, request)
         create_guest_groups(mywedding, request)
+        create_default_rsvp_questions(mywedding, request)
 
         myuser = request.user
         myuser.wedding_id = mywedding.id
