@@ -1,6 +1,7 @@
 from django.db import models
 from apps.weddings.models import Wedding, WeddingRole
 from django.conf import settings
+from utils import constants
 import uuid
 
 
@@ -24,6 +25,7 @@ class Invitation(models.Model):
         null=True,
         blank=True
     )
+    picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     email = models.CharField(max_length=200, blank=True, null=True)
     invitation_code = models.CharField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
@@ -46,6 +48,13 @@ class Invitation(models.Model):
     class Meta:
         verbose_name_plural = 'Invitation'
         ordering = ('-created_at',)
+
+    def get_picture(self):
+        if self.picture:
+            myimage = self.picture.url
+        else:
+            myimage = ''
+        return myimage
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)

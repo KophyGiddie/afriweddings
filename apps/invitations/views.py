@@ -10,6 +10,7 @@ from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
 from apps.weddings.models import WeddingRole, Wedding
+from rest_framework.decorators import action
 
 
 class InvitationViewSet(viewsets.ModelViewSet):
@@ -57,6 +58,21 @@ class InvitationViewSet(viewsets.ModelViewSet):
         send_invitation_email(myinvitation, first_name)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=True, url_path='get_guest_invitations')
+    def update_picture(self, request, *args, **kwargs):
+        """
+        Returns guests invitations
+
+        """
+        picture = request.FILES.get('picture')
+        myinvitation = self.get_object()
+        myinvitation.picture = picture
+        myinvitation.save()
+
+        serializer = InvitationSerializer(myinvitation, context={'request': request})
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
 
     def update(self, request, *args, **kwargs):
         return Response(error_response("Invalid Operation", '123'), status=HTTP_400_BAD_REQUEST)
