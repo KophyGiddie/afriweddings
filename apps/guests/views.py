@@ -9,6 +9,7 @@ from apps.guests.serializer import (
     GuestSerializer, ExtendedGuestGroupSerializer,
     GuestInvitationSerializer, PublicGuestInvitationSerializer
 )
+from utils.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from utils.utilities import get_wedding, send_online_invitation_email
 from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
@@ -328,22 +329,20 @@ class SearchPublicGuest(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request, *args, **kwargs):
-        search_text = request.data.get('search_text', None)
+        first_name = request.data.get('first_name', None)
+        last_name = request.data.get('last_name', None)
         public_url = request.data.get('public_url', None)
 
-        if search_text is not None:
-            search = search_text.split(' ')
-            myqueryset = Guest.objects.select_related('author').all().order_by('-id')
-            for search_text in search:
-                myqueryset = myqueryset.filter(Q(partner_first_name__icontains=search_text)|
-                                               Q(partner_last_name__icontains=search_text)|
-                                               Q(author__last_name__icontains=search_text)|
-                                               Q(author__first_name__icontains=search_text)|
-                                               Q(public_url__icontains=search_text)|
-                                               Q(hashtag__icontains=search_text)
-                                               )
-            paginator = PageNumberPagination()
-            result_page = paginator.paginate_queryset(myqueryset, request)
-            serializer = PublicWeddingSerializer(result_page, context={'request': request}, many=True)
-            return paginator.get_paginated_response(serializer.data)
-        return Response(error_response("Search Text is None", '160'), status=HTTP_400_BAD_REQUEST)
+        myqueryset = GuestInvitation.objects.select_related('author').filter(wedding__public_url=public_url).order_by('-id')
+
+        if first_name and first_name != '':
+            myqueryset = myqueryset.filter(guest__first_name__icontains=first_name)
+
+        if last_name and last_name != '':
+            myqueryset = myqueryset.filter(guest__last_name__icontains=last_name)
+
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = GuestInvitationSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
