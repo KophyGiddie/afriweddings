@@ -1,6 +1,6 @@
 from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
 from apps.guests.models import GuestGroup
-from apps.prerequisites.models import DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget
+from apps.prerequisites.models import DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist
 from django.core.exceptions import ValidationError
 from apps.budget.helpers import create_budget_category, create_budget_expense, update_budget_category
 from decimal import Decimal
@@ -108,6 +108,7 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
     except DefaultBudget.DoesNotExist:
         mybudget = Decimal(10000)
     mywedding.budget = mybudget
+    mywedding.total_checklist = DefaultChecklist.objects.all().count()
     mywedding.save()
     return mywedding
 
@@ -119,7 +120,8 @@ def create_default_budget_categories(mywedding, request):
         mycategory = create_budget_category(item.name, mywedding, mywedding.currency, request.user)
 
         # populate expense
-        myexpenses = mycategory.budget_expense.all()
+        myexpenses = item.budget_expense.all()
+        print (myexpenses)
         for element in myexpenses:
             percentage = Decimal(element.percentage) / Decimal(100)
             estimated_cost = Decimal(mywedding.budget) * percentage
