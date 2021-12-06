@@ -1,8 +1,8 @@
 from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
 from apps.guests.models import GuestGroup
-from apps.prerequisites.models import DefaultRSVPQuestion
+from apps.prerequisites.models import DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget
 from django.core.exceptions import ValidationError
-from apps.budget.models import BudgetCategory
+from apps.budget.helpers import create_budget_category, create_budget_expense, update_budget_category
 from decimal import Decimal
 import random
 from apps.rsvp.helpers import create_rsvp_question
@@ -102,39 +102,30 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
         author=myuser,
         city=city
     )
+    try:
+        mybudget_object = DefaultBudget.objects.get(country=country)
+        mybudget = mybudget_object.total_budget
+    except DefaultBudget.DoesNotExist:
+        mybudget = Decimal(10000)
+    mywedding.budget = mybudget
+    mywedding.save()
     return mywedding
 
 
 def create_default_budget_categories(mywedding, request):
-    categories = ["Planning",
-                  "Ceremony",
-                  "Reception",
-                  "Photography and Video",
-                  "Music",
-                  "Bride accessories",
-                  "Wedding Invitations",
-                  "Health and Beauty",
-                  "Legal processes",
-                  "Jewellery",
-                  "Honeymoon",
-                  "Flowers and Decoration",
-                  "Gift list",
-                  "Transport",
-                  "Groom accessories",
-                  "Other"
-                 ]
+    categories = DefaultBudgetCategory.objects.all()
 
-    for category in categories:
-        BudgetCategory.objects.create(
-            name=category,
-            wedding=mywedding,
-            total_estimated_cost=Decimal(random.randint(500, 5000)),
-            total_final_cost=Decimal(0),
-            total_paid=Decimal(0),
-            total_pending=Decimal(0),
-            currency=mywedding.currency,
-            created_by=request.user
-        )
+    for item in categories:
+        mycategory = create_budget_category(item.name, mywedding, mywedding.currency, request.user)
+
+        # populate expense
+        myexpenses = mycategory.budget_expense.all()
+        for element in myexpenses:
+            percentage = Decimal(element.percentage) / Decimal(100)
+            estimated_cost = Decimal(mywedding.budget) * percentage
+            create_budget_expense(element.name, mycategory, mywedding.currency, estimated_cost, 0, request.user)
+
+        update_budget_category(mycategory)
 
 
 def create_default_rsvp_questions(mywedding, request):
