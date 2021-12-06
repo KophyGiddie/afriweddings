@@ -30,7 +30,6 @@ class RSVPQuestion(models.Model):
         blank=True
     )
 
-
     class Meta:
         verbose_name_plural = 'RSVP Question'
         ordering = ('-created_at',)

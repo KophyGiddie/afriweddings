@@ -9,6 +9,7 @@ from apps.guests.serializer import (
     GuestSerializer, ExtendedGuestGroupSerializer,
     GuestInvitationSerializer, PublicGuestInvitationSerializer
 )
+from apps.rsvp.serializer import RSVPSerializer
 from utils.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from utils.utilities import get_wedding, send_online_invitation_email
@@ -266,6 +267,15 @@ class GuestViewSet(viewsets.ModelViewSet):
         update_event_guests(myobject.event)
 
         serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='get_rsvps')
+    def get_rsvps(self, request, *args, **kwargs):
+        guest_invitation_id = request.data.get('guest_invitation_id', None)
+        mywedding = get_wedding(request)
+        myobject = get_guest_invitation_by_id(guest_invitation_id, mywedding)
+        myqueryset = myobject.rsvp.select_related('rsvp_question').all()
+        serializer = RSVPSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
     @action(methods=['post'], detail=False, url_path='send_online_invitation')

@@ -73,7 +73,6 @@ class InvitationViewSet(viewsets.ModelViewSet):
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-
     def update(self, request, *args, **kwargs):
         return Response(error_response("Invalid Operation", '123'), status=HTTP_400_BAD_REQUEST)
 
