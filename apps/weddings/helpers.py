@@ -137,7 +137,7 @@ def create_default_budget_categories(mywedding, request):
         )
 
 
-def create_rsvp_questions(mywedding, request):
+def create_default_rsvp_questions(mywedding, request):
     myquestions = DefaultRSVPQuestion.objects.all()
     for item in myquestions:
         create_rsvp_question(item.question, mywedding, request.user)
