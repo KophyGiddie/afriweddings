@@ -322,3 +322,28 @@ class UpdateOnlineGuestInvitation(APIView):
 
         serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class SearchPublicGuest(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        search_text = request.data.get('search_text', None)
+        public_url = request.data.get('public_url', None)
+
+        if search_text is not None:
+            search = search_text.split(' ')
+            myqueryset = Guest.objects.select_related('author').all().order_by('-id')
+            for search_text in search:
+                myqueryset = myqueryset.filter(Q(partner_first_name__icontains=search_text)|
+                                               Q(partner_last_name__icontains=search_text)|
+                                               Q(author__last_name__icontains=search_text)|
+                                               Q(author__first_name__icontains=search_text)|
+                                               Q(public_url__icontains=search_text)|
+                                               Q(hashtag__icontains=search_text)
+                                               )
+            paginator = PageNumberPagination()
+            result_page = paginator.paginate_queryset(myqueryset, request)
+            serializer = PublicWeddingSerializer(result_page, context={'request': request}, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        return Response(error_response("Search Text is None", '160'), status=HTTP_400_BAD_REQUEST)
