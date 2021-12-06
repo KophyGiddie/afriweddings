@@ -40,6 +40,23 @@ class DefaultChecklistCategory(models.Model):
         ordering = ('name',)
 
 
+class DefaultBudget(models.Model):
+    """
+    Model for storing the default faqs
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    country = models.CharField(max_length=2000, blank=True, null=True)
+    total_budget = models.DecimalField(max_digits=9, decimal_places=2, default='5000')
+
+    def __str__(self):
+        return '%s' % (self.country)
+
+    class Meta:
+        verbose_name_plural = 'Default Budget'
+        ordering = ('id',)
+
+
 class DefaultRSVPQuestion(models.Model):
     """
     Model for storing the default faqs
@@ -70,6 +87,46 @@ class DefaultFAQ(models.Model):
 
     class Meta:
         verbose_name_plural = 'Default FAQ'
+        ordering = ('id',)
+
+
+class DefaultBudgetCategory(models.Model):
+    """
+    Model for storing the default faqs
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=2000, blank=True, null=True)
+
+    def __str__(self):
+        return '%s' % (self.name)
+
+    class Meta:
+        verbose_name_plural = 'Default Budget Category'
+        ordering = ('id',)
+
+
+class DefaultBudgetExpense(models.Model):
+    """
+    Model for storing the default faqs
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=2000, blank=True, null=True)
+    percentage = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
+    category = models.ForeignKey(
+        DefaultBudgetCategory,
+        related_name='budget_expense',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return '%s' % (self.name)
+
+    class Meta:
+        verbose_name_plural = 'Default Budget Expense'
         ordering = ('id',)
 
 
