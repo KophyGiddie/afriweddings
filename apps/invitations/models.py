@@ -29,6 +29,7 @@ class Invitation(models.Model):
     email = models.CharField(max_length=200, blank=True, null=True)
     invitation_code = models.CharField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
+    description = models.CharField(max_length=1000, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
     user_role = models.CharField(max_length=200, blank=True, null=True)
     user_type = models.CharField(max_length=200, blank=True, null=True)

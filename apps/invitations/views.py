@@ -65,23 +65,31 @@ class InvitationViewSet(viewsets.ModelViewSet):
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='update_picture')
-    def update_picture(self, request, *args, **kwargs):
+    @action(methods=['post'], detail=True, url_path='update_details')
+    def update_details(self, request, *args, **kwargs):
         """
         Returns guests invitations
 
         """
         picture = request.FILES.get('picture')
+        description = request.data.get('description')
         myinvitation = self.get_object()
-        myinvitation.picture = picture
-        myinvitation.save()
 
         try:
             myteam = WeddingTeam.objects.get(email=myinvitation.email)
-            myteam.picture = picture
-            myteam.save()
         except WeddingTeam.DoesNotExist:
             pass
+
+        if picture and picture != '':
+            myinvitation.picture = picture
+            myteam.picture = picture
+
+        if description and description != '':
+            myinvitation.description = description
+            myteam.description = description
+
+        myinvitation.save()
+        myteam.save()
 
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)

@@ -153,6 +153,7 @@ class WeddingTeam(models.Model):
         null=True,
         blank=True
     )
+    description = models.CharField(max_length=1000, blank=True, null=True)
     member = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='team',
