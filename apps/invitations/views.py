@@ -65,15 +65,16 @@ class InvitationViewSet(viewsets.ModelViewSet):
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='update_details')
-    def update_details(self, request, *args, **kwargs):
+    @action(methods=['post'], detail=False, url_path='edit_details')
+    def edit_details(self, request, *args, **kwargs):
         """
         Returns guests invitations
 
         """
         mypicture = request.FILES.get('picture')
         description = request.data.get('description')
-        myinvitation = self.get_object()
+        invitation_id = request.data.get('invitation_id')
+        myinvitation = Invitation.objects.get(id=invitation_id)
 
         try:
             myteam = WeddingTeam.objects.get(email=myinvitation.email, wedding=get_wedding(request))
