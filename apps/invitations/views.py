@@ -78,15 +78,17 @@ class InvitationViewSet(viewsets.ModelViewSet):
         try:
             myteam = WeddingTeam.objects.get(email=myinvitation.email)
         except WeddingTeam.DoesNotExist:
-            pass
+            myteam = None
 
         if picture and picture != '':
             myinvitation.picture = picture
-            myteam.picture = picture
+            if myteam:
+                myteam.picture = picture
 
         if description and description != '':
             myinvitation.description = description
-            myteam.description = description
+            if myteam:
+                myteam.description = description
 
         myinvitation.save()
         myteam.save()
