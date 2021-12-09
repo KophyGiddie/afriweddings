@@ -339,17 +339,21 @@ class SearchPublicGuest(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request, *args, **kwargs):
-        first_name = request.data.get('first_name', None)
-        last_name = request.data.get('last_name', None)
-        public_url = request.data.get('public_url', None)
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        email = request.data.get('email')
+        public_url = request.data.get('public_url')
 
         myqueryset = GuestInvitation.objects.select_related('wedding', 'event', 'guest').filter(wedding__public_url=public_url).order_by('-id')
 
-        if first_name and first_name != '':
+        if first_name:
             myqueryset = myqueryset.filter(guest__first_name__icontains=first_name)
 
-        if last_name and last_name != '':
+        if last_name:
             myqueryset = myqueryset.filter(guest__last_name__icontains=last_name)
+
+        if email:
+            myqueryset = myqueryset.filter(guest__email__icontains=email)
 
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
