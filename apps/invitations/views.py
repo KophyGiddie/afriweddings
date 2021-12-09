@@ -71,19 +71,21 @@ class InvitationViewSet(viewsets.ModelViewSet):
         Returns guests invitations
 
         """
-        picture = request.FILES.get('picture')
+        mypicture = request.FILES.get('picture')
         description = request.data.get('description')
         myinvitation = self.get_object()
 
         try:
-            myteam = WeddingTeam.objects.get(email=myinvitation.email)
+            myteam = WeddingTeam.objects.get(email=myinvitation.email, wedding=get_wedding(request))
         except WeddingTeam.DoesNotExist:
             myteam = None
 
-        if picture:
-            myinvitation.picture = picture
+        if mypicture:
+            print ('one')
+            myinvitation.picture = mypicture
             if myteam:
-                myteam.picture = picture
+                print ('two')
+                myteam.picture = mypicture
 
         if description and description != '':
             myinvitation.description = description
