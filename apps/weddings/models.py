@@ -171,7 +171,7 @@ class WeddingTeam(models.Model):
         null=True,
         blank=True
     )
-    picture = models.ImageField(upload_to=constants.PROFILE_PIC_DIR,
+    picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR,
                                 blank=True,
                                 null=True,
                                 )

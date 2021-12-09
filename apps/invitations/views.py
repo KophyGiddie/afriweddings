@@ -80,7 +80,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         except WeddingTeam.DoesNotExist:
             myteam = None
 
-        if picture and picture != '':
+        if picture:
             myinvitation.picture = picture
             if myteam:
                 myteam.picture = picture
