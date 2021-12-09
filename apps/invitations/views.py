@@ -44,6 +44,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         except Invitation.DoesNotExist:
             myinvitation = Invitation.objects.create(
                                       invitation_type=invitation_type,
+                                      user_type=invitation_type,
                                       invitation_code=generate_invitation_code(),
                                       first_name=first_name,
                                       last_name=last_name,
