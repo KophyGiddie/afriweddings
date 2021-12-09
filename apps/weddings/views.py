@@ -518,7 +518,7 @@ class GetPublicWedding(APIView):
         rsvp_question = mywedding.rsvp.all()
         rsvp_question_serializer = RSVPQuestionSerializer(rsvp_question, context={'request': request}, many=True)
 
-        wedding_team = mywedding.invitation.filter(user_type='Guest')
+        wedding_team = mywedding.invitation.filter(invitation_type='Wedding Team')
         wedding_team_serializer = PublicInvitationSerializer(wedding_team, context={'request': request}, many=True)
 
         return Response({
