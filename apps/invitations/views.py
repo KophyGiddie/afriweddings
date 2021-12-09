@@ -55,7 +55,8 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                       invited_by=request.user,
                                     )
             if invitation_type == 'Wedding Team':
-                WeddingTeam.objects.create(wedding=get_wedding(request),
+                WeddingTeam.objects.create(
+                    wedding=get_wedding(request),
                     first_name=first_name,
                     last_name=last_name,
                     email=email,
@@ -87,14 +88,15 @@ class InvitationViewSet(viewsets.ModelViewSet):
             if myteam:
                 print ('two')
                 myteam.picture = mypicture
+                myteam.save()
 
         if description and description != '':
             myinvitation.description = description
             if myteam:
                 myteam.description = description
+                myteam.save()
 
         myinvitation.save()
-        myteam.save()
 
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
