@@ -9,7 +9,7 @@ from apps.invitations.serializer import InvitationSerializer
 from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
-from apps.weddings.models import WeddingRole, Wedding
+from apps.weddings.models import WeddingRole, Wedding, WeddingTeam
 from rest_framework.decorators import action
 
 
@@ -54,7 +54,13 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                       status='PENDING',
                                       invited_by=request.user,
                                     )
-
+            if invitation_type == 'Wedding Team':
+                WeddingTeam.objects.create(wedding=get_wedding(request),
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    role=myrole
+                )
         send_invitation_email(myinvitation, first_name)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
@@ -69,6 +75,13 @@ class InvitationViewSet(viewsets.ModelViewSet):
         myinvitation = self.get_object()
         myinvitation.picture = picture
         myinvitation.save()
+
+        try:
+            myteam = WeddingTeam.objects.get(email=myinvitation.email)
+            myteam.picture = picture
+            myteam.save()
+        except WeddingTeam.DoesNotExist:
+            pass
 
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
