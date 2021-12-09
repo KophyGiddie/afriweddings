@@ -65,7 +65,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path='get_guest_invitations')
+    @action(methods=['post'], detail=True, url_path='update_picture')
     def update_picture(self, request, *args, **kwargs):
         """
         Returns guests invitations
