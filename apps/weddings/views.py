@@ -21,7 +21,8 @@ from apps.weddings.models import (
 from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
-    get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions
+    get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
+    get_wedding_by_hashtag
 )
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
@@ -327,7 +328,7 @@ class PublicWeddings(APIView):
     permission_classes = (AllowAny, )
 
     def get(self, request, *args, **kwargs):
-        myqueryset = Wedding.objects.select_related('author').all().order_by('-id')
+        myqueryset = Wedding.objects.select_related('author').filter(is_public=True).order_by('-id')
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
         serializer = PublicWeddingSerializer(result_page, context={'request': request}, many=True)
@@ -534,3 +535,26 @@ class GetPublicWedding(APIView):
             }
         }, status=HTTP_200_OK)
 
+
+class ValidateWeddingPublicURL(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        public_url = request.data.get('public_url', None)
+
+        mywedding = get_wedding_by_public_url(public_url)
+        if not mywedding:
+            return Response(error_response("There is no wedding with this URL", '139'), status=HTTP_400_BAD_REQUEST)
+        return Response(success_response('A wedding exist with this public url'), status=HTTP_200_OK)
+
+
+class ValidateWeddingHashtag(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        hashtag = request.data.get('hashtag', None)
+
+        mywedding = get_wedding_by_hashtag(hashtag)
+        if not mywedding:
+            return Response(error_response("There is no wedding with this URL", '139'), status=HTTP_400_BAD_REQUEST)
+        return Response(success_response('A wedding exist with this public url'), status=HTTP_200_OK)

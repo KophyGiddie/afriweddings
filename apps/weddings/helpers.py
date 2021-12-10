@@ -24,6 +24,14 @@ def get_wedding_by_public_url(public_url):
         return False
 
 
+def get_wedding_by_hashtag(hashtag):
+    try:
+        mywedding = Wedding.objects.get(hashtag=hashtag)
+        return mywedding
+    except (Wedding.DoesNotExist, ValidationError):
+        return False
+
+
 def get_role_by_name(role, wedding):
     try:
         WeddingRole.objects.get(role=role, wedding=wedding)
