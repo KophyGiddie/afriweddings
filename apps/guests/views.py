@@ -21,6 +21,7 @@ from apps.guests.helpers import (
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id
 )
+from apps.celerytasks import send_group_invitation
 
 
 class GuestEventViewSet(viewsets.ModelViewSet):
@@ -119,6 +120,20 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         myqueryset = Guest.objects.filter(wedding__id=request.user.wedding_id, group=mygroup)
         serializer = GuestSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=True, url_path='send_group_invitation')
+    def send_group_invitation(self, request, *args, **kwargs):
+        """
+        Send Online Invitation to all members in the group
+
+        """
+        mygroup = self.get_object()
+        mywedding = get_wedding(request)
+
+        send_group_invitation.delay(mygroup.id, mywedding.id)
+
+        serializer = GuestInvitationSerializer(mygroup, context={'request': request}, many=False)
+        return Response(success_response('Invitation has been sent', serializer.data), status=HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         """
