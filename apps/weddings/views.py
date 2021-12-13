@@ -556,5 +556,5 @@ class ValidateWeddingHashtag(APIView):
 
         mywedding = get_wedding_by_hashtag(hashtag)
         if not mywedding:
-            return Response(error_response("There is no wedding with this URL", '139'), status=HTTP_400_BAD_REQUEST)
-        return Response(success_response('A wedding exist with this public url'), status=HTTP_200_OK)
+            return Response(error_response("There is no wedding with this Hashtag", '139'), status=HTTP_400_BAD_REQUEST)
+        return Response(success_response('A wedding exist with this hashtag'), status=HTTP_200_OK)
