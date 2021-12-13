@@ -66,7 +66,7 @@ class SignupUser(APIView):
                         mywedding.save()
 
                     elif myinvitation.invitation_type == 'Wedding Team':
-                        myteam = WeddingTeam.objects.get(email=email)
+                        myteam = WeddingTeam.objects.get(wedding=mywedding, email=email)
                         myteam.member = user
                         myteam.save()
 

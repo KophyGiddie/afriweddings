@@ -56,13 +56,16 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                       invited_by=request.user,
                                     )
             if invitation_type == 'Wedding Team':
-                WeddingTeam.objects.create(
-                    wedding=get_wedding(request),
-                    first_name=first_name,
-                    last_name=last_name,
-                    email=email,
-                    role=myrole
-                )
+                try:
+                    WeddingTeam.objects.get(email=email, wedding=mywedding)
+                except WeddingTeam.DoesNotExist:
+                    WeddingTeam.objects.create(
+                        wedding=get_wedding(request),
+                        first_name=first_name,
+                        last_name=last_name,
+                        email=email,
+                        role=myrole
+                    )
         send_invitation_email(myinvitation, first_name)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
