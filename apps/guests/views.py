@@ -19,7 +19,7 @@ from apps.guests.helpers import (
     create_guest_group, get_guest_group_by_name,
     create_guest, get_guest_group_by_id,
     update_event_guests, get_guest_invitation_by_id,
-    get_guest_public_invitation_by_id
+    get_guest_public_invitation_by_id, get_guest_by_id
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -130,7 +130,7 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         mygroup = self.get_object()
         mywedding = get_wedding(request)
 
-        send_group_invitation.delay(mygroup.id, mywedding.id)
+        send_group_invitation_task.delay(mygroup.id, mywedding.id)
 
         serializer = GuestInvitationSerializer(mygroup, context={'request': request}, many=False)
         return Response(success_response('Invitation has been sent', serializer.data), status=HTTP_200_OK)
@@ -299,17 +299,17 @@ class GuestViewSet(viewsets.ModelViewSet):
         Update guest invitation by changing its status to confirmed or declined or pending
 
         """
-        guest_invitation_id = request.data.get('guest_invitation_id', None)
+        guest_id = request.data.get('guest_id', None)
         mywedding = get_wedding(request)
 
-        myobject = get_guest_invitation_by_id(guest_invitation_id, mywedding)
+        myobject = get_guest_by_id(guest_id, mywedding)
 
         if not myobject.guest.email:
             return Response(error_response("This guest does not have an email address", '140'), status=HTTP_400_BAD_REQUEST)
 
-        send_online_invitation_email(guest_invitation_id, myobject.guest.first_name, mywedding.author.first_name, mywedding.wedding_date, mywedding.partner_first_name, myobject.guest.email)
+        send_online_invitation_email(guest_id, myobject.first_name, mywedding.author.first_name, mywedding.wedding_date, mywedding.partner_first_name, myobject.email)
 
-        serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        serializer = GuestSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Invitation has been snet', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
