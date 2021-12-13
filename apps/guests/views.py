@@ -305,7 +305,7 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         myobject = get_guest_by_id(guest_id, mywedding)
 
-        if not myobject.guest.email:
+        if not myobject.email:
             return Response(error_response("This guest does not have an email address", '140'), status=HTTP_400_BAD_REQUEST)
 
         send_online_invitation_email(guest_id, myobject.first_name, mywedding.author.first_name, mywedding.wedding_date, mywedding.partner_first_name, myobject.email)
