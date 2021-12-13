@@ -21,7 +21,7 @@ from apps.guests.helpers import (
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id
 )
-from apps.celerytasks import send_group_invitation
+from apps.celerytasks.tasks import send_group_invitation
 
 
 class GuestEventViewSet(viewsets.ModelViewSet):
