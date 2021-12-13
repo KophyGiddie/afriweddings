@@ -167,6 +167,7 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
         last_name=last_name,
         wedding=mywedding,
         group=mygroup,
+        status='PENDING',
         email=email,
         phone=phone,
         created_by=myuser

@@ -25,6 +25,7 @@ class GuestSerializer(serializers.Serializer):
     address = serializers.CharField()
     email = serializers.CharField()
     phone = serializers.CharField()
+    status = serializers.CharField()
 
 
 class GuestInvitationSerializer(serializers.Serializer):
