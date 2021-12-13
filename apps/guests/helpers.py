@@ -26,6 +26,15 @@ def get_guest_invitation_by_id(myid, wedding):
         return None
 
 
+def get_guest_invitations_by_guest_id(myid, wedding):
+    """
+    Returns budget expense using the name
+
+    """
+    myguestinvites = GuestInvitation.objects.filter(guest__id=myid, wedding=wedding)
+    return myguestinvites
+
+
 def get_guest_event_by_id(myid, wedding):
     """
     Returns budget expense using the name

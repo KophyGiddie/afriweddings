@@ -19,7 +19,8 @@ from apps.guests.helpers import (
     create_guest_group, get_guest_group_by_name,
     create_guest, get_guest_group_by_id,
     update_event_guests, get_guest_invitation_by_id,
-    get_guest_public_invitation_by_id, get_guest_by_id
+    get_guest_public_invitation_by_id, get_guest_by_id,
+    get_guest_invitations_by_guest_id
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -347,6 +348,16 @@ class UpdateOnlineGuestInvitation(APIView):
         update_event_guests(myobject.event)
 
         serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class GetGuestEventInvitations(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        guest_id = request.data.get('token', None)
+        myobject = get_guest_invitations_by_guest_id(guest_id)
+        serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
 
