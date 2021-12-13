@@ -78,5 +78,5 @@ def compress_image(image_path):
 
 
 @app.task()
-def send_group_invitation(group_id, wedding_id):
+def send_group_invitation_task(group_id, wedding_id):
     print ('er')
