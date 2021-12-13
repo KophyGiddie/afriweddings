@@ -311,7 +311,7 @@ class GuestViewSet(viewsets.ModelViewSet):
         send_online_invitation_email(guest_id, myobject.first_name, mywedding.author.first_name, mywedding.wedding_date, mywedding.partner_first_name, myobject.email)
 
         serializer = GuestSerializer(myobject, context={'request': request}, many=False)
-        return Response(success_response('Invitation has been snet', serializer.data), status=HTTP_200_OK)
+        return Response(success_response('Invitation has been sent', serializer.data), status=HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         """

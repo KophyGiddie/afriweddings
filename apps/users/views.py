@@ -60,8 +60,8 @@ class SignupUser(APIView):
             if invitation_code and invitation_code is not None and invitation_code != '':
                 try:
                     myinvitation = Invitation.objects.get(invitation_code=invitation_code)
+                    mywedding = myinvitation.wedding
                     if myinvitation.invitation_type == 'Partner':
-                        mywedding = myinvitation.wedding
                         mywedding.partner = user
                         mywedding.save()
 
