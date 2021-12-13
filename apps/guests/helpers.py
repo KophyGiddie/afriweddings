@@ -95,6 +95,18 @@ def get_guest_by_id(myid, wedding):
         return None
 
 
+def get_guests_by_group_id(group_id, wedding_id):
+    """
+    Returns budget category using the name
+
+    """
+    try:
+        myguests = Guest.objects.get(group__id=group_id, wedding__id=wedding_id)
+        return myguests
+    except Guest.DoesNotExist:
+        return None
+
+
 def create_guest_event(name, mywedding, myuser):
     """
     Creates a guest event with the parameters supplied

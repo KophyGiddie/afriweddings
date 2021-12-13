@@ -2,8 +2,10 @@ from celery.utils.log import get_task_logger
 from afriweddings.celery import app
 from apps.weddings.models import Wedding
 from utils.compress import start_compressing
+from utils.utilities import send_online_invitation_email
 from apps.users.models import AFUser
 from apps.guests.models import GuestGroup
+from apps.guests.helpers import get_guests_by_group_id
 from apps.checklists.models import Checklist, ChecklistCategory, ChecklistSchedule
 from apps.prerequisites.models import DefaultChecklist
 import time
@@ -78,5 +80,8 @@ def compress_image(image_path):
 
 
 @app.task()
-def send_group_invitation_task(group_id, wedding_id):
-    print ('er')
+def send_group_invitation_task(group_id, wedding_id, invited_by, wedding_date):
+    myguests = get_guests_by_group_id(group_id, wedding_id)
+    for item in myguests:
+        if item.email:
+            send_online_invitation_email(item.id, item.first_name, invited_by, wedding_date, item.partner_first_name, item.email)
