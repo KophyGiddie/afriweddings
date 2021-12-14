@@ -216,12 +216,10 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
 
 def bulk_assign_guests(guest_ids, event_ids, mywedding, myuser):
     for item in event_ids:
-        print (item)
         myevent = get_guest_event_by_id(item, mywedding)
+        print (myevent)
         for element in guest_ids:
-            print (element)
             myguest = get_guest_by_id(element, mywedding)
-            print (myguest)
             GuestInvitation.objects.create(wedding=mywedding,
                                            event=myevent,
                                            guest=myguest,
