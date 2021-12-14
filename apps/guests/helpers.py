@@ -101,7 +101,7 @@ def get_guests_by_group_id(group_id, wedding_id):
 
     """
     try:
-        myguests = Guest.objects.get(group__id=group_id, wedding__id=wedding_id)
+        myguests = Guest.objects.filter(group__id=group_id, wedding__id=wedding_id)
         return myguests
     except Guest.DoesNotExist:
         return None
