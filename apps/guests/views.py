@@ -134,7 +134,7 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
 
         send_group_invitation_task.delay(mygroup.id, mywedding.id, request.user.first_name, mywedding.wedding_date)
 
-        serializer = GuestInvitationSerializer(mygroup, context={'request': request}, many=False)
+        serializer = GuestGroupSerializer(mygroup, context={'request': request}, many=False)
         return Response(success_response('Invitation has been sent', serializer.data), status=HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
