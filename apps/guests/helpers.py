@@ -208,7 +208,8 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
             if myevent:
                 update_event_guests(myevent)
 
-    update_group_guests(mygroup)
+    if group_id and group_id != '':
+        update_group_guests(mygroup)
 
     return myguest
 
