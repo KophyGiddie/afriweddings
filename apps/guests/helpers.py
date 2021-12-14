@@ -214,6 +214,20 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
     return myguest
 
 
+def bulk_assign_guests(guest_ids, event_ids, mywedding, myuser):
+    for item in event_ids:
+        myevent = get_guest_event_by_id(item, mywedding)
+        for element in guest_ids:
+            myguest = get_guest_by_id(element, mywedding)
+            GuestInvitation.objects.create(wedding=mywedding,
+                                           event=myevent,
+                                           guest=myguest,
+                                           created_by=myuser,
+                                           status='PENDING',
+                                           )
+        update_event_guests(myevent)
+
+
 def bulk_populate_guest_list(data, mywedding, myuser):
     for item in data:
         create_guest(mywedding, myuser, item.get('first_name'), item.get('last_name'), [], None, item.get('email'), item.get('phone_number'))

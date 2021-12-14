@@ -20,7 +20,8 @@ from apps.guests.helpers import (
     create_guest, get_guest_group_by_id,
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id, get_guest_by_id,
-    get_guest_invitations_by_guest_id, bulk_populate_guest_list
+    get_guest_invitations_by_guest_id, bulk_populate_guest_list,
+    bulk_assign_guests
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -264,6 +265,22 @@ class GuestViewSet(viewsets.ModelViewSet):
             myqueryset = myqueryset.filter(id=group_id)
         serializer = ExtendedGuestGroupSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='bulk_assign_event')
+    def bulk_assign_event(self, request, *args, **kwargs):
+        """
+        Update guest invitation by changing its status to confirmed or declined or pending
+
+        """
+        guest_ids = request.data.get('guest_ids', None)
+        event_ids = request.data.get('event_ids', None)
+
+        mywedding = get_wedding(request)
+
+        bulk_assign_guests(guest_ids, event_ids, mywedding, request.user)
+
+        return Response(success_response('Event Assigned Successfully'), status=HTTP_200_OK)
+
 
     @action(methods=['post'], detail=False, url_path='update_guests_invitation')
     def update_guests_invitation(self, request, *args, **kwargs):
