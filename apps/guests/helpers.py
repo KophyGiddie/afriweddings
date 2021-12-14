@@ -83,6 +83,18 @@ def get_guest_group_by_name(name, wedding):
         return None
 
 
+def get_public_guest_by_id(myid):
+    """
+    Returns budget category using the name
+
+    """
+    try:
+        myguest = Guest.objects.get(id=myid)
+        return myguest
+    except Guest.DoesNotExist:
+        return None
+
+
 def get_guest_by_id(myid, wedding):
     """
     Returns budget category using the name

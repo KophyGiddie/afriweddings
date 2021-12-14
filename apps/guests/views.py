@@ -21,7 +21,7 @@ from apps.guests.helpers import (
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id, get_guest_by_id,
     get_guest_invitations_by_guest_id, bulk_populate_guest_list,
-    bulk_assign_guests
+    bulk_assign_guests, get_public_guest_by_id
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -341,13 +341,13 @@ class GuestViewSet(viewsets.ModelViewSet):
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
 
-class FetchPublicInvitationDetail(APIView):
+class VerifyGuestToken(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request, *args, **kwargs):
-        guest_invitation_id = request.data.get('token', None)
-        myobject = get_guest_public_invitation_by_id(guest_invitation_id)
-        serializer = PublicGuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        guest_id = request.data.get('token', None)
+        myobject = get_public_guest_by_id(guest_id)
+        serializer = GuestSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
 
