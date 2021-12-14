@@ -20,7 +20,7 @@ from apps.guests.helpers import (
     create_guest, get_guest_group_by_id,
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id, get_guest_by_id,
-    get_guest_invitations_by_guest_id
+    get_guest_invitations_by_guest_id, bulk_populate_guest_list
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -386,3 +386,15 @@ class SearchPublicGuest(APIView):
         serializer = PublicGuestInvitationSerializer(result_page, context={'request': request}, many=True)
         return paginator.get_paginated_response(serializer.data)
 
+
+class BulkUploadGuestList(APIView):
+
+    def post(self, request, *args, **kwargs):
+        data = request.data.get('data')
+        mywedding = get_wedding(request)
+
+        bulk_populate_guest_list(data, mywedding, request.user)
+
+        myqueryset = Guest.objects.filter(wedding__id=request.user.wedding_id)
+        serializer = GuestSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)

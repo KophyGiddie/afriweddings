@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.guests.views import (
     GuestEventViewSet, GuestGroupViewSet, GuestViewSet,
     UpdateOnlineGuestInvitation, FetchPublicInvitationDetail,
-    SearchPublicGuest, GetGuestEventInvitations
+    SearchPublicGuest, GetGuestEventInvitations, BulkUploadGuestList
 )
 
 
@@ -18,6 +18,7 @@ urlpatterns = [
     path('update_online_guest_invitation/', UpdateOnlineGuestInvitation.as_view()),
     path('fetch_public_invitation_detail/', FetchPublicInvitationDetail.as_view()),
     path('search_public_guest/', SearchPublicGuest.as_view()),
+    path('bulk_upload_guest_list/', BulkUploadGuestList.as_view()),
     path('get_guest_event_invitations/', GetGuestEventInvitations.as_view()),
     path('', include(router.urls)),
 ]

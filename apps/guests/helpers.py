@@ -211,3 +211,8 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
     update_group_guests(mygroup)
 
     return myguest
+
+
+def bulk_populate_guest_list(data, mywedding, myuser):
+    for item in data:
+        create_guest(mywedding, myuser, item.get('first_name'), item.get('last_name'), [], None, item.get('email'), item.get('phone_number'))
