@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from apps.invitations.serializer import InvitationSerializer
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.users.serializer import UserSerializer, UserAuthSerializer
 from apps.users.models import AFUser, FailedLogin, StoredPass
@@ -335,12 +336,15 @@ class UpdateProfilePicture(APIView):
                 myinvitation.profile_picture = wedding_team_image
                 myinvitation.save()
 
-            user.profile_picture = avatar
-            user.save()
-            serializer = UserSerializer(user, context={'request': request})
-            # compress_image_choice(user.avatar)
-            compress_image.delay(str(user.profile_picture))
-            return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+                serializer = InvitationSerializer(myinvitation, context={'request': request})
+                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+            else:
+                user.profile_picture = avatar
+                user.save()
+                serializer = UserSerializer(user, context={'request': request})
+                # compress_image_choice(user.avatar)
+                compress_image.delay(str(user.profile_picture))
+                return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
         except ValueError:
             return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
 
