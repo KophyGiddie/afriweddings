@@ -178,7 +178,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         post = request.data.get('post')
         image = request.FILES.get('image', None)
 
-        if not image or image != '':
+        if not image:
             image = None
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
