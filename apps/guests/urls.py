@@ -8,7 +8,6 @@ from apps.guests.views import (
     VerifyGuestToken
 )
 
-
 router = DefaultRouter()
 router.register(r'guest_events', GuestEventViewSet)
 router.register(r'guest_groups', GuestGroupViewSet)
