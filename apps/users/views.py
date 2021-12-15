@@ -328,6 +328,13 @@ class UpdateProfilePicture(APIView):
         try:
             user = request.user
             avatar = request.FILES.get('profile_picture', None)
+            invitation_id = request.data.get('invitation_id', None)
+            if invitation_id:
+                wedding_team_image = request.FILES.get('wedding_team_image', None)
+                myinvitation = Invitation.objects.get(id=invitation_id)
+                myinvitation.profile_picture = wedding_team_image
+                myinvitation.save()
+
             user.profile_picture = avatar
             user.save()
             serializer = UserSerializer(user, context={'request': request})
