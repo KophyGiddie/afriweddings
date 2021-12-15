@@ -23,4 +23,4 @@ class PublicInvitationSerializer(serializers.Serializer):
     last_name = serializers.CharField()
     user_role = serializers.CharField()
     description = serializers.CharField()
-    picture = serializers.URLField(source='get_picture')
+    profile_picture = serializers.URLField(source='get_profile_picture')
