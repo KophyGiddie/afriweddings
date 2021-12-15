@@ -76,7 +76,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         Returns guests invitations
 
         """
-        mypicture = request.FILES.get('picture')
+        mypicture = request.FILES.get('profile_picture')
         description = request.data.get('description')
         invitation_id = request.data.get('invitation_id')
         myinvitation = Invitation.objects.get(id=invitation_id)
@@ -117,7 +117,7 @@ class UpdateWeddingTeamProfilePicture(APIView):
     def post(self, request, *args, **kwargs):
         description = request.data.get('description')
         invitation_id = request.data.get('invitation_id')
-        mypicture = request.FILES.get('picture')
+        mypicture = request.FILES.get('profile_picture')
         myinvitation = Invitation.objects.get(id=invitation_id)
 
         try:
