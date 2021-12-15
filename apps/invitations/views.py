@@ -89,6 +89,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         if mypicture:
             print ('one')
             myinvitation.picture = mypicture
+            myinvitation.save()
             if myteam:
                 print ('two')
                 myteam.picture = mypicture
