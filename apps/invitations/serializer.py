@@ -9,7 +9,7 @@ class InvitationSerializer(serializers.Serializer):
     last_name = serializers.CharField()
     description = serializers.CharField()
     user_role = serializers.CharField()
-    picture = serializers.URLField(source='get_picture')
+    profile_picture = serializers.URLField(source='get_profile_picture')
     user_type = serializers.CharField()
     email = serializers.CharField()
     invitation_type = serializers.CharField()

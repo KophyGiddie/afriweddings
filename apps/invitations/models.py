@@ -25,7 +25,7 @@ class Invitation(models.Model):
         null=True,
         blank=True
     )
-    picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
+    profile_picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     email = models.CharField(max_length=200, blank=True, null=True)
     invitation_code = models.CharField(max_length=200, blank=True, null=True)
     first_name = models.CharField(max_length=200, blank=True, null=True)
@@ -50,9 +50,9 @@ class Invitation(models.Model):
         verbose_name_plural = 'Invitation'
         ordering = ('-created_at',)
 
-    def get_picture(self):
-        if self.picture:
-            myimage = self.picture.url
+    def get_profile_picture(self):
+        if self.profile_picture:
+            myimage = self.profile_picture.url
         else:
             myimage = ''
         return myimage

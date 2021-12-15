@@ -171,10 +171,10 @@ class WeddingTeam(models.Model):
         null=True,
         blank=True
     )
-    picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR,
-                                blank=True,
-                                null=True,
-                                )
+    profile_picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR,
+        blank=True,
+        null=True,
+    )
     display_on_wedding_page = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)

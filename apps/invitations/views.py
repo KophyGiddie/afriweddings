@@ -113,6 +113,39 @@ class InvitationViewSet(viewsets.ModelViewSet):
         return Response(error_response("Invalid Operation", '123'), status=HTTP_400_BAD_REQUEST)
 
 
+class UpdateWeddingTeamProfilePicture(APIView):
+    def post(self, request, *args, **kwargs):
+        description = request.data.get('description')
+        invitation_id = request.data.get('invitation_id')
+        mypicture = request.FILES.get('picture')
+        myinvitation = Invitation.objects.get(id=invitation_id)
+
+        try:
+            myteam = WeddingTeam.objects.get(email=myinvitation.email, wedding=get_wedding(request))
+        except WeddingTeam.DoesNotExist:
+            myteam = None
+
+        if mypicture:
+            print ('one')
+            myinvitation.profile_picture = mypicture
+            myinvitation.save()
+            if myteam:
+                print ('two')
+                myteam.profile_picture = mypicture
+                myteam.save()
+
+        if description and description != '':
+            myinvitation.description = description
+            if myteam:
+                myteam.description = description
+                myteam.save()
+
+        myinvitation.save()
+
+        serializer = InvitationSerializer(myinvitation, context={'request': request})
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
 class AcceptInvite(APIView):
     permission_classes = (AllowAny, )
 
