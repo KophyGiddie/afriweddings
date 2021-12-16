@@ -71,6 +71,7 @@ class AFUser(AbstractBaseUser):
     city = models.CharField(max_length=1000, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     has_onboarded = models.BooleanField(default=False)
+    has_multiple_weddings = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
