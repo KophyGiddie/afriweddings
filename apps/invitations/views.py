@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.invitations.serializer import InvitationSerializer
+from apps.weddings.serializer import PublicWeddingSerializer
 from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
@@ -164,4 +165,13 @@ class AcceptInvite(APIView):
             mywedding.partner_accepted_invite = True
             mywedding.save()
         serializer = InvitationSerializer(myinvitation, context={'request': request})
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class WeddingsInvitedTo(APIView):
+
+    def get(self, request, *args, **kwargs):
+        myids = Invitation.objects.filter(email=request.user.email).values_list('wedding__id', flat=True)
+        myqueryset = Wedding.objects.filter(id__in=myids)
+        serializer = PublicWeddingSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)

@@ -71,9 +71,11 @@ class SignupUser(APIView):
                         myteam.member = user
                         myteam.save()
 
-                    if user_type == 'Wedding Team':
                         user.is_wedding_admin = False
                         user.save()
+
+                        mywedding.wedding_team.add(user)
+                        mywedding.save()
 
                     if user_role == 'Wedding Planner':
                         mywedding.admins.add(user)

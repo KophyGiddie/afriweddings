@@ -57,6 +57,11 @@ class Wedding(models.Model):
         related_name='wedding_admins',
         blank=True
     )
+    wedding_team = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='wedding_team',
+        blank=True
+    )
 
     def get_partner_picture(self):
         if self.partner_picture:
