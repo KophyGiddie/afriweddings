@@ -10,6 +10,7 @@ from apps.weddings.serializer import PublicWeddingSerializer
 from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
+from apps.users.helpers import get_user_by_email
 from apps.weddings.models import WeddingRole, Wedding, WeddingTeam
 from rest_framework.decorators import action
 
@@ -152,9 +153,12 @@ class AcceptInvite(APIView):
 
     def post(self, request, *args, **kwargs):
         invitation_code = request.data.get('invitation_code', None)
-
+        user_exists = False
         try:
             myinvitation = Invitation.objects.get(invitation_code=invitation_code)
+            myuser = get_user_by_email(myinvitation.email)
+            if myuser:
+                user_exists = True
         except Invitation.DoesNotExist:
             return Response(error_response("Invalid Invitation", '122'), status=HTTP_400_BAD_REQUEST)
         myinvitation.status = 'ACCEPTED'
@@ -165,7 +169,10 @@ class AcceptInvite(APIView):
             mywedding.partner_accepted_invite = True
             mywedding.save()
         serializer = InvitationSerializer(myinvitation, context={'request': request})
-        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+        return Response({"response_code": "100",
+                         "user_exist": user_exists,
+                         "message": message, 
+                         "results": data}, status=HTTP_200_OK)
 
 
 class WeddingsInvitedTo(APIView):
