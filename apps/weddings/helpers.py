@@ -6,6 +6,14 @@ from apps.budget.helpers import create_budget_category, create_budget_expense, u
 from decimal import Decimal
 import random
 from apps.rsvp.helpers import create_rsvp_question
+from django.db.models import Q
+
+
+def get_associated_weddings(request, wedding_id):
+    myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user)).values_list('id', flat=True)
+    if wedding_id in myqueryset:
+        return True
+    return False
 
 
 def validate_slug(myslug):

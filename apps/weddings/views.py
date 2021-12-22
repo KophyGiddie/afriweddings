@@ -22,7 +22,7 @@ from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
-    get_wedding_by_hashtag
+    get_wedding_by_hashtag, get_associated_weddings
 )
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
@@ -162,7 +162,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
     def switch(self, request):
         wedding_id = request.data.get('wedding_id')
 
-        mywedding = get_admin_wedding(wedding_id, request)
+        mywedding = get_associated_weddings(request, wedding_id)
         if not mywedding:
             return Response(error_response("You do not have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
 
