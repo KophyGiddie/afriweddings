@@ -175,7 +175,7 @@ class AcceptInvite(APIView):
 
         title = 'Invitation Response'
         body = '%s accepted on your invite' % myinvitation.first_name
-        create_notification(title, body, request.user, str(myinvitation.id))
+        create_notification(title, body, None, str(myinvitation.id))
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response({"response_code": "100",
                          "user_exist": user_exists,
