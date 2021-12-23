@@ -126,6 +126,11 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
     mywedding.budget = mybudget
     mywedding.total_checklist = DefaultChecklist.objects.all().count()
     mywedding.save()
+
+    myuser.has_created_wedding = True
+    myuser.save()
+
+    # do has multiple weddings check here
     return mywedding
 
 

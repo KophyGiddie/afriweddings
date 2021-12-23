@@ -171,8 +171,8 @@ class AcceptInvite(APIView):
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response({"response_code": "100",
                          "user_exist": user_exists,
-                         "message": message, 
-                         "results": data}, status=HTTP_200_OK)
+                         "message": "Data returned successfully",
+                         "results": serializer.data}, status=HTTP_200_OK)
 
 
 class WeddingsInvitedTo(APIView):

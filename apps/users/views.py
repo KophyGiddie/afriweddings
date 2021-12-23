@@ -83,7 +83,6 @@ class SignupUser(APIView):
 
                     user.wedding_id = mywedding.id
                     user.is_active = True
-                    user.has_onboarded = True
                     user.save()
                 except Invitation.DoesNotExist:
                     return Response(error_response("Invalid Invitation Code", '102'), status=HTTP_400_BAD_REQUEST)
