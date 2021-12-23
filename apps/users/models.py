@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from utils import constants
 from rest_framework.authtoken.models import Token
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 
 class AFUserManager(BaseUserManager):
@@ -190,3 +191,33 @@ class UserActivity(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class UserNotification(models.Model):
+    """
+    Model for Notification
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    object_id = models.IntegerField(blank=True, null=True)
+    read = models.BooleanField(default=False)
+    user_in_question = models.ForeignKey(AFUser,
+                                         related_name='my_notifications',
+                                         blank=True,
+                                         null=True,
+                                         on_delete=models.CASCADE)
+    notification_type = models.CharField(blank=True, null=True, max_length=1000)
+    title = models.CharField(blank=True, null=True, max_length=1000)
+    message = models.CharField(blank=True, null=True, max_length=1000)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.message)
+
+    class Meta:
+        ordering = ('-date_created',)
+        verbose_name_plural = 'Notification'
+
+    def get_elapsed_time(self):
+        mytime = naturaltime(self.date_created)
+        mytime = mytime.replace(' ', ' ')
+        return mytime

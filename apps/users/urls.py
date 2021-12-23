@@ -4,9 +4,12 @@ from rest_framework.routers import DefaultRouter
 from apps.users.views import (
     LoginUser, ValidateEmail, ForgotPassword,
     SignupUser, CurrentUserProfile, ResetPassword,
-    ChangePassword, UpdateProfilePicture, ResendSignupVerification
+    ChangePassword, UpdateProfilePicture, ResendSignupVerification,
+    UserNotificationsViewSet
 )
+
 router = DefaultRouter()
+router.register(r'notifications', UserNotificationsViewSet)
 
 urlpatterns = [
     path('signup/', SignupUser.as_view()),

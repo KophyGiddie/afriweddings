@@ -6,9 +6,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from apps.invitations.serializer import InvitationSerializer
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from apps.users.serializer import UserSerializer, UserAuthSerializer
-from apps.users.models import AFUser, FailedLogin, StoredPass
+from apps.users.serializer import UserSerializer, UserAuthSerializer, UserNotificationSerializer
+from apps.users.models import AFUser, FailedLogin, StoredPass, UserNotification
 from apps.users.helpers import update_wedding_team_image
+from utils.pagination import PageNumberPagination
+from rest_framework import viewsets
 from apps.invitations.models import Invitation
 from utils.utilities import hash_string, send_activation_email, get_client_ip, send_forgot_password_email
 from utils.token import account_activation_token
@@ -18,6 +20,7 @@ from dateutil.relativedelta import relativedelta
 from apps.celerytasks.tasks import populate_wedding_checklist, compress_image
 from apps.prerequisites.models import DefaultChecklistCategory, DefaultChecklistSchedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule
+from rest_framework.decorators import action
 
 
 class SignupUser(APIView):
@@ -355,3 +358,31 @@ class UpdateProfilePicture(APIView):
         except ValueError:
             return Response(error_response("Unable to Save Image", '120'), status=HTTP_400_BAD_REQUEST)
 
+
+class UserNotificationsViewSet(viewsets.ModelViewSet):
+
+    model = UserNotification
+    serializer_class = UserNotificationSerializer
+    queryset = UserNotification.objects.all().order_by('-id')
+
+    def list(self, request, *args, **kwargs):
+        myqueryset = UserNotification.objects.filter(user_in_question=request.user)
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = UserNotificationSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+    @action(methods=['post'], detail=True, url_path='mark_as_read')
+    def mark_as_read(self, request, *args, **kwargs):
+        mynotification = self.get_object()
+        mynotification.read = True
+        mynotification.save()
+        post = UserNotificationSerializer(mynotification, context={'request': request}, many=False)
+        return Response(success_response(message="Password Reset Successful", data=post.data), status=HTTP_200_OK)
+
+    @action(methods=['get'], detail=False, url_path='num_of_unread')
+    def num_of_unread(self, request, *args, **kwargs):
+        mynumber = UserNotification.objects.filter(read=False, user_in_question=request.user).count()
+        return Response({'num_of_unread': mynumber,
+                         'response_code': '100',
+                         'message': 'Data Returned Successfully'}, status=HTTP_200_OK)

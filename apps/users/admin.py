@@ -79,3 +79,4 @@ class MyUserAdmin(UserAdmin):
 
 admin.site.register(AFUser, MyUserAdmin)
 admin.site.register(UserActivity)
+admin.site.register(UserNotification)
