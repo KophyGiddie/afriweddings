@@ -198,7 +198,7 @@ class UserNotification(models.Model):
     Model for Notification
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    object_id = models.IntegerField(blank=True, null=True)
+    object_id = models.CharField(blank=True, null=True, max_length=1000)
     read = models.BooleanField(default=False)
     user_in_question = models.ForeignKey(AFUser,
                                          related_name='my_notifications',

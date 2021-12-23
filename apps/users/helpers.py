@@ -1,5 +1,5 @@
-from apps.users.models import AFUser
-from apps.invitations.models import Invitation, UserNotification
+from apps.users.models import AFUser, UserNotification
+from apps.invitations.models import Invitation
 from django.core.exceptions import ValidationError
 
 
@@ -20,9 +20,10 @@ def update_wedding_team_image(avatar, request, wedding):
         pass
 
 
-def create_notification(title, body, myuser):
+def create_notification(title, body, myuser, object_id):
     UserNotification.objects.create(user_in_question=myuser,
                                     title=title,
+                                    object_id=object_id,
                                     message=body,
                                     notification_type='GENERAL')
     return True

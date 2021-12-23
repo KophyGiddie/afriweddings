@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from apps.users.helpers import create_notification
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.invitations.serializer import InvitationSerializer
 from apps.weddings.serializer import PublicWeddingSerializer
@@ -171,6 +172,10 @@ class AcceptInvite(APIView):
             mywedding = myinvitation.wedding
             mywedding.partner_accepted_invite = True
             mywedding.save()
+
+        title = 'Invitation Response'
+        body = '%s accepted on your invite' % myinvitation.first_name
+        create_notification(title, body, request.user, str(myinvitation.id))
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response({"response_code": "100",
                          "user_exist": user_exists,
