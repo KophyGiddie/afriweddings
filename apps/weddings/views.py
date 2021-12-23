@@ -24,6 +24,7 @@ from apps.weddings.helpers import (
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
     get_wedding_by_hashtag, get_associated_weddings
 )
+from apps.users.helpers import create_notification
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
 from django.db.models import Q
 

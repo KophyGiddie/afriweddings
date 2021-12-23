@@ -61,7 +61,7 @@ class WeddingSerializer(serializers.Serializer):
     is_admin = serializers.SerializerMethodField('get_admin_status')
 
     def get_admin_status(self, obj):
-        myusers = obj.admin.all()
+        myusers = obj.admins.all()
         myuser = self.context['request'].user
         if myuser in myusers:
             return True
