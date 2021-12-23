@@ -159,6 +159,9 @@ class AcceptInvite(APIView):
             myuser = get_user_by_email(myinvitation.email)
             if myuser:
                 user_exists = True
+                myteam = WeddingTeam.objects.get(wedding=myinvitation.wedding, email=myinvitation.email)
+                myteam.member = myuser
+                myteam.save()
         except Invitation.DoesNotExist:
             return Response(error_response("Invalid Invitation", '122'), status=HTTP_400_BAD_REQUEST)
         myinvitation.status = 'ACCEPTED'

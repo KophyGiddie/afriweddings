@@ -8,6 +8,7 @@ from apps.invitations.serializer import InvitationSerializer
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.users.serializer import UserSerializer, UserAuthSerializer
 from apps.users.models import AFUser, FailedLogin, StoredPass
+from apps.users.helpers import update_wedding_team_image
 from apps.invitations.models import Invitation
 from utils.utilities import hash_string, send_activation_email, get_client_ip, send_forgot_password_email
 from utils.token import account_activation_token
@@ -84,6 +85,8 @@ class SignupUser(APIView):
                     user.wedding_id = mywedding.id
                     user.is_active = True
                     user.save()
+
+                    # do has multiple weddings check here
                 except Invitation.DoesNotExist:
                     return Response(error_response("Invalid Invitation Code", '102'), status=HTTP_400_BAD_REQUEST)
 
@@ -342,6 +345,9 @@ class UpdateProfilePicture(APIView):
             else:
                 user.profile_picture = avatar
                 user.save()
+
+                update_wedding_team_image(avatar, request)
+
                 serializer = UserSerializer(user, context={'request': request})
                 # compress_image_choice(user.avatar)
                 compress_image.delay(str(user.profile_picture))
