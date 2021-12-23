@@ -68,6 +68,7 @@ class SignupUser(APIView):
                     mywedding = myinvitation.wedding
                     if myinvitation.invitation_type == 'Partner':
                         mywedding.partner = user
+                        mywedding.admins.add(user)
                         mywedding.save()
 
                     elif myinvitation.invitation_type == 'Wedding Team':

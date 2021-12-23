@@ -130,6 +130,9 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
     myuser.has_created_wedding = True
     myuser.save()
 
+    mywedding.admins.add(myuser)
+    mywedding.save()
+
     # do has multiple weddings check here
     return mywedding
 
