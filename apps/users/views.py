@@ -350,8 +350,8 @@ class UpdateProfilePicture(APIView):
             else:
                 user.profile_picture = avatar
                 user.save()
-                # update_wedding_team_image(avatar, request, mywedding)
 
+                # update image in wedding teams associated
                 myinvitations = Invitation.objects.filter(email=request.user.email)
                 if myinvitations:
                     for myinvitation in myinvitations:
