@@ -11,7 +11,8 @@ from django.db.models import Q
 
 def get_associated_weddings(request, wedding_id):
     myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user)).values_list('id', flat=True)
-    if wedding_id in myqueryset:
+    print (myqueryset)
+    if str(wedding_id) in myqueryset:
         return True
     return False
 

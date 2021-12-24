@@ -162,7 +162,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False, url_path='switch')
     def switch(self, request):
         wedding_id = request.data.get('wedding_id')
-
+        print (wedding_id)
         mywedding = get_associated_weddings(request, wedding_id)
         if not mywedding:
             return Response(error_response("You do not have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
