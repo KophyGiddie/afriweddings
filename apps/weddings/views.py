@@ -168,7 +168,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
             return Response(error_response("You do not have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
 
         myuser = request.user
-        myuser.wedding_id = mywedding.id
+        myuser.wedding_id = wedding_id
         myuser.save()
 
         serializer = WeddingSerializer(mywedding, context={'request': request})
