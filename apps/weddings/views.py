@@ -22,7 +22,7 @@ from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
-    get_wedding_by_hashtag, get_associated_weddings
+    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id
 )
 from apps.users.helpers import create_notification
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
@@ -171,6 +171,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         myuser.wedding_id = wedding_id
         myuser.save()
 
+        mywedding = get_wedding_by_id(wedding_id)
         serializer = WeddingSerializer(mywedding, context={'request': request})
         return Response(success_response('Wedding Updated Successfully', serializer.data), status=HTTP_200_OK)
 
