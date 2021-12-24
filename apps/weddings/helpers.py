@@ -13,6 +13,7 @@ def get_associated_weddings(request, wedding_id):
     myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user)).values_list('id', flat=True)
     print (myqueryset)
     for item in myqueryset:
+        print (str(item))
         if str(item) == str(wedding_id):
             return True
     return False
