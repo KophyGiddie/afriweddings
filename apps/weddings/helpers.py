@@ -4,6 +4,7 @@ from apps.prerequisites.models import DefaultRSVPQuestion, DefaultBudgetCategory
 from django.core.exceptions import ValidationError
 from apps.budget.helpers import create_budget_category, create_budget_expense, update_budget_category
 from decimal import Decimal
+from apps.invitations.models import Invitation
 import random
 from apps.rsvp.helpers import create_rsvp_question
 from django.db.models import Q
@@ -144,7 +145,11 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
     mywedding.admins.add(myuser)
     mywedding.save()
 
-    # do has multiple weddings check here
+    myinvites = Invitation.objects.filter(email=myuser.email).count()
+    if myinvites:
+        myuser.has_multiple_weddings = True
+        myuser.save()
+
     return mywedding
 
 
