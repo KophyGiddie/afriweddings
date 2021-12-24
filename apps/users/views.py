@@ -350,16 +350,14 @@ class UpdateProfilePicture(APIView):
             else:
                 user.profile_picture = avatar
                 user.save()
-
-                mywedding = get_wedding(request)
                 # update_wedding_team_image(avatar, request, mywedding)
-                try:
-                    myinvitation = Invitation.objects.get(wedding=mywedding, email=request.user.email)
-                    myinvitation.profile_picture = avatar
-                    myinvitation.save()
-                except Invitation.DoesNotExist:
-                    print ("pass")
-                    pass
+
+                myinvitations = Invitation.objects.filter(email=request.user.email)
+                if myinvitations:
+                    for myinvitation in myinvitations:
+                        myinvitation.profile_picture = avatar
+                        myinvitation.save()
+
 
                 serializer = UserSerializer(user, context={'request': request})
                 # compress_image_choice(user.avatar)
