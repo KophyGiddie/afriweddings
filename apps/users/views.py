@@ -21,6 +21,7 @@ from apps.celerytasks.tasks import populate_wedding_checklist, compress_image
 from apps.prerequisites.models import DefaultChecklistCategory, DefaultChecklistSchedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule
 from rest_framework.decorators import action
+from utils.utilities import get_wedding
 
 
 class SignupUser(APIView):
@@ -350,7 +351,8 @@ class UpdateProfilePicture(APIView):
                 user.profile_picture = avatar
                 user.save()
 
-                update_wedding_team_image(avatar, request)
+                mywedding = get_wedding(request)
+                update_wedding_team_image(avatar, request, mywedding)
 
                 serializer = UserSerializer(user, context={'request': request})
                 # compress_image_choice(user.avatar)
