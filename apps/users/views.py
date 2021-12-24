@@ -351,8 +351,8 @@ class UpdateProfilePicture(APIView):
                 user.profile_picture = avatar
                 user.save()
 
-                mywedding = get_wedding(request)
-                update_wedding_team_image(avatar, request, mywedding)
+                # mywedding = get_wedding(request)
+                # update_wedding_team_image(avatar, request, mywedding)
 
                 serializer = UserSerializer(user, context={'request': request})
                 # compress_image_choice(user.avatar)
