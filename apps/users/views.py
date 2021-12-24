@@ -355,9 +355,8 @@ class UpdateProfilePicture(APIView):
                 myinvitations = Invitation.objects.filter(email=request.user.email)
                 if myinvitations:
                     for myinvitation in myinvitations:
-                        myinvitation.profile_picture = avatar
+                        myinvitation.profile_picture = user.profile_picture
                         myinvitation.save()
-
 
                 serializer = UserSerializer(user, context={'request': request})
                 # compress_image_choice(user.avatar)
