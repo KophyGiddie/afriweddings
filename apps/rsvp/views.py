@@ -42,12 +42,12 @@ class RSVPQuestionViewSet(viewsets.ModelViewSet):
             return Response(error_response("Please provide a question", '140'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
-        existing_question = get_rsvp_question_name(question, mywedding, question_type)
+        existing_question = get_rsvp_question_name(question, mywedding)
 
         if existing_question:
             return Response(error_response("this question already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        myquestion = create_rsvp_question(question, mywedding, request.user)
+        myquestion = create_rsvp_question(question, mywedding, request.user, question_type, answers)
 
         serializer = RSVPQuestionSerializer(myquestion, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
