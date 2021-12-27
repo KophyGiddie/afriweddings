@@ -1,4 +1,4 @@
-from apps.rsvp.models import RSVPQuestion, RSVP
+from apps.rsvp.models import RSVPQuestion, RSVP, RSVPAnswer
 from django.core.exceptions import ValidationError
 from apps.guests.helpers import get_guest_public_invitation_by_id
 
@@ -38,6 +38,15 @@ def create_rsvp_question(question, mywedding, myuser, question_type, answers):
         wedding=mywedding,
         created_by=myuser
     )
+    if question_type == 'BINARY':
+        RSVPAnswer.objects.create(question=myquestion, answer='Yes')
+        RSVPAnswer.objects.create(question=myquestion, answer='No')
+
+    if question_type == 'MUTIPLE_CHOICE':
+        myanswers = answers.split(',')
+        for item in myanswers:
+            RSVPAnswer.objects.create(question=myquestion, answer=item)
+
     return myquestion
 
 

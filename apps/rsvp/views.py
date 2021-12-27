@@ -25,7 +25,7 @@ class RSVPQuestionViewSet(viewsets.ModelViewSet):
         Returns a list of created guest events
 
         """
-        myqueryset = RSVPQuestion.objects.filter(wedding__id=request.user.wedding_id)
+        myqueryset = RSVPQuestion.objects.prefetch_related('answers').filter(wedding__id=request.user.wedding_id)
         serializer = RSVPQuestionSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 

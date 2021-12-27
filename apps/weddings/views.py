@@ -520,7 +520,7 @@ class GetPublicWedding(APIView):
         schedules = mywedding.schedule_events.all()
         schedule_serializer = ExtendedWeddingScheduleEventSerializer(schedules, context={'request': request}, many=True)
 
-        rsvp_question = mywedding.rsvp.all()
+        rsvp_question = mywedding.rsvp.prefetch_related('answers').all()
         rsvp_question_serializer = RSVPQuestionSerializer(rsvp_question, context={'request': request}, many=True)
 
         wedding_team = mywedding.invitation.filter(invitation_type='Wedding Team')
