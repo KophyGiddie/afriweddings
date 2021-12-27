@@ -42,7 +42,7 @@ def create_rsvp_question(question, mywedding, myuser, question_type, answers):
         RSVPAnswer.objects.create(question=myquestion, answer='Yes')
         RSVPAnswer.objects.create(question=myquestion, answer='No')
 
-    if question_type == 'MUTIPLE_CHOICE':
+    if question_type == 'MULTIPLE_CHOICE':
         myanswers = answers.split(',')
         for item in myanswers:
             RSVPAnswer.objects.create(question=myquestion, answer=item)
