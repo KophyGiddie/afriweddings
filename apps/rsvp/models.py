@@ -38,6 +38,38 @@ class RSVPQuestion(models.Model):
         return '%s' % (self.question)
 
 
+class RSVPAnswer(models.Model):
+    """
+    Model for RSVP Answer displayed on the wedding page
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    question = models.ForeignKey(
+        RSVPQuestion,
+        related_name='answers',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    answer = models.CharField(max_length=2000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='rsvp_answers',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name_plural = 'RSVP Answer'
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return '%s' % (self.answer)
+
+
 class RSVP(models.Model):
     """
     Model for answers provided by guests on rsvp questions
@@ -46,6 +78,13 @@ class RSVP(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     rsvp_question = models.ForeignKey(
         RSVPQuestion,
+        related_name='rsvp',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    rsvp_answer = models.ForeignKey(
+        RSVPAnswer,
         related_name='rsvp',
         on_delete=models.CASCADE,
         null=True,

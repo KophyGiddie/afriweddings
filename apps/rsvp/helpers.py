@@ -3,13 +3,13 @@ from django.core.exceptions import ValidationError
 from apps.guests.helpers import get_guest_public_invitation_by_id
 
 
-def get_rsvp_question_name(question, wedding):
+def get_rsvp_question_name(question, wedding, question_type):
     """
     Returns an rsvp question
 
     """
     try:
-        myquestion = RSVPQuestion.objects.get(question=question, wedding=wedding)
+        myquestion = RSVPQuestion.objects.get(question=question, wedding=wedding, question_type=question_type)
         return myquestion
     except (RSVPQuestion.DoesNotExist, ValidationError):
         return None

@@ -35,12 +35,14 @@ class RSVPQuestionViewSet(viewsets.ModelViewSet):
 
         """
         question = request.data.get('question', None)
+        question_type = request.data.get('question_type', None)
+        answers = request.data.get('answers', None)
 
         if not question:
             return Response(error_response("Please provide a question", '140'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = get_wedding(request)
-        existing_question = get_rsvp_question_name(question, mywedding)
+        existing_question = get_rsvp_question_name(question, mywedding, question_type)
 
         if existing_question:
             return Response(error_response("this question already exist", '139'), status=HTTP_400_BAD_REQUEST)
