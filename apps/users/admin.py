@@ -60,7 +60,7 @@ class MyUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal information', {'fields': ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'temporal_login_fails', 'permanent_login_fails', 'user_type', 'user_role')}),
-        ('Permissions', {'fields': ('is_admin', 'is_active', 'is_blocked', 'activation_token')}),
+        ('Permissions', {'fields': ('is_admin', 'is_active', 'is_blocked', 'has_created_wedding', 'has_multiple_weddings', 'has_onboarded', 'activation_token')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
