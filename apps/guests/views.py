@@ -129,9 +129,11 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         Send Online Invitation to all members in the group
 
         """
+        print ('enters')
         mygroup = self.get_object()
+        print ('enters 1')
         mywedding = get_wedding(request)
-
+        print ('enters 2')
         send_group_invitation_task.delay(mygroup.id, mywedding.id, request.user.first_name, mywedding.wedding_date)
 
         serializer = GuestGroupSerializer(mygroup, context={'request': request}, many=False)
@@ -280,7 +282,6 @@ class GuestViewSet(viewsets.ModelViewSet):
         bulk_assign_guests(guest_ids, event_ids, mywedding, request.user)
 
         return Response(success_response('Event Assigned Successfully'), status=HTTP_200_OK)
-
 
     @action(methods=['post'], detail=False, url_path='update_guests_invitation')
     def update_guests_invitation(self, request, *args, **kwargs):
