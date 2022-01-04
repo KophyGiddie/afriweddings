@@ -152,8 +152,10 @@ def update_group_guests_count(mygroup_id, mywedding):
     Update expenses total_paid when a payment is made
 
     """
+    print ('WOW')
     mygroup = get_guest_group_by_id(mygroup_id, mywedding)
-    total_guests = mywedding.guests_invitations.filter(group=mygroup).count()
+    total_guests = mywedding.guests.filter(group=mygroup).count()
+    print (total_guests)
     mygroup.num_of_guests = total_guests
     mygroup.save()
 
@@ -165,7 +167,7 @@ def update_group_guests(mygroup):
     """
     mywedding = mygroup.wedding
 
-    total_guests = mywedding.guests_invitations.filter(group=mygroup).count()
+    total_guests = mywedding.guests.filter(group=mygroup).count()
     mygroup.num_of_guests = total_guests
     mygroup.save()
 
