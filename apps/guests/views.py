@@ -21,7 +21,7 @@ from apps.guests.helpers import (
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id, get_guest_by_id,
     get_guest_invitations_by_guest_id, bulk_populate_guest_list,
-    bulk_assign_guests, get_public_guest_by_id
+    bulk_assign_guests, get_public_guest_by_id, update_group_guests_count
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -129,11 +129,11 @@ class GuestGroupViewSet(viewsets.ModelViewSet):
         Send Online Invitation to all members in the group
 
         """
-        print ('enters')
+
         mygroup = self.get_object()
-        print ('enters 1')
+
         mywedding = get_wedding(request)
-        print ('enters 2')
+
         send_group_invitation_task.delay(mygroup.id, mywedding.id, request.user.first_name, mywedding.wedding_date)
 
         serializer = GuestGroupSerializer(mygroup, context={'request': request}, many=False)
@@ -222,6 +222,9 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         myguest = create_guest(mywedding, request.user, first_name, last_name, event_ids, group_id, email, phone)
 
+        if group_id and group_id != '':
+            update_group_guests_count(group_id, mywedding)
+
         serializer = GuestSerializer(myguest, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
 
@@ -251,6 +254,9 @@ class GuestViewSet(viewsets.ModelViewSet):
             myobject.phone = request.data.get('phone')
 
         myobject.save()
+
+        if myobject.group:
+            update_group_guests_count(myobject.group.id, mywedding)
 
         serializer = GuestSerializer(myobject, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
@@ -364,6 +370,26 @@ class UpdateOnlineGuestInvitation(APIView):
         myobject.save()
 
         update_event_guests(myobject.event)
+
+        serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class UpdateCompanionInfo(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        guest_invitation_id = request.data.get('token', None)
+        companion_first_name = request.data.get('companion_first_name', None)
+        companion_last_name = request.data.get('companion_last_name', None)
+
+        myobject = get_guest_public_invitation_by_id(guest_invitation_id)
+
+        myguest = myobject.guest
+        myguest.has_companion = True
+        myguest.companion_last_name = companion_last_name
+        myguest.companion_first_name = companion_first_name
+        myguest.save()
 
         serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)

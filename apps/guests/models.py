@@ -120,6 +120,8 @@ class Guest(models.Model):
         blank=True
     )
     first_name = models.CharField(max_length=2000, blank=True, null=True)
+    companion_first_name = models.CharField(max_length=2000, blank=True, null=True)
+    companion_last_name = models.CharField(max_length=2000, blank=True, null=True)
     status = models.CharField(max_length=2000, blank=True, null=True)
     last_name = models.CharField(max_length=2000, blank=True, null=True)
     age = models.CharField(max_length=2000, blank=True, null=True)
@@ -129,6 +131,7 @@ class Guest(models.Model):
     companion = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    has_companion = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Guests'

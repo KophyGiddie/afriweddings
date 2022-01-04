@@ -81,7 +81,9 @@ def compress_image(image_path):
 
 @app.task()
 def send_group_invitation_task(group_id, wedding_id, invited_by, wedding_date):
+    mywedding = Wedding.objects.get(id=wedding_id)
     myguests = get_guests_by_group_id(group_id, wedding_id)
+    print (myguests)
     for item in myguests:
         if item.email:
-            send_online_invitation_email(item.id, item.first_name, invited_by, wedding_date, item.partner_first_name, item.email)
+            send_online_invitation_email(item.id, item.first_name, mywedding.author.first_name, wedding_date, mywedding.partner_first_name, item.email)
