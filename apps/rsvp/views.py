@@ -83,7 +83,7 @@ class RSVPResponses(APIView):
 
     def get(self, request, *args, **kwargs):
         mywedding = get_wedding(request)
-        myqueryset = RSVP.objects.select_related('guest').filter(rsvp_question__wedding=mywedding).order_by('-created_at')
+        myqueryset = RSVP.objects.select_related('guest', 'rsvp_question').filter(rsvp_question__wedding=mywedding).order_by('-created_at')
         serializer = RSVPSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
