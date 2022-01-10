@@ -99,3 +99,14 @@ class SubmitRSVP(APIView):
         create_or_update_rsvp(guest_invitation_id, rsvp_question_id, answer)
 
         return Response(success_response('Submitted Successfully'), status=HTTP_200_OK)
+
+
+class BulkSubmitRSVP(APIView):
+    permission_classes = (AllowAny, )
+
+    def post(self, request, *args, **kwargs):
+        data = request.data.get('data')
+        for element in data:
+            create_or_update_rsvp(element['guest_invitation_id'], element['rsvp_question_id'], element['answer'])
+
+        return Response(success_response('Submitted Successfully'), status=HTTP_200_OK)
