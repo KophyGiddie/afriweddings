@@ -17,7 +17,7 @@ class Wedding(models.Model):
     partner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='partner_wedding',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True
     )

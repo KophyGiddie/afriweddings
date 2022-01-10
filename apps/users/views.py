@@ -70,7 +70,9 @@ class SignupUser(APIView):
                     if myinvitation.invitation_type == 'Partner':
                         mywedding.partner = user
                         user.has_onboarded = True
+                        user.profile_picture = mywedding.partner_picture
                         mywedding.admins.add(user)
+                        mywedding.partner_email = email
                         mywedding.save()
 
                     elif myinvitation.invitation_type == 'Wedding Team':
