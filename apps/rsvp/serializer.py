@@ -14,8 +14,14 @@ class RSVPQuestionSerializer(serializers.Serializer):
     answers = RSVPAnswerSerializer(many=True)
 
 
+class LimitedRSVPQuestionSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    question = serializers.CharField()
+    question_type = serializers.CharField()
+
+
 class RSVPSerializer(serializers.Serializer):
     id = serializers.CharField()
     answer = serializers.CharField()
-    rsvp_question = RSVPQuestionSerializer(many=False)
+    rsvp_question = LimitedRSVPQuestionSerializer(many=False)
     guest = GuestSerializer(many=False)
