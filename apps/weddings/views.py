@@ -32,7 +32,7 @@ from django.db.models import Q
 class AllWeddings(APIView):
 
     def get(self, request, *args, **kwargs):
-        myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user))
+        myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user)).distinct('id').order_by('id')
         serializer = WeddingSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
