@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from apps.guests.serializer import GuestSerializer
 
 
 class RSVPAnswerSerializer(serializers.Serializer):
@@ -17,3 +18,4 @@ class RSVPSerializer(serializers.Serializer):
     id = serializers.CharField()
     answer = serializers.CharField()
     question = RSVPQuestionSerializer(many=False)
+    guest = GuestSerializer(many=False)

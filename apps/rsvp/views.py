@@ -5,11 +5,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.rsvp.serializer import (
-    RSVPQuestionSerializer
+    RSVPQuestionSerializer, RSVPSerializer
 )
 from rest_framework.permissions import AllowAny
 from utils.utilities import get_wedding
-from apps.rsvp.models import RSVPQuestion
+from apps.rsvp.models import RSVPQuestion, RSVP
 from apps.rsvp.helpers import get_rsvp_question_name, create_rsvp_question, create_or_update_rsvp
 
 # Create your views here.
@@ -76,6 +76,15 @@ class RSVPQuestionViewSet(viewsets.ModelViewSet):
         if myobject.created_by == request.user:
             myobject.delete()
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
+
+
+class RSVPResponses(APIView):
+    permission_classes = (AllowAny, )
+
+    def get(self, request, *args, **kwargs):
+        myqueryset = RSVP.objects.select_related('guest').order_by('-created_at')
+        serializer = RSVPSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
 
 class SubmitRSVP(APIView):
