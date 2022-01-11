@@ -152,10 +152,8 @@ def update_group_guests_count(mygroup_id, mywedding):
     Update expenses total_paid when a payment is made
 
     """
-    print ('WOW')
     mygroup = get_guest_group_by_id(mygroup_id, mywedding)
     total_guests = mywedding.guests.filter(group=mygroup).count()
-    print (total_guests)
     mygroup.num_of_guests = total_guests
     mygroup.save()
 
@@ -166,7 +164,6 @@ def update_group_guests(mygroup):
 
     """
     mywedding = mygroup.wedding
-
     total_guests = mywedding.guests.filter(group=mygroup).count()
     mygroup.num_of_guests = total_guests
     mygroup.save()
@@ -196,6 +193,30 @@ def update_event_guests(myevent):
     myevent.pending_guests = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
     myevent.guests_cancelled = mywedding.guests_invitations.filter(status='CANCELLED', event=myevent).count()
     myevent.save()
+
+
+def update_guest_groups_and_events(mywedding):
+
+    mygroups = mywedding.guest_groups.all()
+    for mygroup in mygroups:
+        total_guests = mywedding.guests.filter(group=mygroup).count()
+        mygroup.num_of_guests = total_guests
+        mygroup.save()
+
+    # total_guests_invited = mywedding.guests_invitations.all().count()
+    # guests_pending = mywedding.guests_invitations.filter(status='PENDING').count()
+
+    # mywedding.invited_guests = total_guests_invited
+    # mywedding.pending_guests = guests_pending
+    # mywedding.save()
+
+    # myevents = mywedding.guest_events.all()
+
+    # for myevent in myevents:
+    #     myevent.invited_guests = mywedding.guests_invitations.filter(event=myevent).count()
+    #     myevent.pending_guests = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
+    #     myevent.save()
+
 
 
 def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, email, phone):
