@@ -369,10 +369,11 @@ class GuestViewSet(viewsets.ModelViewSet):
         myobject = self.get_object()
         mygroup = myobject.group
         myinvitations = myobject.guests_invitations.all().values_list('event__id', flat=True)
+        print (myinvitations)
         myevents = GuestEvent.objects.filter(id__in=myinvitations)
 
         group_serializer = GuestGroupSerializer(mygroup, context={'request': request})
-        event_serializer = GuestGroupSerializer(myevents, context={'request': request}, many=True)
+        event_serializer = GuestEventSerializer(myevents, context={'request': request}, many=True)
 
         return Response({
             'response_code': "100",
