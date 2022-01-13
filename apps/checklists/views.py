@@ -13,7 +13,10 @@ from utils.utilities import get_wedding
 from django.utils import timezone
 from apps.checklists.helpers import update_checklist_done, get_checklist_category, get_checklist_schedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule, Checklist
-from apps.checklists.helpers import get_checklist_category_by_name, get_checklist_schedule_by_name
+from apps.checklists.helpers import (
+    get_checklist_category_by_name, get_checklist_schedule_by_name, create_checklist_category,
+    create_checklist_schedule, create_checklist
+)
 
 
 class ChecklistCategoryViewSet(viewsets.ModelViewSet):
@@ -39,11 +42,7 @@ class ChecklistCategoryViewSet(viewsets.ModelViewSet):
         if existing_category:
             return Response(error_response("A category with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        mycategory = ChecklistCategory.objects.create(
-                                  name=name,
-                                  wedding=mywedding,
-                                  created_by=request.user
-                                )
+        mycategory = create_checklist_category(name, mywedding, request.user)
 
         serializer = ChecklistCategorySerializer(mycategory, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
@@ -93,12 +92,7 @@ class ChecklistScheduleViewSet(viewsets.ModelViewSet):
         if existing_schedule:
             return Response(error_response("A Schedule with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        myschedule = ChecklistSchedule.objects.create(
-                                    name=name,
-                                    priority=priority,
-                                    wedding=mywedding,
-                                    created_by=request.user
-                                )
+        myschedule = create_checklist_schedule(name, mywedding, priority, request.user)
 
         serializer = ChecklistScheduleSerializer(myschedule, context={'request': request})
         return Response(success_response('schedule Created Successfully', serializer.data), status=HTTP_200_OK)
@@ -157,15 +151,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         if not mycategory:
             return Response(error_response("Invalid category", '160'), status=HTTP_400_BAD_REQUEST)
 
-        mychecklist = Checklist.objects.create(
-                                  title=title,
-                                  wedding=mywedding,
-                                  category=mycategory,
-                                  schedule=myschedule,
-                                  note=note,
-                                  is_essential=is_essential,
-                                  created_by=request.user
-                                )
+        mychecklist = create_checklist(title, mywedding, mycategory, myschedule, note, is_essential, request.user)
 
         update_checklist_done(mywedding)
 

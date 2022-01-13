@@ -8,7 +8,6 @@ from apps.invitations.serializer import InvitationSerializer
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.users.serializer import UserSerializer, UserAuthSerializer, UserNotificationSerializer
 from apps.users.models import AFUser, FailedLogin, StoredPass, UserNotification
-from apps.users.helpers import update_wedding_team_image
 from utils.pagination import PageNumberPagination
 from rest_framework import viewsets
 from apps.invitations.models import Invitation
@@ -21,7 +20,27 @@ from apps.celerytasks.tasks import populate_wedding_checklist, compress_image
 from apps.prerequisites.models import DefaultChecklistCategory, DefaultChecklistSchedule
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule
 from rest_framework.decorators import action
-from utils.utilities import get_wedding
+
+
+def create_initial_checklist(theuser):
+    checklist_categories = DefaultChecklistCategory.objects.all()
+    checklist_schedules = DefaultChecklistSchedule.objects.all()
+
+    for item in checklist_categories:
+        try:
+            ChecklistCategory.objects.get(created_by=theuser, name=item.name, identifier=item.identifier)
+        except ChecklistCategory.DoesNotExist:
+            ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier)
+
+    for item in checklist_schedules:
+        try:
+            ChecklistSchedule.objects.get(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
+        except ChecklistSchedule.DoesNotExist:
+            ChecklistSchedule.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
+
+    myschedules = ChecklistSchedule.objects.filter(created_by=theuser)
+    for item in myschedules:
+        populate_wedding_checklist.delay(item.identifier, theuser.id)
 
 
 class SignupUser(APIView):
@@ -125,25 +144,7 @@ class ValidateEmail(APIView):
             theuser.is_active = True
             theuser.save()
 
-            #Start doing backjobs here
-            checklist_categories = DefaultChecklistCategory.objects.all()
-            checklist_schedules = DefaultChecklistSchedule.objects.all()
-
-            for item in checklist_categories:
-                try:
-                    ChecklistCategory.objects.get(created_by=theuser, name=item.name, identifier=item.identifier)
-                except ChecklistCategory.DoesNotExist:
-                    ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier)
-
-            for item in checklist_schedules:
-                try:
-                    ChecklistSchedule.objects.get(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
-                except ChecklistSchedule.DoesNotExist:
-                    ChecklistSchedule.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority)
-
-            myschedules = ChecklistSchedule.objects.filter(created_by=theuser)
-            for item in myschedules:
-                populate_wedding_checklist.delay(item.identifier, theuser.id)
+            create_initial_checklist(theuser)
 
             return Response(success_response('Your email has been verified successfully kindly login'), status=HTTP_200_OK)
         except AFUser.DoesNotExist:

@@ -23,7 +23,7 @@ from apps.guests.helpers import (
     get_guest_public_invitation_by_id, get_guest_by_id,
     get_guest_invitations_by_guest_id, bulk_populate_guest_list,
     bulk_assign_guests, get_public_guest_by_id, update_group_guests_count,
-    update_guest_groups_and_events
+    update_guest_groups_and_events, update_guests_invitations
 )
 from apps.celerytasks.tasks import send_group_invitation_task
 
@@ -235,6 +235,7 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         """
         myobject = self.get_object()
+        event_ids = request.data.get('event_ids')
         mywedding = get_wedding(request)
         if request.data.get('first_name') and request.data.get('first_name') != '':
             myobject.first_name = request.data.get('first_name')
@@ -243,7 +244,7 @@ class GuestViewSet(viewsets.ModelViewSet):
             myobject.last_name = request.data.get('last_name')
 
         if request.data.get('group_id') and request.data.get('group_id') != '':
-            
+
             group = get_guest_group_by_id(request.data.get('group_id'), mywedding)
             if group:
                 myobject.group = group
@@ -255,6 +256,9 @@ class GuestViewSet(viewsets.ModelViewSet):
             myobject.phone = request.data.get('phone')
 
         myobject.save()
+
+        if event_ids:
+            update_guests_invitations(event_ids, myobject, mywedding, request.user)
 
         update_guest_groups_and_events(mywedding)
 
@@ -334,6 +338,14 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         send_online_invitation_email(guest_id, myobject.first_name, mywedding.author.first_name, mywedding.wedding_date, mywedding.partner_first_name, myobject.email)
 
+        myobject.email_invitation_sent = True
+        myobject.save()
+
+        guests_invitations = myobject.guests_invitations.all()
+        for element in guests_invitations:
+            element.status = 'PENDING'
+            element.save()
+
         serializer = GuestSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Invitation has been sent', serializer.data), status=HTTP_200_OK)
 
@@ -352,6 +364,21 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         return Response(success_response('Deleted Successfully'), status=HTTP_200_OK)
 
+    @action(methods=['get'], detail=True, url_path='get_groups_and_events')
+    def get_groups_and_events(self, request, *args, **kwargs):
+        myobject = self.get_object()
+        mygroup = myobject.group
+        myinvitations = myobject.guests_invitations.all().values_list('event__id', flat=True)
+        myevents = GuestEvent.objects.filter(id__in=myinvitations)
+
+        group_serializer = GuestGroupSerializer(mygroup, context={'request': request})
+        event_serializer = GuestGroupSerializer(myevents, context={'request': request}, many=True)
+
+        return Response({
+            'response_code': "100",
+            'group': group_serializer.data,
+            'events': event_serializer.data}, status=HTTP_200_OK)
+
 
 class VerifyGuestToken(APIView):
     permission_classes = (AllowAny, )
@@ -362,8 +389,8 @@ class VerifyGuestToken(APIView):
         mywedding = myobject.wedding
         serializer = GuestSerializer(myobject, context={'request': request}, many=False)
         wedding_serializer = PublicWeddingSerializer(mywedding, context={'request': request}, many=False)
-        return Response({"response_code": "100", 
-                         "Data Returned Successfully": message, 
+        return Response({"response_code": "100",
+                         "message": "Data Returned Successfully",
                          "results": serializer.data,
                          "wedding": wedding_serializer.data}, status=HTTP_200_OK)
 

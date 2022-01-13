@@ -132,6 +132,7 @@ class Guest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     has_companion = models.BooleanField(default=False)
+    email_invitation_sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Guests'

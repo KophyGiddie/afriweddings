@@ -22,7 +22,7 @@ from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
-    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id
+    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id, is_wedding_admin
 )
 from apps.users.helpers import create_notification
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
@@ -88,6 +88,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         mywedding = self.get_object()
+
+        if not is_wedding_admin(request.user, mywedding):
+            return Response(error_response("You do not have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
 
         if request.data.get('our_story') and request.data.get('our_story') != '':
             mywedding.our_story = request.data.get('our_story')
@@ -218,6 +221,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
         image = request.FILES.get('image')
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
+
+        if not is_wedding_admin(request.user, mywedding):
+            return Response(error_response("You do not have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
 
         mypost = WeddingMedia.objects.create(author=request.user,
                                              wedding=mywedding,

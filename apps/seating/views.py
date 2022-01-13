@@ -7,7 +7,10 @@ from apps.seating.serializer import SeatingTableSerializer, SeatingChartSerializ
 from utils.utilities import get_wedding
 from apps.seating.models import SeatingTable, SeatingChart
 from apps.guests.helpers import get_guest_by_id, get_guest_event_by_id
-from apps.seating.helpers import get_seating_table_by_name, get_seating_table_by_id, get_existing_seating_chart
+from apps.seating.helpers import (
+    get_seating_table_by_name, get_seating_table_by_id, get_existing_seating_chart,
+    create_seating_table, create_seating_chart
+)
 
 
 class SeatingTableViewSet(viewsets.ModelViewSet):
@@ -31,12 +34,7 @@ class SeatingTableViewSet(viewsets.ModelViewSet):
         if existing_table:
             return Response(error_response("A table with this name already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        mytable = SeatingTable.objects.create(
-                                  name=name,
-                                  wedding=mywedding,
-                                  table_capacity=table_capacity,
-                                  created_by=request.user
-                                )
+        mytable = create_seating_table(name, mywedding, table_capacity, request.user)
 
         serializer = SeatingTableSerializer(mytable, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)
@@ -89,14 +87,7 @@ class SeatingChartViewSet(viewsets.ModelViewSet):
         if existing_table:
             return Response(error_response("This guest is already on this table for this event", '139'), status=HTTP_400_BAD_REQUEST)
 
-        mychart = SeatingChart.objects.create(
-            seat_number=seat_number,
-            wedding=mywedding,
-            guest=myguest,
-            guest_event=myevent,
-            table=mytable,
-            created_by=request.user
-        )
+        mychart = create_seating_chart(seat_number, mywedding, myguest, myevent, mytable, request.user)
 
         serializer = SeatingChartSerializer(mychart, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)

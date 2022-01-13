@@ -87,3 +87,12 @@ def send_group_invitation_task(group_id, wedding_id, invited_by, wedding_date):
     for item in myguests:
         if item.email:
             send_online_invitation_email(item.id, item.first_name, mywedding.author.first_name, wedding_date, mywedding.partner_first_name, item.email)
+            item.email_invitation_sent = True
+            item.save()
+
+            guests_invitations = item.guests_invitations.all()
+            for element in guests_invitations:
+                element.status = 'PENDING'
+                element.save()
+
+

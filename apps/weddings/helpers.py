@@ -10,6 +10,14 @@ from apps.rsvp.helpers import create_rsvp_question
 from django.db.models import Q
 
 
+def is_wedding_admin(myuser, mywedding):
+    myusers = mywedding.admins.all()
+    if myuser in myusers:
+        return True
+    else:
+        return False
+
+
 def get_associated_weddings(request, wedding_id):
     myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user)).values_list('id', flat=True)
     print (myqueryset)

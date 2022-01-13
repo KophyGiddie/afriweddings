@@ -2,6 +2,16 @@ from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
 from django.core.exceptions import ValidationError
 
 
+def create_guest_invitation(mywedding, myevent, myguest, myuser):
+    GuestInvitation.objects.create(
+        wedding=mywedding,
+        event=myevent,
+        guest=myguest,
+        created_by=myuser,
+        status='',
+    )
+
+
 def get_guest_public_invitation_by_id(myid):
     """
     Returns budget expense using the name
@@ -176,7 +186,7 @@ def update_event_guests(myevent):
     """
     mywedding = myevent.wedding
 
-    total_guests_invited = mywedding.guests_invitations.all().count()
+    total_guests_invited = mywedding.guests.all().count()
     guests_confirmed = mywedding.guests_invitations.filter(status='CONFIRMED').count()
     guests_cancelled = mywedding.guests_invitations.filter(status='CANCELLED').count()
     guests_pending = mywedding.guests_invitations.filter(status='PENDING').count()
@@ -203,20 +213,15 @@ def update_guest_groups_and_events(mywedding):
         mygroup.num_of_guests = total_guests
         mygroup.save()
 
-    # total_guests_invited = mywedding.guests_invitations.all().count()
-    # guests_pending = mywedding.guests_invitations.filter(status='PENDING').count()
+    total_guests_invited = mywedding.guests.all().count()
+    mywedding.invited_guests = total_guests_invited
+    mywedding.save()
 
-    # mywedding.invited_guests = total_guests_invited
-    # mywedding.pending_guests = guests_pending
-    # mywedding.save()
+    myevents = mywedding.guest_events.all()
 
-    # myevents = mywedding.guest_events.all()
-
-    # for myevent in myevents:
-    #     myevent.invited_guests = mywedding.guests_invitations.filter(event=myevent).count()
-    #     myevent.pending_guests = mywedding.guests_invitations.filter(status='PENDING', event=myevent).count()
-    #     myevent.save()
-
+    for myevent in myevents:
+        myevent.invited_guests = mywedding.guests_invitations.filter(event=myevent).count()
+        myevent.save()
 
 
 def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, email, phone):
@@ -248,7 +253,7 @@ def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, 
                                            event=myevent,
                                            guest=myguest,
                                            created_by=myuser,
-                                           status='PENDING',
+                                           status='',
                                            group=mygroup)
 
             if myevent:
@@ -266,15 +271,36 @@ def bulk_assign_guests(guest_ids, event_ids, mywedding, myuser):
         print (myevent)
         for element in guest_ids:
             myguest = get_guest_by_id(element, mywedding)
-            GuestInvitation.objects.create(wedding=mywedding,
-                                           event=myevent,
-                                           guest=myguest,
-                                           created_by=myuser,
-                                           status='PENDING',
-                                           )
+            create_guest_invitation(mywedding, myevent, myguest, myuser)
         update_event_guests(myevent)
 
 
 def bulk_populate_guest_list(data, mywedding, myuser):
     for item in data:
         create_guest(mywedding, myuser, item.get('first_name'), item.get('last_name'), [], None, item.get('email'), item.get('phone_number'))
+
+
+def update_guests_invitations(event_ids, myobject, mywedding, myuser):
+    guests_invitations = myobject.guests_invitations.all()
+
+    if guests_invitations:
+
+        # DELETE EXISTING INVITATIONS THAT ARE NOT PART OF CURRENT LIST NOW
+        guests_invitations.exclude(id__in=event_ids).delete()
+
+        for item in event_ids:
+            try:
+                GuestInvitation.objects.get(id=item)
+            except (GuestInvitation.DoesNotExist, ValidationError):
+                myevent = get_guest_event_by_id(item, mywedding)
+                myguest = myobject
+                create_guest_invitation(mywedding, myevent, myguest, myuser)
+
+            update_event_guests(myevent)
+    else:
+        for item in event_ids:
+            myevent = get_guest_event_by_id(item, mywedding)
+            myguest = myobject
+            create_guest_invitation(mywedding, myevent, myguest, myuser)
+            update_event_guests(myevent)
+

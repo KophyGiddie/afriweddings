@@ -29,6 +29,7 @@ class GuestSerializer(serializers.Serializer):
     has_companion = serializers.BooleanField()
     companion_last_name = serializers.CharField()
     companion_first_name = serializers.CharField()
+    email_invitation_sent = serializers.BooleanField()
 
 
 class GuestInvitationSerializer(serializers.Serializer):
