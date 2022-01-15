@@ -70,7 +70,8 @@ class WeddingSerializer(serializers.Serializer):
             return False
 
     def get_wedding_role(self, obj):
-        return "Role"
+        myrole = obj.wedding_user_role.filter(user=self.context['request'].user)
+        return myrole.role
 
 
 class WallPostSerializer(serializers.Serializer):

@@ -320,3 +320,32 @@ class WeddingSchedule(models.Model):
     class Meta:
         verbose_name_plural = 'Wedding Schedule'
         ordering = ('id',)
+
+
+class WeddingUserRole(models.Model):
+    '''
+    This is for the actual roles each user has on the wedding
+    '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    wedding = models.ForeignKey(
+        Wedding,
+        related_name='wedding_user_role',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    role = models.CharField(max_length=200, blank=True, null=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='wedding_user_role',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name_plural = 'Wedding User Roles'
+        ordering = ('id',)
+
+    def __str__(self):
+        return str(self.role)
