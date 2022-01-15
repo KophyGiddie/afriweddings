@@ -181,12 +181,12 @@ class WeddingViewSet(viewsets.ModelViewSet):
         myuser.wedding_id = wedding_id
         myuser.save()
 
+        mywedding = get_wedding_by_id(wedding_id)
         myrole = mywedding.wedding_user_role.filter(user=request.user)
         if myrole:
             myuser.user_role = myrole.role
             myuser.save()
 
-        mywedding = get_wedding_by_id(wedding_id)
         serializer = WeddingSerializer(mywedding, context={'request': request})
         return Response(success_response('Wedding Updated Successfully', serializer.data), status=HTTP_200_OK)
 
