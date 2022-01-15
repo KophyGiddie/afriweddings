@@ -16,7 +16,8 @@ from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
 from dateutil.parser import parse
 from apps.weddings.models import (
-    Wedding, WeddingRole, WallPost, WeddingMedia, WeddingFAQ, WeddingSchedule, WeddingScheduleEvent
+    Wedding, WeddingRole, WallPost, WeddingMedia, WeddingFAQ, WeddingSchedule, WeddingScheduleEvent,
+    WeddingUserRole
 )
 from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
@@ -82,6 +83,12 @@ class WeddingViewSet(viewsets.ModelViewSet):
         myuser.save()
 
         assign_wedding_checklists.delay(myuser.id, mywedding.id)
+
+        WeddingUserRole.objects.create(
+            role=myuser.user_role,
+            wedding=mywedding,
+            user=request.user
+        )
 
         serializer = WeddingSerializer(mywedding, context={'request': request})
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
@@ -173,6 +180,11 @@ class WeddingViewSet(viewsets.ModelViewSet):
         myuser = request.user
         myuser.wedding_id = wedding_id
         myuser.save()
+
+        myrole = mywedding.wedding_user_role.filter(user=request.user)
+        if myrole:
+            myuser.user_role = myrole.role
+            myuser.save()
 
         mywedding = get_wedding_by_id(wedding_id)
         serializer = WeddingSerializer(mywedding, context={'request': request})

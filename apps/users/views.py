@@ -14,7 +14,7 @@ from apps.invitations.models import Invitation
 from utils.utilities import hash_string, send_activation_email, get_client_ip, send_forgot_password_email
 from utils.token import account_activation_token
 from django.utils import timezone
-from apps.weddings.models import WeddingTeam
+from apps.weddings.models import WeddingTeam, WeddingUserRole
 from dateutil.relativedelta import relativedelta
 from apps.celerytasks.tasks import populate_wedding_checklist, compress_image
 from apps.prerequisites.models import DefaultChecklistCategory, DefaultChecklistSchedule
@@ -94,6 +94,12 @@ class SignupUser(APIView):
                         mywedding.partner_email = email
                         mywedding.save()
 
+                        WeddingUserRole.objects.create(
+                            role=user_role,
+                            wedding=mywedding,
+                            user=user
+                        )
+
                     elif myinvitation.invitation_type == 'Wedding Team':
                         myteam = WeddingTeam.objects.get(wedding=mywedding, email=email)
                         myteam.member = user
@@ -104,6 +110,12 @@ class SignupUser(APIView):
 
                         mywedding.wedding_team.add(user)
                         mywedding.save()
+
+                        WeddingUserRole.objects.create(
+                            role=user_role,
+                            wedding=mywedding,
+                            user=user
+                        )
 
                     if user_role == 'Wedding Planner':
                         mywedding.admins.add(user)
@@ -120,6 +132,7 @@ class SignupUser(APIView):
             else:
                 mytoken = account_activation_token.make_token(user)
                 user.activation_token = mytoken
+                user.author_role = user_role
                 user.save()
 
                 send_activation_email(user, mytoken, "Kindly Activate Your Account")

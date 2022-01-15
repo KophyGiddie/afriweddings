@@ -20,7 +20,7 @@ class UserAuthSerializer(serializers.ModelSerializer):
         fields = ('id', 'auth_token', 'email', 'username', 'profile_picture',
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at', 'has_multiple_weddings',
-                  'has_created_wedding'
+                  'has_created_wedding', 'author_role'
                   )
 
 
@@ -32,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'auth_token', 'email', 'username', 'profile_picture',
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at', 'has_multiple_weddings',
-                  'has_created_wedding'
+                  'has_created_wedding', 'author_role'
                   )
 
 

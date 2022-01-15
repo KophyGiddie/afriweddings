@@ -46,18 +46,18 @@ class InvitationViewSet(viewsets.ModelViewSet):
             return Response(error_response("This user has already been invited", '121'), status=HTTP_400_BAD_REQUEST)
         except Invitation.DoesNotExist:
             myinvitation = Invitation.objects.create(
-                                      invitation_type=invitation_type,
-                                      user_type=invitation_type,
-                                      invitation_code=generate_invitation_code(),
-                                      first_name=first_name,
-                                      last_name=last_name,
-                                      invitee_role=myrole,
-                                      user_role=myrole.role,
-                                      email=email,
-                                      wedding=get_wedding(request),
-                                      status='PENDING',
-                                      invited_by=request.user,
-                                    )
+                invitation_type=invitation_type,
+                user_type=invitation_type,
+                invitation_code=generate_invitation_code(),
+                first_name=first_name,
+                last_name=last_name,
+                invitee_role=myrole,
+                user_role=myrole.role,
+                email=email,
+                wedding=get_wedding(request),
+                status='PENDING',
+                invited_by=request.user,
+            )
             if invitation_type == 'Wedding Team':
                 try:
                     WeddingTeam.objects.get(email=email, wedding=mywedding)
@@ -69,6 +69,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                         email=email,
                         role=myrole
                     )
+
         send_invitation_email(myinvitation, first_name)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
