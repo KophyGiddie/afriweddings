@@ -71,6 +71,7 @@ class WeddingSerializer(serializers.Serializer):
 
     def get_wedding_role(self, obj):
         myrole = obj.wedding_user_role.filter(user=self.context['request'].user)
+        print (myrole)
         if myrole:
             return myrole[0].role
         return ""
