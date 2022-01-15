@@ -407,7 +407,12 @@ class UpdateOnlineGuestInvitation(APIView):
         myobject.status = status
         myobject.save()
 
+        myguest = myobject.guest
+        myguest.status = myobject.status
+        myobject.save()
+
         update_event_guests(myobject.event)
+        update_guest_groups_and_events(myobject.wedding)
 
         serializer = GuestInvitationSerializer(myobject, context={'request': request}, many=False)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
