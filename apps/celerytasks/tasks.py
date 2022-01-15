@@ -95,4 +95,3 @@ def send_group_invitation_task(group_id, wedding_id, invited_by, wedding_date):
                 element.status = 'PENDING'
                 element.save()
 
-

@@ -59,6 +59,7 @@ class WeddingSerializer(serializers.Serializer):
     total_checklist = serializers.IntegerField()
     checklist_completed = serializers.IntegerField()
     is_admin = serializers.SerializerMethodField('get_admin_status')
+    user_role_on_wedding = serializers.SerializerMethodField('get_wedding_role')
 
     def get_admin_status(self, obj):
         myusers = obj.admins.all()
@@ -67,6 +68,9 @@ class WeddingSerializer(serializers.Serializer):
             return True
         else:
             return False
+
+    def get_wedding_role(self, obj):
+        return "Role"
 
 
 class WallPostSerializer(serializers.Serializer):
