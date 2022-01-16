@@ -184,7 +184,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         mywedding = get_wedding_by_id(wedding_id)
         myrole = mywedding.wedding_user_role.filter(user=request.user)
         if myrole:
-            myuser.user_role = myrole.role
+            myuser.user_role = myrole[0].role
             myuser.save()
 
         serializer = WeddingSerializer(mywedding, context={'request': request})
