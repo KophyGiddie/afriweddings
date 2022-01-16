@@ -229,7 +229,7 @@ class FilterChecklist(APIView):
         schedule_id = request.data.get('schedule_id')
         paginate = request.data.get('paginate', True)
 
-        myqueryset = ChecklistSchedule.objects.prefetch_related('checklists', 'checklists__category', 'checklists__schedule').filter(wedding__id=request.user.wedding_id).order_by('priority')
+        myqueryset = ChecklistSchedule.objects.prefetch_related('checklists', 'checklists__category', 'checklists__schedule').filter(wedding__id=request.user.wedding_id).order_by('-priority')
 
         if schedule_id and schedule_id != '':
             myqueryset = myqueryset.filter(id=schedule_id)
