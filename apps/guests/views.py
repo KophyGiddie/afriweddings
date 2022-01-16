@@ -409,7 +409,7 @@ class UpdateOnlineGuestInvitation(APIView):
 
         myguest = myobject.guest
         myguest.status = myobject.status
-        myobject.save()
+        myguest.save()
 
         update_event_guests(myobject.event)
         update_guest_groups_and_events(myobject.wedding)
