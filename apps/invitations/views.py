@@ -74,7 +74,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
-    @action(methods=['post'], detail=False, url_path='delete_wedding_team_member')
+    @action(methods=['delete'], detail=False, url_path='delete_wedding_team_member')
     def delete_wedding_team_member(self, request, *args, **kwargs):
         """
         Returns guests invitations
