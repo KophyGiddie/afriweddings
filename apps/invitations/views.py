@@ -12,7 +12,7 @@ from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
 from apps.users.helpers import get_user_by_email
-from apps.weddings.models import WeddingRole, Wedding, WeddingTeam
+from apps.weddings.models import WeddingRole, Wedding, WeddingTeam, WeddingUserRole
 from rest_framework.decorators import action
 
 
@@ -73,6 +73,43 @@ class InvitationViewSet(viewsets.ModelViewSet):
         send_invitation_email(myinvitation, first_name)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='delete_wedding_team_member')
+    def delete_wedding_team_member(self, request, *args, **kwargs):
+        """
+        Returns guests invitations
+
+        """
+        invitation_id = request.data.get('wedding_team_id')
+        myinvitation = Invitation.objects.get(id=invitation_id)
+        mywedding = get_wedding(request)
+        try:
+            myteam = WeddingTeam.objects.get(email=myinvitation.email, wedding=mywedding)
+
+            if myteam.member:
+                myuser = myteam.member
+                myuser.wedding_id = ''
+                myuser.save()
+
+                try:
+                    WeddingUserRole.objects.get(
+                        wedding=mywedding,
+                        user=myuser
+                    ).delete()
+
+                except WeddingUserRole.DoesNotExist:
+                    pass
+
+                mywedding.wedding_team.remove(myuser)
+
+            myteam.delete()
+
+        except WeddingTeam.DoesNotExist:
+            myteam = None
+
+        myinvitation.delete()
+
+        return Response(success_response('Deleted Successfully', []), status=HTTP_200_OK)
 
     @action(methods=['post'], detail=False, url_path='update_details')
     def update_details(self, request, *args, **kwargs):
