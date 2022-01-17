@@ -205,7 +205,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
                                          post=post,
                                          image=image)
         title = 'New Wall Post'
-        body = '%s posted on your wedding wall' % request.user.first_name
+        body = '%s posted on the wedding wall' % request.user.first_name
         create_notification(title, body, request.user, str(mypost.id))
         serializer = WallPostSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)

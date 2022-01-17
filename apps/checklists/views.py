@@ -15,7 +15,7 @@ from apps.checklists.helpers import update_checklist_done, get_checklist_categor
 from apps.checklists.models import ChecklistCategory, ChecklistSchedule, Checklist
 from apps.checklists.helpers import (
     get_checklist_category_by_name, get_checklist_schedule_by_name, create_checklist_category,
-    create_checklist_schedule, create_checklist
+    create_checklist_schedule, create_checklist_custom
 )
 
 
@@ -134,6 +134,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         title = request.data.get('title', None)
         category_id = request.data.get('category_id', None)
         schedule_id = request.data.get('schedule_id', None)
+        description = request.data.get('description', None)
         note = request.data.get('note', None)
         is_essential = request.data.get('is_essential', False)
 
@@ -151,7 +152,7 @@ class ChecklistViewSet(viewsets.ModelViewSet):
         if not mycategory:
             return Response(error_response("Invalid category", '160'), status=HTTP_400_BAD_REQUEST)
 
-        mychecklist = create_checklist(title, mywedding, mycategory, myschedule, note, is_essential, request.user)
+        mychecklist = create_checklist_custom(title, mywedding, mycategory, myschedule, note, is_essential, request.user, description)
 
         update_checklist_done(mywedding)
 

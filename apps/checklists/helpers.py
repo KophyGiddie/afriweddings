@@ -46,6 +46,24 @@ def create_checklist(title, mywedding, mycategory, myschedule, note, is_essentia
     return mychecklist
 
 
+def create_checklist_custom(title, mywedding, mycategory, myschedule, note, is_essential, myuser, description):
+    """
+    Creates a checklist
+
+    """
+    mychecklist = Checklist.objects.create(
+        title=title,
+        wedding=mywedding,
+        category=mycategory,
+        description=description,
+        schedule=myschedule,
+        note=note,
+        is_essential=is_essential,
+        created_by=myuser
+    )
+    return mychecklist
+
+
 def get_checklist_category(id):
     try:
         return ChecklistCategory.objects.get(id=id)
