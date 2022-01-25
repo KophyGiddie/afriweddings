@@ -276,7 +276,7 @@ BROKER_URL = os.environ['CLOUDAMQP_URL']
 
 
 sentry_sdk.init(
-    dsn="https://2f9f16bcb6934e6cbbee0fb472375185@o1063492.ingest.sentry.io/6053896",
+    dsn=os.environ.get('SENTRY_URL'),
     integrations=[DjangoIntegration()],
     traces_sample_rate=1.0,
     send_default_pii=True

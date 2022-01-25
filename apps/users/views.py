@@ -324,7 +324,7 @@ class LoginUser(APIView):
                     return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
                 else:
                     if user.is_blocked:
-                        return Response(error_response('Your account has been blocked. Please Contact Provident Insurance Support', '114'), status=HTTP_400_BAD_REQUEST)
+                        return Response(error_response('Your account has been blocked. Please Contact Afriweddings Support', '114'), status=HTTP_400_BAD_REQUEST)
 
             # if user credentials fails increase failed login attempts counter
             else:
