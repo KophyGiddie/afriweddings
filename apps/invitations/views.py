@@ -206,6 +206,12 @@ class AcceptInvite(APIView):
                 mywedding.save()
                 myuser.has_multiple_weddings = True
                 myuser.save()
+
+                WeddingUserRole.objects.create(
+                    role=myinvitation.invitee_role.role,
+                    wedding=myinvitation.wedding,
+                    user=myuser
+                )
         except Invitation.DoesNotExist:
             return Response(error_response("Invalid Invitation", '122'), status=HTTP_400_BAD_REQUEST)
         myinvitation.status = 'ACCEPTED'
