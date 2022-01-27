@@ -168,7 +168,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         # update total values of budget category
         update_budget_category(myexpense.category)
 
-        serializer = BudgetCategorySerializer(myexpense, context={'request': request})
+        serializer = BudgetExpenseSerializer(myexpense, context={'request': request})
         return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
 
     @action(methods=['get'], detail=True, url_path='get_expense_payments')
