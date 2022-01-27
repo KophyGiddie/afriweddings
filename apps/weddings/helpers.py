@@ -122,7 +122,7 @@ def create_wedding_roles(mywedding):
 
 
 def create_wedding(wedding_date, expected_guests, country, currency, partner_role,
-                   partner_last_name, myuser, city, partner_first_name):
+                   partner_last_name, myuser, city, budget, partner_first_name):
     """
     Creates a wedding
 
@@ -136,6 +136,7 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
         partner_last_name=partner_last_name,
         partner_first_name=partner_first_name,
         author=myuser,
+        budget=Decimal(budget),
         city=city
     )
     try:
