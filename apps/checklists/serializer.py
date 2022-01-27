@@ -53,7 +53,7 @@ class MasterChecklistScheduleSerializer(serializers.Serializer):
 
         myusers = obj.checklists.all()
 
-        if is_done and is_done != '':
+        if is_done != '' and is_done is not None:
             myusers = myusers.filter(is_done=is_done)
 
         if is_essential and is_essential != '':
