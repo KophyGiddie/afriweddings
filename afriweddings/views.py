@@ -40,6 +40,7 @@ def populate_default_checklist(request):
             DefaultChecklist.objects.create(
                 title=item["title"],
                 description=item["description"],
+                intent=item["intent"],
                 category=mycategory,
                 schedule=myschedule,
                 is_essential=item["essential"],

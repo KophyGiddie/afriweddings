@@ -1,70 +1,70 @@
 [
     {
         "label": "Planning",
-        "value": "planning"
-    },
-    {
-        "label": "Legal Processes",
-        "value": "legal"
+        "value": "Planning"
     },
     {
         "label": "Ceremony",
-        "value": "ceremony"
+        "value": "Ceremony"
     },
     {
         "label": "Reception",
-        "value": "reception"
+        "value": "Reception"
+    },
+    {
+        "label": "Photography and Video",
+        "value": "Photography and Video"
     },
     {
         "label": "Music",
         "value": "music"
     },
     {
-        "label": "Wedding Invitations",
-        "value": "wedding_invitations"
+        "label": "Bride accessories",
+        "value": "Bride accessories"
     },
     {
-        "label": "Wedding Favours",
-        "value": "wedding_favours"
+        "label": "Other",
+        "value": "Other"
+    },
+    {
+        "label": "Wedding invitations",
+        "value": "Wedding invitations"
+    },
+    {
+        "label": "Health and beauty",
+        "value": "Health and beauty"
     },
     {
         "label": "Flowers and Decoration",
-        "value": "flowers_and_decoration"
+        "value": "Flowers and Decoration"
     },
     {
-        "label": "Photography and Video",
-        "value": "photography_and_video"
-    },
-    {
-        "label": "Transport",
-        "value": "transport"
+        "label": "Legal processes",
+        "value": "Legal processes"
     },
     {
         "label": "Jewellery",
-        "value": "jewellery"
+        "value": "Jewellery"
     },
     {
-        "label": "Bridal Accessories",
-        "value": "bridal_accessories"
+        "label": "Honeymoon",
+        "value": "Honeymoon"
     },
     {
-        "label": "Groom's Accessories",
-        "value": "groom_accessories"
-    },
-    {
-        "label": "Health and Beauty",
-        "value": "health_and_beauty"
+        "label": "Gift list",
+        "value": "Gift list"
     },
     {
         "label": "Honeymoon",
         "value": "honeymoon"
     },
     {
-        "label": "Gift List",
-        "value": "gift_list"
+        "label": "Transport",
+        "value": "Transport"
     },
     {
-        "label": "Other",
-        "value": "other"
+        "label": "Groom accessories",
+        "value": "Groom accessories"
     }
 ]

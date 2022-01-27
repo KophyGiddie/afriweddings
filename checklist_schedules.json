@@ -1,34 +1,38 @@
 [
     {
-        "label": "Begining",
-        "value": "begining"
+        "label": "From 10 to 12 months",
+        "value": "From 10 to 12 months"
     },
     {
-        "label": "Next Stage",
-        "value": "middle_stage"
+        "label": "From 7 to 9 months",
+        "value": "From 7 to 9 months"
     },
     {
-        "label": "Final Stages",
-        "value": "final_stage"
+        "label": "From 4 to 6 months",
+        "value": "From 4 to 6 months"
+    },
+    {
+        "label": "From 2 to 3 months",
+        "value": "From 2 to 3 months"
     },
     {
         "label": "The last month",
-        "value": "the_last_month"
+        "value": "The last month"
     },
     {
         "label": "2 weeks",
-        "value": "two_weeks"
+        "value": "2 weeks"
     },
     {
-        "label": "Last Week",
-        "value": "last_week"
+        "label": "Last week",
+        "value": "Last week"
     },
     {
         "label": "Last day",
-        "value": "last_day"
+        "value": "Last day"
     },
     {
         "label": "After the wedding",
-        "value": "after_the_wedding"
+        "value": "After the wedding"
     }
 ]

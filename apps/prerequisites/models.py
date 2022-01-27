@@ -152,7 +152,7 @@ class DefaultChecklistSchedule(models.Model):
 
 class DefaultChecklist(models.Model):
     """
-    Model for storing the default checklist used in prepopulating the couples checklist
+    Model for storing the default checkliste used in prepopulating the couples checklist
 
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -173,6 +173,7 @@ class DefaultChecklist(models.Model):
     )
     is_essential = models.BooleanField(default=False)
     is_default = models.BooleanField(default=False)
+    intent = models.CharField(max_length=2000, blank=True, null=True)
     title = models.CharField(max_length=2000, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     note = models.CharField(max_length=4000, blank=True, null=True)

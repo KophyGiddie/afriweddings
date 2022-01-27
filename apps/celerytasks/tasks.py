@@ -52,6 +52,7 @@ def populate_wedding_checklist(schedule_identifier, author_id):
             title=item.title,
             created_by=myauthor,
             description=item.description,
+            intent=item.intent,
             category=ChecklistCategory.objects.get(identifier=item.category.identifier, created_by=myauthor),
             schedule=myschedule,
             is_essential=item.is_essential,
