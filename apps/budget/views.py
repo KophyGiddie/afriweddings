@@ -158,7 +158,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
             myexpense.estimated_cost = Decimal(request.data.get("estimated_cost"))
 
         if request.data.get('final_cost') and request.data.get('final_cost') != '':
-            myexpense.estimated_cost = Decimal(request.data.get("final_cost"))
+            myexpense.final_cost = Decimal(request.data.get("final_cost"))
 
         if request.data.get('note') and request.data.get('note') != '':
             myexpense.note = request.data.get("note")
