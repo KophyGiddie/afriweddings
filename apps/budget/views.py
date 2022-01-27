@@ -163,6 +163,16 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         if request.data.get('note') and request.data.get('note') != '':
             myexpense.note = request.data.get("note")
 
+        if request.data.get('name') and request.data.get('name') != '':
+            myexpense.name = request.data.get("name")
+
+        if request.data.get('category_id') and request.data.get('category_id') != '':
+            mycategory = get_budget_category(request.data.get('category_id'))
+            if not mycategory:
+                return Response(error_response("Invalid Budget Category", '149'), status=HTTP_400_BAD_REQUEST)
+
+            myexpense.category = mycategory
+
         myexpense.save()
 
         # update total values of budget category
