@@ -5,7 +5,6 @@ from apps.invitations.views import (
     InvitationViewSet, AcceptInvite, UpdateWeddingTeamProfilePicture, WeddingsInvitedTo, SendBetaInvite
 )
 
-
 router = DefaultRouter()
 router.register(r'invitations', InvitationViewSet)
 
