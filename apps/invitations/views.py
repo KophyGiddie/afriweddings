@@ -9,7 +9,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.invitations.serializer import InvitationSerializer
 from apps.weddings.serializer import PublicWeddingSerializer
 from utils.pagination import PageNumberPagination
-from apps.invitations.models import Invitation
+from apps.invitations.models import Invitation, BetaInvitation
 from utils.utilities import get_wedding, send_invitation_email, generate_invitation_code
 from apps.users.helpers import get_user_by_email
 from apps.weddings.models import WeddingRole, Wedding, WeddingTeam, WeddingUserRole
@@ -239,3 +239,23 @@ class WeddingsInvitedTo(APIView):
         myqueryset = Wedding.objects.filter(id__in=myids)
         serializer = PublicWeddingSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class SendBetaInvite(APIView):
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+
+        try:
+            BetaInvitation.objects.get(email=email)
+            return Response(error_response("User Already Invited", '123'), status=HTTP_400_BAD_REQUEST)
+
+        except BetaInvitation.DoesNotExist:
+            BetaInvitation.objects.create(
+                email=email,
+                first_name=first_name,
+                last_name=last_name
+            )
+            return Response(success_response('User Invited Successfully'), status=HTTP_200_OK)

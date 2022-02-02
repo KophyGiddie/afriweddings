@@ -59,3 +59,17 @@ class Invitation(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+
+class BetaInvitation(models.Model):
+    """
+    Model for beta invitations
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.CharField(max_length=200, blank=True, null=True)
+    first_name = models.CharField(max_length=200, blank=True, null=True)
+    last_name = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return '%s' % (self.email)
