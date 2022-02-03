@@ -81,6 +81,17 @@ def send_online_invitation_email(token, first_name, invited_by, wedding_date, pa
     sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
 
 
+def send_beta_email(first_name, email):
+    title = 'Afriweddings Beta Test Invitation'
+    context = {
+        'title': title,
+        'first_name': first_name,
+        'button_url': WEB_APP_URL
+    }
+    msg_html = render_to_string('email_templates/beta_invitation.html', context)
+    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
+
+
 def send_activation_email(myuser, token, title):
     context = {
         'title': title,

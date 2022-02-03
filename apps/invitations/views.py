@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from apps.users.helpers import create_notification
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from apps.invitations.serializer import InvitationSerializer
+from apps.celerytasks.tasks import send_beta_email_task
 from apps.weddings.serializer import PublicWeddingSerializer
 from utils.pagination import PageNumberPagination
 from apps.invitations.models import Invitation, BetaInvitation
@@ -258,4 +259,5 @@ class SendBetaInvite(APIView):
                 first_name=first_name,
                 last_name=last_name
             )
+            send_beta_email_task.delay(first_name, email)
             return Response(success_response('User Invited Successfully'), status=HTTP_200_OK)
