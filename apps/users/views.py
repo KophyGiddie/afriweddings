@@ -139,7 +139,9 @@ class SignupUser(APIView):
                     BetaInvitation.objects.get(email=email)
                     send_activation_email(user, mytoken, "Kindly Activate Your Account")
                 except BetaInvitation.DoesNotExist:
-                    return Response(error_response("Thank you for signing up. This app is currently in Beta Mode, you will be notified when we are live.", '102'), status=HTTP_400_BAD_REQUEST)
+                    user.is_beta_reject = True
+                    user.save()
+                    return Response(error_response("Thank you for signing up, Afriweddings is currently in Beta Mode, you will be notified when we are live.", '102'), status=HTTP_400_BAD_REQUEST)
 
             hashed = hash_string(password)
             StoredPass.objects.create(hashed=hashed, author=user)

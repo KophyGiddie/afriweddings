@@ -191,7 +191,7 @@ class DefaultChecklist(models.Model):
 
 class DefaultWeddingRole(models.Model):
     """
-    Model for storing the default roles for prepopulation
+    Model for storing the default wedding roles for prepopulation
 
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -209,7 +209,7 @@ class DefaultWeddingRole(models.Model):
 
 class DefaultWeddingEvent(models.Model):
     """
-    Model for storing the default schedule events for prepopulation
+    Model for storing the default wedding events for prepopulation
 
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

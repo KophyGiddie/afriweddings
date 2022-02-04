@@ -75,6 +75,7 @@ class AFUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     has_onboarded = models.BooleanField(default=False)
     has_multiple_weddings = models.BooleanField(default=False)
+    is_beta_reject = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     has_created_wedding = models.BooleanField(default=False)
