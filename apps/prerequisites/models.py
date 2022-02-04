@@ -205,3 +205,39 @@ class DefaultWeddingRole(models.Model):
     class Meta:
         verbose_name_plural = 'Default Wedding Roles'
         ordering = ('name', )
+
+
+class DefaultScheduleEvent(models.Model):
+    """
+    Model for storing the default schedule events for prepopulation
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=2000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s' % (self.name)
+
+    class Meta:
+        verbose_name_plural = 'Default Schedule Events'
+        ordering = ('name', )
+
+
+class DefaultGuestEvent(models.Model):
+    """
+    Model for storing the default guest events for prepopulation
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=2000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s' % (self.name)
+
+    class Meta:
+        verbose_name_plural = 'Default Guest Events'
+        ordering = ('name', )
