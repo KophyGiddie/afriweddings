@@ -23,7 +23,8 @@ from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
-    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id, is_wedding_admin
+    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id, is_wedding_admin,
+    create_schedule_event, create_default_wedding_events
 )
 from apps.users.helpers import create_notification
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
@@ -80,6 +81,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         create_default_budget_categories(mywedding, request)
         create_guest_groups(mywedding, request)
         create_default_rsvp_questions(mywedding, request)
+        create_default_schedule_events(mywedding, request)
 
         myuser = request.user
         myuser.wedding_id = mywedding.id
@@ -435,13 +437,7 @@ class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
         if existing_name:
             return Response(error_response("This event already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        mytable = WeddingScheduleEvent.objects.create(
-            name=name,
-            venue=venue,
-            date=date,
-            wedding=mywedding,
-            created_by=request.user
-        )
+        mytable = create_schedule_event(request.user, mywedding, date, venue, name)
 
         serializer = WeddingScheduleEventSerializer(mytable, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)

@@ -1,13 +1,27 @@
 from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
 from apps.guests.models import GuestGroup
-from apps.prerequisites.models import DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist
+from apps.prerequisites.models import (
+    DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist, DefaultWeddingEvent
+)
 from django.core.exceptions import ValidationError
 from apps.budget.helpers import create_budget_category, create_budget_expense, update_budget_category
 from decimal import Decimal
 from apps.invitations.models import Invitation
 import random
 from apps.rsvp.helpers import create_rsvp_question
+from apps.guests.helpers import create_guest_event
 from django.db.models import Q
+
+
+def create_schedule_event(myuser, mywedding, date, venue, name):
+    myevent = WeddingScheduleEvent.objects.create(
+        name=name,
+        venue=venue,
+        date=date,
+        wedding=mywedding,
+        created_by=myuser
+    )
+    return myevent
 
 
 def is_wedding_admin(myuser, mywedding):
@@ -184,6 +198,13 @@ def create_default_rsvp_questions(mywedding, request):
     myquestions = DefaultRSVPQuestion.objects.all()
     for item in myquestions:
         create_rsvp_question(item.question, mywedding, request.user, 'USER_INPUT', '')
+
+
+def create_default_wedding_events(mywedding, request):
+    myquestions = DefaultWeddingEvent.objects.all()
+    for item in myquestions:
+        create_schedule_event(request.user, mywedding, mywedding.wedding_date, mywedding.venue, item.name)
+        create_guest_event(item.name, mywedding, request.user)
 
 
 def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, request):
