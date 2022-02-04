@@ -59,11 +59,12 @@ class AFUser(AbstractBaseUser):
     phone_number = models.CharField(max_length=100, null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
-    profile_picture = models.FileField('Profile Pic',
-                                        upload_to=constants.PROFILE_PIC_DIR,
-                                        blank=True,
-                                        null=True,
-                                        )
+    profile_picture = models.FileField(
+        'Profile Pic',
+        upload_to=constants.PROFILE_PIC_DIR,
+        blank=True,
+        null=True,
+    )
     user_type = models.CharField(max_length=100, default='COUPLE')
     user_role = models.CharField(max_length=1000, blank=True, null=True)
     author_role = models.CharField(max_length=1000, blank=True, null=True)
@@ -201,11 +202,13 @@ class UserNotification(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     object_id = models.CharField(blank=True, null=True, max_length=1000)
     read = models.BooleanField(default=False)
-    user_in_question = models.ForeignKey(AFUser,
-                                         related_name='my_notifications',
-                                         blank=True,
-                                         null=True,
-                                         on_delete=models.CASCADE)
+    user_in_question = models.ForeignKey(
+        AFUser,
+        related_name='my_notifications',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE
+    )
     notification_type = models.CharField(blank=True, null=True, max_length=1000)
     title = models.CharField(blank=True, null=True, max_length=1000)
     message = models.CharField(blank=True, null=True, max_length=1000)

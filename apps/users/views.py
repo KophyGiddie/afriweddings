@@ -10,7 +10,7 @@ from apps.users.serializer import UserSerializer, UserAuthSerializer, UserNotifi
 from apps.users.models import AFUser, FailedLogin, StoredPass, UserNotification
 from utils.pagination import PageNumberPagination
 from rest_framework import viewsets
-from apps.invitations.models import Invitation
+from apps.invitations.models import Invitation, BetaInvitation
 from utils.utilities import hash_string, send_activation_email, get_client_ip, send_forgot_password_email
 from utils.token import account_activation_token
 from django.utils import timezone
@@ -135,7 +135,11 @@ class SignupUser(APIView):
                 user.author_role = user_role
                 user.save()
 
-                send_activation_email(user, mytoken, "Kindly Activate Your Account")
+                try:
+                    BetaInvitation.objects.get(email=email)
+                    send_activation_email(user, mytoken, "Kindly Activate Your Account")
+                except BetaInvitation.DoesNotExist:
+                    return Response(error_response("Thank you for signing up. This app is currently in Beta Mode, you will be notified when we are live.", '102'), status=HTTP_400_BAD_REQUEST)
 
             hashed = hash_string(password)
             StoredPass.objects.create(hashed=hashed, author=user)
