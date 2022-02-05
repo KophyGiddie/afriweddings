@@ -81,7 +81,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         create_default_budget_categories(mywedding, request)
         create_guest_groups(mywedding, request)
         create_default_rsvp_questions(mywedding, request)
-        create_default_schedule_events(mywedding, request)
+        create_default_wedding_events(mywedding, request)
 
         myuser = request.user
         myuser.wedding_id = mywedding.id
