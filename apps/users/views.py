@@ -287,6 +287,8 @@ class ResetPassword(APIView):
         myuser.set_password(password)
         myuser.wild_string = ''
         myuser.password_changed = True
+        myuser.is_active = True
+        myuser.is_blocked = True
         myuser.save()
 
         return Response(success_response('Password Reset Successfully. Kindly login'), status=HTTP_200_OK)
@@ -352,7 +354,7 @@ class LoginUser(APIView):
                 return Response(error_response('Your Password is incorrect. %s tries left' % left, '115'), status=HTTP_400_BAD_REQUEST)
 
         except AFUser.DoesNotExist:
-            return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
+            return Response(error_response("Your email or password is wrong", '110'), status=HTTP_400_BAD_REQUEST)
 
 
 class UpdateProfilePicture(APIView):
