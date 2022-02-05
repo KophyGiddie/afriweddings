@@ -70,7 +70,7 @@ class SignupUser(APIView):
 
         except AFUser.DoesNotExist:
             user = AFUser(
-                        email=email,
+                        email=email.lower(),
                         invitation_code=invitation_code,
                         first_name=first_name,
                         user_type=user_type,
@@ -224,7 +224,7 @@ class ResendSignupVerification(APIView):
     def post(self, request, *args, **kwargs):
 
         email = request.data.get('email')
-        user = AFUser.objects.get(email=email)
+        user = AFUser.objects.get(email=email.lower())
 
         mytoken = account_activation_token.make_token(user)
         print (mytoken)
@@ -243,7 +243,7 @@ class ForgotPassword(APIView):
         email = request.data.get('email')
 
         try:
-            myuser = AFUser.objects.get(email=email)
+            myuser = AFUser.objects.get(email=email.lower())
             mytoken = account_activation_token.make_token(myuser)
             myuser.activation_token = mytoken
             myuser.email_initiation_date = timezone.now()
@@ -309,7 +309,7 @@ class LoginUser(APIView):
             return Response(error_response("Please provide the password value", '113'), status=HTTP_400_BAD_REQUEST)
 
         try:
-            myuser = AFUser.objects.get(email=email)
+            myuser = AFUser.objects.get(email=email.lower())
 
             #checks if the user is blocked and reverts a message or reset the temporal login fails and unblock if time exceeds
             if myuser.is_blocked:
@@ -333,7 +333,8 @@ class LoginUser(APIView):
                 else:
                     if user.is_blocked:
                         return Response(error_response('Your account has been blocked. Please Contact Afriweddings Support', '114'), status=HTTP_400_BAD_REQUEST)
-
+                    else:
+                        return Response(error_response('Kindly activate your account by clicking on the link in your email', '115'), status=HTTP_400_BAD_REQUEST)
             # if user credentials fails increase failed login attempts counter
             else:
                 FailedLogin.objects.create(author=myuser, ip_address=get_client_ip(request))
