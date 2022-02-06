@@ -11,6 +11,24 @@ import random
 from apps.rsvp.helpers import create_rsvp_question
 from apps.guests.helpers import create_guest_event
 from django.db.models import Q
+from decimal import DecimalException
+
+
+def validate_create_wedding_input(budget, guests):
+    error_message = ''
+    send_error = False
+
+    try:
+        Decimal(budget)
+    except (ValueError, DecimalException):
+        error_message += "You have entered an invalid wedding budget value\n"
+
+    try:
+        int(guests)
+    except (ValueError):
+        error_message += "You have entered an invalid expected number of guests\n"
+
+    return send_error, error_message
 
 
 def create_schedule_event(myuser, mywedding, date, venue, name):

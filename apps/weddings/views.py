@@ -24,7 +24,7 @@ from apps.weddings.helpers import (
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
     get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id, is_wedding_admin,
-    create_schedule_event, create_default_wedding_events
+    create_schedule_event, create_default_wedding_events, validate_create_wedding_input
 )
 from apps.users.helpers import create_notification
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
@@ -63,6 +63,10 @@ class WeddingViewSet(viewsets.ModelViewSet):
         partner_first_name = request.data.get('partner_first_name', None)
         partner_last_name = request.data.get('partner_last_name', None)
 
+        send_error, error_message = validate_create_wedding_input(budget, expected_guests)
+        if send_error:
+            return Response(error_response(error_message, '123'), status=HTTP_400_BAD_REQUEST)
+
         mywedding = create_wedding(wedding_date,
                                    expected_guests,
                                    country,
@@ -100,6 +104,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
+        print (request.data)
         mywedding = self.get_object()
 
         if not is_wedding_admin(request.user, mywedding):
@@ -203,6 +208,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
         if not image:
             image = None
+
+        if post == '' or post is None:
+            return Response(error_response("Wedding Post message cannot be none", '123'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
