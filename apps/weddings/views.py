@@ -209,8 +209,8 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if not image:
             image = None
 
-        if post == '' or post is None:
-            return Response(error_response("Wedding Post message cannot be none", '123'), status=HTTP_400_BAD_REQUEST)
+        if not post or post == ' ' or post is None:
+            return Response(error_response("Wedding Post message cannot be empty", '123'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
