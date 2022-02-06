@@ -166,6 +166,8 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
         expected_guests=expected_guests,
         country=country,
         currency=currency,
+        start_time="11:00",
+        end_time="13:00",
         partner_role=partner_role,
         partner_last_name=partner_last_name,
         partner_first_name=partner_first_name,
