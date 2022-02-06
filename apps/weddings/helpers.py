@@ -21,11 +21,13 @@ def validate_create_wedding_input(budget, guests):
     try:
         Decimal(budget)
     except (ValueError, DecimalException):
+        send_error = True
         error_message += "You have entered an invalid wedding budget value\n"
 
     try:
         int(guests)
     except (ValueError):
+        send_error = True
         error_message += "You have entered an invalid expected number of guests\n"
 
     return send_error, error_message
