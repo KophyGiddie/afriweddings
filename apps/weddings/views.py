@@ -53,7 +53,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         wedding_date = request.data.get('wedding_date', None)
-        budget = request.data.get('budget', 0)
+        budget = request.data.get('budget', 0).replace(',', '').replace(' ', '')
         venue = request.data.get('venue', None)
         expected_guests = request.data.get('expected_guests', None)
         country = request.data.get('country', None)
@@ -336,7 +336,7 @@ class SearchPublicWeddings(APIView):
 
         if search_text is not None:
             search = search_text.split(' ')
-            myqueryset = Wedding.objects.select_related('author').all().order_by('-id')
+            myqueryset = Wedding.objects.select_related('author').filter(is_public=True).order_by('-id')
             for search_text in search:
                 myqueryset = myqueryset.filter(Q(partner_first_name__icontains=search_text)|
                                                Q(partner_last_name__icontains=search_text)|

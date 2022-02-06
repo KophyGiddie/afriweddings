@@ -113,8 +113,8 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         name = request.data.get('name', None)
         category_id = request.data.get('category_id', None)
         currency = get_currency(request)
-        estimated_cost = request.data.get('estimated_cost', 0)
-        final_cost = request.data.get('final_cost', 0)
+        estimated_cost = request.data.get('estimated_cost', 0).replace(',', '')
+        final_cost = request.data.get('final_cost', 0).replace(',', '')
 
         if not name:
             return Response(error_response("Please provide the name value", '141'), status=HTTP_400_BAD_REQUEST)
@@ -202,7 +202,7 @@ class BudgetExpenseViewSet(viewsets.ModelViewSet):
         payment_due = request.data.get('payment_due', None)
         paid_by = request.data.get('paid_by', None)
         is_paid = request.data.get('is_paid', False)
-        payment_amount = request.data.get('payment_amount', None)
+        payment_amount = request.data.get('payment_amount', None).replace(',', '')
         payment_method = request.data.get('payment_method', None)
         currency = get_currency(request)
 
