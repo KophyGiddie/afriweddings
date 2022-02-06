@@ -399,7 +399,7 @@ class UserNotificationsViewSet(viewsets.ModelViewSet):
     queryset = UserNotification.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = UserNotification.objects.filter(user_in_question=request.user)
+        myqueryset = UserNotification.objects.filter(wedding_id=request.user.wedding_id)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
         serializer = UserNotificationSerializer(result_page, context={'request': request}, many=True)

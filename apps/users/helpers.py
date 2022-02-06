@@ -20,9 +20,10 @@ def update_wedding_team_image(avatar, request, wedding):
         pass
 
 
-def create_notification(title, body, myuser, object_id):
+def create_notification(title, body, myuser, object_id, wedding_id):
     UserNotification.objects.create(user_in_question=myuser,
                                     title=title,
+                                    wedding_id=wedding_id,
                                     object_id=object_id,
                                     message=body,
                                     notification_type='GENERAL')

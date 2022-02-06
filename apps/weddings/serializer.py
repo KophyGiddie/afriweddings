@@ -81,6 +81,7 @@ class WallPostSerializer(serializers.Serializer):
     author = LimitedUserSerializer(many=False)
     post = serializers.CharField()
     image = serializers.URLField(source='get_image')
+    elapsed_time = serializers.CharField(source='get_elapsed_time')
 
 
 class WeddingMediaSerializer(serializers.Serializer):

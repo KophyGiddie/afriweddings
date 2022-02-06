@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from utils import constants
 import uuid
-
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 # Create your models here.
 class Wedding(models.Model):
@@ -216,6 +216,11 @@ class WallPost(models.Model):
     class Meta:
         verbose_name_plural = 'Wall Post'
         ordering = ('-created_at',)
+
+    def get_elapsed_time(self):
+        mytime = naturaltime(self.created_at)
+        mytime = mytime.replace(' ', ' ')
+        return mytime
 
     def get_image(self):
         if self.image:

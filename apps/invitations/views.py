@@ -224,8 +224,8 @@ class AcceptInvite(APIView):
             mywedding.save()
 
         title = 'Invitation Response'
-        body = '%s accepted on your invite' % myinvitation.first_name
-        create_notification(title, body, None, str(myinvitation.id))
+        body = '%s accepted invitation' % myinvitation.first_name
+        create_notification(title, body, None, str(myinvitation.id), myinvitation.wedding.id)
         serializer = InvitationSerializer(myinvitation, context={'request': request})
         return Response({"response_code": "100",
                          "user_exist": user_exists,
