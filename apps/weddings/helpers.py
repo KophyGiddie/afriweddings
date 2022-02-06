@@ -179,7 +179,8 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
         mybudget = mybudget_object.total_budget
     except DefaultBudget.DoesNotExist:
         mybudget = Decimal(10000)
-    mywedding.budget = mybudget
+    if mywedding.budget <= Decimal(0):
+        mywedding.budget = mybudget
     mywedding.total_checklist = DefaultChecklist.objects.all().count()
     mywedding.save()
 
