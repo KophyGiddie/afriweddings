@@ -202,7 +202,7 @@ class UserNotification(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     object_id = models.CharField(blank=True, null=True, max_length=1000)
-    wedding_id = models.UUIDField(default=uuid.uuid4, editable=True)
+    wedding_id = models.UUIDField(default=uuid.uuid4, blank=True, null=True)
     read = models.BooleanField(default=False)
     user_in_question = models.ForeignKey(
         AFUser,
