@@ -53,7 +53,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         wedding_date = request.data.get('wedding_date', None)
-        budget = request.data.get('budget', 0).replace(',', '').replace(' ', '')
+        budget = request.data.get('budget', "0").replace(',', '').replace(' ', '')
         venue = request.data.get('venue', None)
         expected_guests = request.data.get('expected_guests', None)
         country = request.data.get('country', None)
