@@ -322,7 +322,7 @@ class LoginUser(APIView):
                     left = int(300) - int(cooloff)
                     return Response(error_response('You have attempted to login 3 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
 
-            user = authenticate(email=email, password=password)
+            user = authenticate(email=email.lower(), password=password)
 
             #if user credentials passes authentication do OAuth login here
             if user is not None:
