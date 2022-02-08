@@ -1,7 +1,8 @@
-from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
+from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent, WeddingFAQ
 from apps.guests.models import GuestGroup
 from apps.prerequisites.models import (
-    DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist, DefaultWeddingEvent
+    DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist, DefaultWeddingEvent,
+    DefaultFAQ
 )
 from django.core.exceptions import ValidationError
 from apps.budget.helpers import create_budget_category, create_budget_expense, update_budget_category
@@ -228,6 +229,17 @@ def create_default_wedding_events(mywedding, request):
     for item in myquestions:
         create_schedule_event(request.user, mywedding, mywedding.wedding_date, mywedding.venue, item.name)
         create_guest_event(item.name, mywedding, request.user)
+
+
+def create_default_wedding_faq(mywedding, request):
+    myfaq = DefaultFAQ.objects.all()
+    for item in myfaq:
+        WeddingFAQ.objects.create(
+            question=item.question,
+            wedding=mywedding,
+            answer=item.answer,
+            created_by=request.user
+        )
 
 
 def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, request):
