@@ -23,7 +23,9 @@ from apps.weddings.helpers import (
     create_guest_groups, get_role_by_name, generate_slug, create_wedding_roles, create_wedding,
     create_default_budget_categories, get_faq_by_question, get_schedule_event_by_name,
     get_wedding_schedule_event_by_id, get_wedding_by_public_url, create_default_rsvp_questions,
-    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id, is_wedding_admin
+    get_wedding_by_hashtag, get_associated_weddings, get_wedding_by_id, is_wedding_admin,
+    create_schedule_event, create_default_wedding_events, validate_create_wedding_input,
+    create_default_wedding_faq
 )
 from apps.users.helpers import create_notification
 from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_groups, compress_image
@@ -52,7 +54,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         wedding_date = request.data.get('wedding_date', None)
-        budget = request.data.get('budget', 0)
+        budget = request.data.get('budget', "0").replace(',', '').replace(' ', '')
         venue = request.data.get('venue', None)
         expected_guests = request.data.get('expected_guests', None)
         country = request.data.get('country', None)
@@ -61,6 +63,10 @@ class WeddingViewSet(viewsets.ModelViewSet):
         partner_role = request.data.get('partner_role', None)
         partner_first_name = request.data.get('partner_first_name', None)
         partner_last_name = request.data.get('partner_last_name', None)
+
+        send_error, error_message = validate_create_wedding_input(budget, expected_guests)
+        if send_error:
+            return Response(error_response(error_message, '123'), status=HTTP_400_BAD_REQUEST)
 
         mywedding = create_wedding(wedding_date,
                                    expected_guests,
@@ -80,6 +86,8 @@ class WeddingViewSet(viewsets.ModelViewSet):
         create_default_budget_categories(mywedding, request)
         create_guest_groups(mywedding, request)
         create_default_rsvp_questions(mywedding, request)
+        create_default_wedding_events(mywedding, request)
+        create_default_wedding_faq(mywedding, request)
 
         myuser = request.user
         myuser.wedding_id = mywedding.id
@@ -98,6 +106,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
+        print (request.data)
         mywedding = self.get_object()
 
         if not is_wedding_admin(request.user, mywedding):
@@ -202,6 +211,9 @@ class WeddingViewSet(viewsets.ModelViewSet):
         if not image:
             image = None
 
+        if not post or post == ' ' or post is None:
+            return Response(error_response("Wedding Post message cannot be empty", '123'), status=HTTP_400_BAD_REQUEST)
+
         mywedding = Wedding.objects.get(id=request.user.wedding_id)
 
         mypost = WallPost.objects.create(author=request.user,
@@ -210,7 +222,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
                                          image=image)
         title = 'New Wall Post'
         body = '%s posted on the wedding wall' % request.user.first_name
-        create_notification(title, body, request.user, str(mypost.id))
+        create_notification(title, body, request.user, str(mypost.id), mywedding.id)
         serializer = WallPostSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
 
@@ -334,7 +346,7 @@ class SearchPublicWeddings(APIView):
 
         if search_text is not None:
             search = search_text.split(' ')
-            myqueryset = Wedding.objects.select_related('author').all().order_by('-id')
+            myqueryset = Wedding.objects.select_related('author').filter(is_public=True).order_by('-id')
             for search_text in search:
                 myqueryset = myqueryset.filter(Q(partner_first_name__icontains=search_text)|
                                                Q(partner_last_name__icontains=search_text)|
@@ -435,13 +447,7 @@ class WeddingScheduleEventViewSet(viewsets.ModelViewSet):
         if existing_name:
             return Response(error_response("This event already exist", '139'), status=HTTP_400_BAD_REQUEST)
 
-        mytable = WeddingScheduleEvent.objects.create(
-            name=name,
-            venue=venue,
-            date=date,
-            wedding=mywedding,
-            created_by=request.user
-        )
+        mytable = create_schedule_event(request.user, mywedding, date, venue, name)
 
         serializer = WeddingScheduleEventSerializer(mytable, context={'request': request})
         return Response(success_response('Created Successfully', serializer.data), status=HTTP_200_OK)

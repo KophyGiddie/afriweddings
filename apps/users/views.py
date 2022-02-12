@@ -10,7 +10,7 @@ from apps.users.serializer import UserSerializer, UserAuthSerializer, UserNotifi
 from apps.users.models import AFUser, FailedLogin, StoredPass, UserNotification
 from utils.pagination import PageNumberPagination
 from rest_framework import viewsets
-from apps.invitations.models import Invitation
+from apps.invitations.models import Invitation, BetaInvitation
 from utils.utilities import hash_string, send_activation_email, get_client_ip, send_forgot_password_email
 from utils.token import account_activation_token
 from django.utils import timezone
@@ -70,7 +70,7 @@ class SignupUser(APIView):
 
         except AFUser.DoesNotExist:
             user = AFUser(
-                        email=email,
+                        email=email.lower(),
                         invitation_code=invitation_code,
                         first_name=first_name,
                         user_type=user_type,
@@ -135,7 +135,13 @@ class SignupUser(APIView):
                 user.author_role = user_role
                 user.save()
 
-                send_activation_email(user, mytoken, "Kindly Activate Your Account")
+                try:
+                    BetaInvitation.objects.get(email=email)
+                    send_activation_email(user, mytoken, "Kindly Activate Your Account")
+                except BetaInvitation.DoesNotExist:
+                    user.is_beta_reject = True
+                    user.save()
+                    return Response(error_response("Thank you for signing up, Afriweddings is currently in Beta Mode, you will be notified when we are live.", '102'), status=HTTP_400_BAD_REQUEST)
 
             hashed = hash_string(password)
             StoredPass.objects.create(hashed=hashed, author=user)
@@ -218,7 +224,7 @@ class ResendSignupVerification(APIView):
     def post(self, request, *args, **kwargs):
 
         email = request.data.get('email')
-        user = AFUser.objects.get(email=email)
+        user = AFUser.objects.get(email=email.lower())
 
         mytoken = account_activation_token.make_token(user)
         print (mytoken)
@@ -237,7 +243,7 @@ class ForgotPassword(APIView):
         email = request.data.get('email')
 
         try:
-            myuser = AFUser.objects.get(email=email)
+            myuser = AFUser.objects.get(email=email.lower())
             mytoken = account_activation_token.make_token(myuser)
             myuser.activation_token = mytoken
             myuser.email_initiation_date = timezone.now()
@@ -281,6 +287,8 @@ class ResetPassword(APIView):
         myuser.set_password(password)
         myuser.wild_string = ''
         myuser.password_changed = True
+        myuser.is_active = True
+        myuser.is_blocked = True
         myuser.save()
 
         return Response(success_response('Password Reset Successfully. Kindly login'), status=HTTP_200_OK)
@@ -301,7 +309,7 @@ class LoginUser(APIView):
             return Response(error_response("Please provide the password value", '113'), status=HTTP_400_BAD_REQUEST)
 
         try:
-            myuser = AFUser.objects.get(email=email)
+            myuser = AFUser.objects.get(email=email.lower())
 
             #checks if the user is blocked and reverts a message or reset the temporal login fails and unblock if time exceeds
             if myuser.is_blocked:
@@ -314,7 +322,7 @@ class LoginUser(APIView):
                     left = int(300) - int(cooloff)
                     return Response(error_response('You have attempted to login 3 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
 
-            user = authenticate(email=email, password=password)
+            user = authenticate(email=email.lower(), password=password)
 
             #if user credentials passes authentication do OAuth login here
             if user is not None:
@@ -325,7 +333,8 @@ class LoginUser(APIView):
                 else:
                     if user.is_blocked:
                         return Response(error_response('Your account has been blocked. Please Contact Afriweddings Support', '114'), status=HTTP_400_BAD_REQUEST)
-
+                    else:
+                        return Response(error_response('Kindly activate your account by clicking on the link in your email', '115'), status=HTTP_400_BAD_REQUEST)
             # if user credentials fails increase failed login attempts counter
             else:
                 FailedLogin.objects.create(author=myuser, ip_address=get_client_ip(request))
@@ -346,7 +355,7 @@ class LoginUser(APIView):
                 return Response(error_response('Your Password is incorrect. %s tries left' % left, '115'), status=HTTP_400_BAD_REQUEST)
 
         except AFUser.DoesNotExist:
-            return Response(error_response("Email doesn't exist", '110'), status=HTTP_400_BAD_REQUEST)
+            return Response(error_response("Your email or password is wrong", '110'), status=HTTP_400_BAD_REQUEST)
 
 
 class UpdateProfilePicture(APIView):
@@ -390,7 +399,7 @@ class UserNotificationsViewSet(viewsets.ModelViewSet):
     queryset = UserNotification.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
-        myqueryset = UserNotification.objects.filter(user_in_question=request.user)
+        myqueryset = UserNotification.objects.filter(wedding_id=request.user.wedding_id)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(myqueryset, request)
         serializer = UserNotificationSerializer(result_page, context={'request': request}, many=True)

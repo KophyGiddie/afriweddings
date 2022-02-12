@@ -191,7 +191,7 @@ class DefaultChecklist(models.Model):
 
 class DefaultWeddingRole(models.Model):
     """
-    Model for storing the default roles for prepopulation
+    Model for storing the default wedding roles for prepopulation
 
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -204,4 +204,22 @@ class DefaultWeddingRole(models.Model):
 
     class Meta:
         verbose_name_plural = 'Default Wedding Roles'
+        ordering = ('name', )
+
+
+class DefaultWeddingEvent(models.Model):
+    """
+    Model for storing the default wedding events for prepopulation
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=2000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s' % (self.name)
+
+    class Meta:
+        verbose_name_plural = 'Default Wedding Events'
         ordering = ('name', )

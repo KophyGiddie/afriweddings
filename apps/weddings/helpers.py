@@ -1,13 +1,48 @@
-from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent
+from apps.weddings.models import WeddingRole, Wedding, WeddingFAQ, WeddingScheduleEvent, WeddingFAQ
 from apps.guests.models import GuestGroup
-from apps.prerequisites.models import DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist
+from apps.prerequisites.models import (
+    DefaultRSVPQuestion, DefaultBudgetCategory, DefaultBudget, DefaultChecklist, DefaultWeddingEvent,
+    DefaultFAQ
+)
 from django.core.exceptions import ValidationError
 from apps.budget.helpers import create_budget_category, create_budget_expense, update_budget_category
 from decimal import Decimal
 from apps.invitations.models import Invitation
 import random
 from apps.rsvp.helpers import create_rsvp_question
+from apps.guests.helpers import create_guest_event
 from django.db.models import Q
+from decimal import DecimalException
+
+
+def validate_create_wedding_input(budget, guests):
+    error_message = ''
+    send_error = False
+
+    try:
+        Decimal(budget)
+    except (ValueError, DecimalException):
+        send_error = True
+        error_message += "You have entered an invalid wedding budget value\n\n"
+
+    try:
+        int(guests)
+    except (ValueError):
+        send_error = True
+        error_message += "You have entered an invalid expected number of guests"
+
+    return send_error, error_message
+
+
+def create_schedule_event(myuser, mywedding, date, venue, name):
+    myevent = WeddingScheduleEvent.objects.create(
+        name=name,
+        venue=venue,
+        date=date,
+        wedding=mywedding,
+        created_by=myuser
+    )
+    return myevent
 
 
 def is_wedding_admin(myuser, mywedding):
@@ -132,6 +167,8 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
         expected_guests=expected_guests,
         country=country,
         currency=currency,
+        start_time="11:00",
+        end_time="14:00",
         partner_role=partner_role,
         partner_last_name=partner_last_name,
         partner_first_name=partner_first_name,
@@ -145,7 +182,8 @@ def create_wedding(wedding_date, expected_guests, country, currency, partner_rol
         mybudget = mybudget_object.total_budget
     except DefaultBudget.DoesNotExist:
         mybudget = Decimal(10000)
-    mywedding.budget = mybudget
+    if mywedding.budget <= Decimal(0):
+        mywedding.budget = mybudget
     mywedding.total_checklist = DefaultChecklist.objects.all().count()
     mywedding.save()
 
@@ -184,6 +222,24 @@ def create_default_rsvp_questions(mywedding, request):
     myquestions = DefaultRSVPQuestion.objects.all()
     for item in myquestions:
         create_rsvp_question(item.question, mywedding, request.user, 'USER_INPUT', '')
+
+
+def create_default_wedding_events(mywedding, request):
+    myquestions = DefaultWeddingEvent.objects.all()
+    for item in myquestions:
+        create_schedule_event(request.user, mywedding, mywedding.wedding_date, mywedding.venue, item.name)
+        create_guest_event(item.name, mywedding, request.user)
+
+
+def create_default_wedding_faq(mywedding, request):
+    myfaq = DefaultFAQ.objects.all()
+    for item in myfaq:
+        WeddingFAQ.objects.create(
+            question=item.question,
+            wedding=mywedding,
+            answer=item.answer,
+            created_by=request.user
+        )
 
 
 def custom_create_guest_group(mywedding, name, is_wedding_creator, is_partner, request):
