@@ -35,6 +35,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         first_name = request.data.get('first_name', None)
         last_name = request.data.get('last_name', None)
         mywedding = get_wedding(request)
+        mypicture = request.FILES.get('profile_picture', None)
 
         try:
             myrole = WeddingRole.objects.get(role=user_role, wedding=mywedding)
@@ -57,6 +58,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                 wedding=get_wedding(request),
                 status='PENDING',
                 invited_by=request.user,
+                profile_picture=mypicture
             )
             if invitation_type == 'Wedding Team':
                 try:
@@ -67,6 +69,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                         first_name=first_name,
                         last_name=last_name,
                         email=email,
+                        profile_picture=mypicture,
                         role=myrole
                     )
 

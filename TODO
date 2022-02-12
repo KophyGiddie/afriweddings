@@ -1,2 +1,7 @@
-WEDDING PLANNER
-wen wedding planner dont create checklist at user level do it wen creating wedding then the rest follows
+SEND AN INVITE TO PLATFORM VIA EMAIL
+	- create model for this and use email as POI
+	- check email in POI and note it to return for error
+
+Test invite thingy image
+
+CREATE CHECKLIST FOR USER WHO ALREADY EXIST
