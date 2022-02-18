@@ -45,6 +45,7 @@ class Wedding(models.Model):
     total_checklist = models.IntegerField(default=0)
     wedding_date = models.DateField(blank=True, null=True)
     is_public = models.BooleanField(default=False)
+    is_featured = models.BooleanField(default=False)
     start_time = models.CharField(max_length=200, blank=True, null=True)
     end_time = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -76,6 +77,11 @@ class Wedding(models.Model):
         else:
             myimage = ''
         return myimage
+
+    def get_wedding_date(self):
+        if self.wedding_date:
+            return self.wedding_date.strftime("%Y-%m-%d")
+        return None
 
     class Meta:
         verbose_name_plural = 'Weddings'

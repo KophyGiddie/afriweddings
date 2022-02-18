@@ -40,6 +40,14 @@ class AllWeddings(APIView):
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
 
+class FeaturedWeddings(APIView):
+
+    def get(self, request, *args, **kwargs):
+        myqueryset = Wedding.objects.filter(is_featured=True).order_by('id')
+        serializer = WeddingSerializer(myqueryset, context={'request': request}, many=True)
+        return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
+
+
 class WeddingViewSet(viewsets.ModelViewSet):
     model = Wedding
     serializer_class = WeddingSerializer
@@ -54,6 +62,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         wedding_date = request.data.get('wedding_date', None)
+        wedding_date = parse(request.data.get("wedding_date"), dayfirst=False)
         budget = request.data.get('budget', "0").replace(',', '').replace(' ', '')
         venue = request.data.get('venue', None)
         expected_guests = request.data.get('expected_guests', None)
@@ -143,7 +152,7 @@ class WeddingViewSet(viewsets.ModelViewSet):
             mywedding.partner_last_name = request.data.get("partner_last_name")
 
         if request.data.get('wedding_date') and request.data.get('wedding_date') != "":
-            mywedding.wedding_date = parse(request.data.get("wedding_date"), dayfirst=True)
+            mywedding.wedding_date = parse(request.data.get("wedding_date"), dayfirst=False)
 
         if request.data.get('expected_guests') and request.data.get('expected_guests') != "":
             mywedding.expected_guests = request.data.get('expected_guests')

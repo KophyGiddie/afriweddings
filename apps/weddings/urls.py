@@ -4,7 +4,8 @@ from rest_framework.routers import DefaultRouter
 from apps.weddings.views import (
     WeddingViewSet, AllWeddings, WeddingRoleViewSet, SearchPublicWeddings,
     WeddingFAQViewSet, WeddingScheduleEventViewSet, WeddingScheduleViewSet,
-    GetPublicWedding, PublicWeddings, ValidateWeddingPublicURL, ValidateWeddingHashtag
+    GetPublicWedding, PublicWeddings, ValidateWeddingPublicURL, ValidateWeddingHashtag,
+    FeaturedWeddings
 )
 
 router = DefaultRouter()
@@ -18,6 +19,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('all_weddings/', AllWeddings.as_view()),
     path('public_weddings/', PublicWeddings.as_view()),
+    path('featured_weddings/', FeaturedWeddings.as_view()),
     path('validate_wedding_public_url/', ValidateWeddingPublicURL.as_view()),
     path('validate_wedding_hashtag/', ValidateWeddingHashtag.as_view()),
     path('get_public_wedding/', GetPublicWedding.as_view()),
