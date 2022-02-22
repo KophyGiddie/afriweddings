@@ -224,6 +224,47 @@ def update_guest_groups_and_events(mywedding):
         myevent.save()
 
 
+def create_guest_custom(mywedding, myuser, first_name, last_name, event_ids, group_id, email, phone, country_code):
+    """
+    Creates a guest event with the parameters supplied
+
+    """
+    mygroup = None
+
+    if group_id and group_id != '':
+        mygroup = get_guest_group_by_id(group_id, mywedding)
+
+    myguest = Guest.objects.create(
+        first_name=first_name,
+        last_name=last_name,
+        wedding=mywedding,
+        group=mygroup,
+        status='PENDING',
+        country_code=country_code,
+        email=email,
+        phone=phone,
+        created_by=myuser
+    )
+
+    if event_ids:
+        for item in event_ids:
+            myevent = get_guest_event_by_id(item, mywedding)
+
+            GuestInvitation.objects.create(wedding=mywedding,
+                                           event=myevent,
+                                           guest=myguest,
+                                           created_by=myuser,
+                                           status='',
+                                           group=mygroup)
+
+            if myevent:
+                update_event_guests(myevent)
+
+    if group_id and group_id != '':
+        update_group_guests(mygroup)
+
+    return myguest
+
 def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, email, phone):
     """
     Creates a guest event with the parameters supplied

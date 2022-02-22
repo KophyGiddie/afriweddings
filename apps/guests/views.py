@@ -18,7 +18,7 @@ from apps.guests.models import GuestGroup, GuestEvent, Guest, GuestInvitation
 from apps.guests.helpers import (
     create_guest_event, get_guest_event_by_name,
     create_guest_group, get_guest_group_by_name,
-    create_guest, get_guest_group_by_id,
+    create_guest, get_guest_group_by_id, create_guest_custom,
     update_event_guests, get_guest_invitation_by_id,
     get_guest_public_invitation_by_id, get_guest_by_id,
     get_guest_invitations_by_guest_id, bulk_populate_guest_list,
@@ -213,6 +213,7 @@ class GuestViewSet(viewsets.ModelViewSet):
         group_id = request.data.get('group_id', None)
         email = request.data.get('email', None)
         phone = request.data.get('phone', None)
+        country_code = request.data.get('country_code', None)
 
         if not first_name:
             return Response(error_response("Please provide the first name value", '140'), status=HTTP_400_BAD_REQUEST)
@@ -222,7 +223,7 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         mywedding = get_wedding(request)
 
-        myguest = create_guest(mywedding, request.user, first_name, last_name, event_ids, group_id, email, phone)
+        myguest = create_guest_custom(mywedding, request.user, first_name, last_name, event_ids, group_id, email, phone, country_code)
 
         update_guest_groups_and_events(mywedding)
 
@@ -251,6 +252,9 @@ class GuestViewSet(viewsets.ModelViewSet):
 
         if request.data.get('email') and request.data.get('email') != '':
             myobject.email = request.data.get('email')
+
+        if request.data.get('country_code') and request.data.get('country_code') != '':
+            myobject.country_code = request.data.get('country_code')
 
         if request.data.get('phone') and request.data.get('phone') != '':
             myobject.phone = request.data.get('phone')

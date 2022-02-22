@@ -127,6 +127,7 @@ class Guest(models.Model):
     age = models.CharField(max_length=2000, blank=True, null=True)
     address = models.CharField(max_length=2000, blank=True, null=True)
     email = models.CharField(max_length=2000, blank=True, null=True)
+    country_code = models.CharField(max_length=2000, blank=True, null=True)
     phone = models.CharField(max_length=2000, blank=True, null=True)
     companion = models.CharField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
