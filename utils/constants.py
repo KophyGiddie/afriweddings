@@ -18,7 +18,7 @@ PROFILE_PIC_DIR = 'PROFILE/' + TODAY_PATH + generate_image_upload_prefix() + '/'
 WALLPOST_PIC_DIR = 'WALLPOST/' + TODAY_PATH + generate_image_upload_prefix() + '/'
 
 if "LIVE" in os.environ:
-    WEB_APP_URL = 'https://afriweddingsweb.herokuapp.com/'
+    WEB_APP_URL = 'https://www.afriweddings.com/'
 else:
     WEB_APP_URL = 'https://afriweddingsweb.herokuapp.com/'
 
