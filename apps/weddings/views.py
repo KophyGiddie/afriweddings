@@ -41,6 +41,7 @@ class AllWeddings(APIView):
 
 
 class FeaturedWeddings(APIView):
+    permission_classes = (AllowAny, )
 
     def get(self, request, *args, **kwargs):
         myqueryset = Wedding.objects.filter(is_featured=True).order_by('id')
