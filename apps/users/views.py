@@ -288,7 +288,6 @@ class ResetPassword(APIView):
         myuser.wild_string = ''
         myuser.password_changed = True
         myuser.is_active = True
-        myuser.is_blocked = True
         myuser.save()
 
         return Response(success_response('Password Reset Successfully. Kindly login'), status=HTTP_200_OK)
@@ -320,7 +319,7 @@ class LoginUser(APIView):
                     myuser.save()
                 else:
                     left = int(300) - int(cooloff)
-                    return Response(error_response('You have attempted to login 3 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
+                    return Response(error_response('You have attempted to login 5 times unsuccessfully. Your account is locked for %s seconds' % left, '114'), status=HTTP_400_BAD_REQUEST)
 
             user = authenticate(email=email.lower(), password=password)
 
@@ -341,18 +340,18 @@ class LoginUser(APIView):
                 myuser.temporal_login_fails += 1
                 myuser.save()
 
-                if int(myuser.temporal_login_fails) == 3:
+                if int(myuser.temporal_login_fails) == 5:
                     myuser.is_blocked = True
                     myuser.permanent_login_fails += 1
                     myuser.save()
 
-                    if int(myuser.permanent_login_fails) >= 3:
+                    if int(myuser.permanent_login_fails) >= 5:
                         myuser.is_active = False
                         myuser.save()
 
-                    return Response(error_response("You have attempted to login 3 times, with no success. Your account has been locked temporarily for 300 seconds", '111'), status=HTTP_400_BAD_REQUEST)
-                left = 3 - myuser.temporal_login_fails
-                return Response(error_response('Your Password is incorrect. %s tries left' % left, '115'), status=HTTP_400_BAD_REQUEST)
+                    return Response(error_response("You have attempted to login 5 times, with no success. Your account has been locked temporarily for 300 seconds", '111'), status=HTTP_400_BAD_REQUEST)
+                left = 5 - myuser.temporal_login_fails
+                return Response(error_response('Your Email or Password is incorrect.', '115'), status=HTTP_400_BAD_REQUEST)
 
         except AFUser.DoesNotExist:
             return Response(error_response("Your email or password is wrong", '110'), status=HTTP_400_BAD_REQUEST)
