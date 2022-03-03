@@ -235,7 +235,7 @@ REST_FRAMEWORK = {
         'rest_framework.pagination.PageNumberPagination'
     ),
 
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 30
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
