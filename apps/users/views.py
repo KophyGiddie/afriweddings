@@ -309,7 +309,8 @@ class LoginUser(APIView):
 
         try:
             myuser = AFUser.objects.get(email=email.lower())
-
+            if not myuser.is_active and not myuser.is_blocked:
+                return Response(error_response('Your account is inactive, kindly activate your account by clicking on the link sent to your email', '115'), status=HTTP_400_BAD_REQUEST)
             #checks if the user is blocked and reverts a message or reset the temporal login fails and unblock if time exceeds
             if myuser.is_blocked:
                 cooloff = (timezone.now() - myuser.failed_login_attempts.all().latest('id').date_created).seconds
