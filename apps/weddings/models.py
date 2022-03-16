@@ -46,6 +46,7 @@ class Wedding(models.Model):
     total_checklist = models.IntegerField(default=0)
     wedding_date = models.DateField(blank=True, null=True)
     is_public = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
     start_time = models.CharField(max_length=200, blank=True, null=True)
     end_time = models.CharField(max_length=200, blank=True, null=True)
