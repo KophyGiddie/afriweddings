@@ -185,6 +185,12 @@ class WeddingViewSet(viewsets.ModelViewSet):
 
             compress_image.delay(str(mywedding.couple_picture))
 
+        if request.FILES.get('couple_picture_mobile'):
+            mywedding.couple_picture_mobile = request.FILES.get('couple_picture_mobile')
+            mywedding.save()
+
+            compress_image.delay(str(mywedding.couple_picture))
+
         mywedding.save()
 
         update_guest_groups.delay(mywedding.id)
