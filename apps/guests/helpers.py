@@ -265,6 +265,7 @@ def create_guest_custom(mywedding, myuser, first_name, last_name, event_ids, gro
 
     return myguest
 
+
 def create_guest(mywedding, myuser, first_name, last_name, event_ids, group_id, email, phone):
     """
     Creates a guest event with the parameters supplied

@@ -31,6 +31,7 @@ class Wedding(models.Model):
     budget = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     partner_picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     couple_picture = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
+    couple_picture_mobile = models.FileField(upload_to=constants.PROFILE_PIC_DIR, blank=True, null=True)
     currency = models.CharField(blank=True, null=True, max_length=128, default="GHS")
     country = models.CharField(blank=True, null=True, max_length=128, default="Ghana")
     partner_accepted_invite = models.BooleanField(default=False)
@@ -63,6 +64,13 @@ class Wedding(models.Model):
         related_name='wedding_team',
         blank=True
     )
+
+    def get_couple_picture_mobile(self):
+        if self.couple_picture_mobile:
+            myimage = self.couple_picture_mobile.url
+        else:
+            myimage = ''
+        return myimage
 
     def get_partner_picture(self):
         if self.partner_picture:
