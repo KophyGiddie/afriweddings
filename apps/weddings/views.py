@@ -14,6 +14,7 @@ from apps.rsvp.serializer import RSVPQuestionSerializer
 from apps.invitations.serializer import PublicInvitationSerializer
 from utils.pagination import PageNumberPagination
 from utils.utilities import get_admin_wedding, get_wedding
+from apps.celerytasks.tasks import send_wall_post_email_task
 from dateutil.parser import parse
 from apps.weddings.models import (
     Wedding, WeddingRole, WallPost, WeddingMedia, WeddingFAQ, WeddingSchedule, WeddingScheduleEvent,
@@ -239,6 +240,10 @@ class WeddingViewSet(viewsets.ModelViewSet):
         title = 'New Wall Post'
         body = '%s posted on the wedding wall' % request.user.first_name
         create_notification(title, body, request.user, str(mypost.id), mywedding.id)
+        if mywedding.is_premium:
+            send_wall_post_email_task.delay(mywedding.author.first_name,
+                                            mywedding.author.email,
+                                            body)
         serializer = WallPostSerializer(mypost, context={'request': request})
         return Response(success_response('Wedding Created Successfully', serializer.data), status=HTTP_200_OK)
 

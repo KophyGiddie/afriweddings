@@ -81,6 +81,19 @@ def send_online_invitation_email(token, first_name, invited_by, wedding_date, pa
     sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
 
 
+def send_wall_post_email(first_name, email, body):
+    title = 'Afriweddings - New Wall Post'
+    context = {
+        'title': title,
+        'body': body,
+        'first_name': first_name,
+    }
+    msg_html = render_to_string('email_templates/wall_post.html', context)
+    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
+
+
+
+
 def send_beta_email(first_name, email):
     title = 'Afriweddings Beta Test Invitation'
     context = {
