@@ -103,7 +103,7 @@ def send_vendor_approval_email(first_name, last_name, display_name, phone_number
         'button_url': WEB_APP_URL
     }
     msg_html = render_to_string('email_templates/vendor_approval.html', context)
-    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
+    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), "leslie.salami@salconsolutions.com")
 
 
 
