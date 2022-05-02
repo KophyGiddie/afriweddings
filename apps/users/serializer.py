@@ -20,7 +20,7 @@ class UserAuthSerializer(serializers.ModelSerializer):
         fields = ('id', 'auth_token', 'email', 'username', 'profile_picture',
                   'first_name', 'last_name', 'user_type', 'has_onboarded',
                   'phone_number', 'user_role', 'created_at', 'has_multiple_weddings',
-                  'has_created_wedding', 'author_role', 'country_code'
+                  'has_created_wedding', 'author_role', 'country_code',
                   )
 
 
@@ -34,6 +34,29 @@ class UserSerializer(serializers.ModelSerializer):
                   'phone_number', 'user_role', 'created_at', 'has_multiple_weddings',
                   'has_created_wedding', 'author_role', 'country_code'
                   )
+
+
+class VendorAuthSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    auth_token = serializers.CharField(max_length=500, read_only=True)
+    profile_picture = serializers.URLField(source='get_avatar_full')
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    vendor_display_name = serializers.CharField()
+    phone_number = serializers.CharField()
+    address = serializers.CharField()
+    is_approved = serializers.BooleanField()
+
+
+class VendorSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    profile_picture = serializers.URLField(source='get_avatar_full')
+    vendor_display_name = serializers.CharField()
+    phone_number = serializers.CharField()
+    address = serializers.CharField()
+    is_approved = serializers.BooleanField()
 
 
 class LimitedUserSerializer(serializers.Serializer):

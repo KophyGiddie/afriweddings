@@ -92,6 +92,19 @@ def send_wall_post_email(first_name, email, body):
     sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
 
 
+def send_vendor_approval_email(first_name, last_name, display_name, phone_number):
+    title = 'New Vendor Approval Request'
+    context = {
+        'title': title,
+        'first_name': first_name,
+        'last_name': last_name,
+        'display_name': display_name,
+        'phone_number': phone_number,
+        'button_url': WEB_APP_URL
+    }
+    msg_html = render_to_string('email_templates/vendor_approval.html', context)
+    sendgrid.send_email(title, msg_html, os.environ.get('FROM_EMAIL'), email)
+
 
 
 def send_beta_email(first_name, email):

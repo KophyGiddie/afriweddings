@@ -163,7 +163,10 @@ class ValidateEmail(APIView):
             theuser.is_active = True
             theuser.save()
 
-            create_initial_checklist(theuser)
+            if theuser.user_type == 'VENDOR':
+                print ('vendor check')
+            else:
+                create_initial_checklist(theuser)
 
             return Response(success_response('Your email has been verified successfully kindly login'), status=HTTP_200_OK)
         except AFUser.DoesNotExist:
@@ -173,7 +176,10 @@ class ValidateEmail(APIView):
 class CurrentUserProfile(APIView):
 
     def get(self, request, *args, **kwargs):
-        serializer = UserSerializer(request.user, context={'request': request})
+        if request.user.user_type == 'VENDOR':
+            serializer = VendorSerializer(request.user, context={'request': request})
+        else:
+            serializer = UserSerializer(request.user, context={'request': request})
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
@@ -328,7 +334,11 @@ class LoginUser(APIView):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    serializer = UserAuthSerializer(user, context={'request': request})
+                    if user.user_type == 'VENDOR':
+                        serializer = VendorAuthSerializer(user, context={'request': request})
+                    else:
+                        serializer = UserAuthSerializer(user, context={'request': request})
+
                     return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
                 else:
                     if user.is_blocked:
@@ -419,3 +429,53 @@ class UserNotificationsViewSet(viewsets.ModelViewSet):
         return Response({'num_of_unread': mynumber,
                          'response_code': '100',
                          'message': 'Data Returned Successfully'}, status=HTTP_200_OK)
+
+
+class UpdateVendorProfile(APIView):
+
+    def post(self, request, *args, **kwargs):
+        myuser = request.user
+
+        if request.data.get('first_name') and request.data.get('first_name') != '':
+            myuser.first_name = request.data.get('first_name')
+
+        if request.data.get('last_name') and request.data.get('last_name') != '':
+            myuser.last_name = request.data.get('last_name')
+
+        if request.data.get('vendor_display_name') and request.data.get('vendor_display_name') != '':
+            myuser.vendor_display_name = request.data.get('vendor_display_name')
+
+        if request.data.get('phone_number') and request.data.get('phone_number') != "":
+            myuser.phone_number = request.data.get("phone_number")
+
+        if request.data.get('address') and request.data.get('address') != "":
+            myuser.address = request.data.get("address")       
+
+        myuser.save()
+        serializer = VendorSerializer(myuser, context={'request': request})
+        return Response(success_response('Updated Successfully', serializer.data), status=HTTP_200_OK)
+
+
+class RequestforApproval(APIView):
+
+    def post(self, request, *args, **kwargs):
+        myuser = request.user
+
+        if myuser.is_approved:       
+            return Response(error_response("Your profile has already been approved", '120'), status=HTTP_400_BAD_REQUEST)
+        
+        send_vendor_approval_email_task.delay(myuser.first_name, myuser.last_name, myuser.vendor_display_name, myuser.phone_number)
+
+        serializer = VendorSerializer(myuser, context={'request': request})
+        return Response(success_response('Your request is being processed.', serializer.data), status=HTTP_200_OK)
+
+
+
+class ApprovedVendors(APIView):
+
+    def get(self, request, *args, **kwargs):
+        myqueryset = AFUser.objects.filter(user_type='VENDOR', is_approved=True)
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(myqueryset, request)
+        serializer = VendorSerializer(result_page, context={'request': request}, many=True)
+        return paginator.get_paginated_response(serializer.data)

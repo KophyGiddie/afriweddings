@@ -56,7 +56,7 @@ class MyUserAdmin(UserAdmin):
     add_form = UserCreationForm
 
     list_display = ('full_name', 'email',)
-    list_filter = ('is_admin',)
+    list_filter = ('is_admin', 'user_type')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal information', {'fields': ('first_name', 'last_name', 'username', 'phone_number', 'profile_picture', 'temporal_login_fails', 'permanent_login_fails', 'user_type', 'user_role', 'author_role')}),

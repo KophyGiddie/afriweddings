@@ -2,7 +2,7 @@ from celery.utils.log import get_task_logger
 from afriweddings.celery import app
 from apps.weddings.models import Wedding
 from utils.compress import start_compressing
-from utils.utilities import send_online_invitation_email, send_beta_email, send_wall_post_email
+from utils.utilities import send_online_invitation_email, send_beta_email, send_wall_post_email, send_wall_post_email
 from apps.users.models import AFUser
 from apps.guests.models import GuestGroup
 from apps.guests.helpers import get_guests_by_group_id
@@ -100,6 +100,11 @@ def send_group_invitation_task(group_id, wedding_id, invited_by, wedding_date):
 @app.task()
 def send_beta_email_task(first_name, email):
     send_beta_email(first_name, email)
+
+
+@app.task()
+def send_vendor_approval_email_task(first_name, last_name, display_name, phone_number):
+    send_vendor_approval_email(first_name, last_name, display_name, phone_number)
 
 
 @app.task()
