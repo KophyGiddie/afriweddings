@@ -165,6 +165,8 @@ class ValidateEmail(APIView):
 
             if theuser.user_type == 'VENDOR':
                 print ('vendor check')
+            elif theuser.user_type.upper() == 'WEDDING PLANNER':
+                print ('vendor check')
             else:
                 create_initial_checklist(theuser)
 

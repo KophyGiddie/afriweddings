@@ -33,10 +33,31 @@ from apps.celerytasks.tasks import assign_wedding_checklists, update_guest_group
 from django.db.models import Q
 
 
+def planner_create_initial_checklist(theuser, mywedding):
+    checklist_categories = DefaultChecklistCategory.objects.all()
+    checklist_schedules = DefaultChecklistSchedule.objects.all()
+
+    for item in checklist_categories:
+        try:
+            ChecklistCategory.objects.get(created_by=theuser, name=item.name, identifier=item.identifier, wedding=mywedding)
+        except ChecklistCategory.DoesNotExist:
+            ChecklistCategory.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, wedding=mywedding)
+
+    for item in checklist_schedules:
+        try:
+            ChecklistSchedule.objects.get(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority, wedding=mywedding)
+        except ChecklistSchedule.DoesNotExist:
+            ChecklistSchedule.objects.create(created_by=theuser, name=item.name, identifier=item.identifier, priority=item.priority, wedding=mywedding)
+
+    myschedules = ChecklistSchedule.objects.filter(created_by=theuser, wedding=mywedding)
+    for item in myschedules:
+        planner_populate_wedding_checklist.delay(item.identifier, theuser.id, mywedding.id)
+
+
 class AllWeddings(APIView):
 
     def get(self, request, *args, **kwargs):
-        myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(author=request.user)|Q(wedding_team=request.user)).distinct('id').order_by('id')
+        myqueryset = Wedding.objects.filter(Q(admins=request.user) | Q(planner=request.user)| Q(author=request.user)|Q(wedding_team=request.user)).distinct('id').order_by('id')
         serializer = WeddingSerializer(myqueryset, context={'request': request}, many=True)
         return Response(success_response('Data Returned Successfully', serializer.data), status=HTTP_200_OK)
 
@@ -105,7 +126,20 @@ class WeddingViewSet(viewsets.ModelViewSet):
         myuser.has_onboarded = True
         myuser.save()
 
-        assign_wedding_checklists.delay(myuser.id, mywedding.id)
+        if request.user.user_type.upper() == 'WEDDING PLANNER':
+            mywedding.planner = request.user
+            mywedding.save()
+
+            mywedding.author = None
+            mywedding.planner_created = True
+            mywedding.save()
+
+            mywedding.admins.add(myuser)
+            mywedding.save()
+
+            planner_create_initial_checklist(request.user, mywedding)
+        else:
+            assign_wedding_checklists.delay(myuser.id, mywedding.id)
 
         WeddingUserRole.objects.create(
             role=myuser.user_role,

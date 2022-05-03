@@ -64,6 +64,33 @@ def populate_wedding_checklist(schedule_identifier, author_id):
     print('Time taken to run: ', end - start)
 
 
+
+@app.task()
+def planner_populate_wedding_checklist(schedule_identifier, author_id, wedding_id):
+    mywedding = Wedding.objects.get(id=int(wedding_id))
+    start = time.time()
+    myscheduled_checklist = DefaultChecklist.objects.select_related('category').filter(schedule__identifier=schedule_identifier)
+    myauthor = AFUser.objects.get(id=author_id)
+    myschedule = ChecklistSchedule.objects.get(identifier=schedule_identifier, created_by=myauthor)
+
+    for item in myscheduled_checklist:
+        Checklist.objects.create(
+            title=item.title,
+            created_by=myauthor,
+            description=item.description,
+            intent=item.intent,
+            wedding=mywedding,
+            category=ChecklistCategory.objects.get(identifier=item.category.identifier, created_by=myauthor),
+            schedule=myschedule,
+            is_essential=item.is_essential,
+            is_default=True,
+            priority=item.priority,
+            identifier=item.identifier,
+        )
+    end = time.time()
+    print('Time taken to run: ', end - start)
+
+
 @app.task()
 def update_guest_groups(mywedding_id):
     mywedding = Wedding.objects.get(id=mywedding_id)

@@ -21,6 +21,13 @@ class Wedding(models.Model):
         null=True,
         blank=True
     )
+    planner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='planner_wedding',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     partner_first_name = models.CharField(max_length=200, blank=True, null=True)
     partner_last_name = models.CharField(max_length=200, blank=True, null=True)
     schedule = models.CharField(max_length=200, blank=True, null=True)
@@ -35,6 +42,7 @@ class Wedding(models.Model):
     currency = models.CharField(blank=True, null=True, max_length=128, default="GHS")
     country = models.CharField(blank=True, null=True, max_length=128, default="Ghana")
     partner_accepted_invite = models.BooleanField(default=False)
+    planner_created = models.BooleanField(default=False)
     city = models.CharField(blank=True, null=True, max_length=128)
     venue = models.CharField(blank=True, max_length=1028, null=True)
     expected_guests = models.IntegerField(default=0)
