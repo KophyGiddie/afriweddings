@@ -221,6 +221,7 @@ class AcceptInvite(APIView):
                     pass
         except Invitation.DoesNotExist:
             return Response(error_response("Invalid Invitation", '122'), status=HTTP_400_BAD_REQUEST)
+
         myinvitation.status = 'ACCEPTED'
         myinvitation.save()
         myrole = myinvitation.invitee_role
@@ -267,3 +268,54 @@ class SendBetaInvite(APIView):
             )
             send_beta_email_task.delay(first_name, email)
             return Response(success_response('User Invited Successfully'), status=HTTP_200_OK)
+
+
+class InviteCouple(APIView):
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email', None)
+        invitation_type = "COUPLE"
+        user_role = request.data.get('role', None)
+        if user_role == 'GROOM':
+            user_role = 'Groom'
+        elif user_role == 'BRIDE':
+            user_role = 'Bride'
+        first_name = request.data.get('first_name', None)
+        last_name = request.data.get('last_name', None)
+        wedding_id = request.data.get('wedding_id', None)
+
+
+        myids = Wedding.objects.filter(Q(admins=request.user) | Q(planner=request.user)| Q(author=request.user)|Q(wedding_team=request.user)).distinct('id').values_list('id', flat=True)
+        
+        if wedding_id not in myids:
+            return Response(error_response("You dont have access to this wedding", '123'), status=HTTP_400_BAD_REQUEST)
+        
+        mywedding = get_wedding_by_id(wedding_id)
+
+        try:
+            myrole = WeddingRole.objects.get(role=user_role, wedding=mywedding)
+        except WeddingRole.DoesNotExist:
+            return Response(error_response("Invalid Wedding Role", '123'), status=HTTP_400_BAD_REQUEST)
+
+        try:
+            Invitation.objects.get(email=email, wedding=Wedding.objects.get(id=request.user.wedding_id))
+            return Response(error_response("This user has already been invited", '121'), status=HTTP_400_BAD_REQUEST)
+        except Invitation.DoesNotExist:
+            myinvitation = Invitation.objects.create(
+                invitation_type=invitation_type,
+                user_type=invitation_type,
+                invitation_code=generate_invitation_code(),
+                first_name=first_name,
+                last_name=last_name,
+                invitee_role=myrole,
+                user_role=myrole.role,
+                email=email,
+                wedding=mywedding,
+                status='PENDING',
+                invited_by=request.user,
+            )
+
+        send_invitation_email(myinvitation, first_name)
+        serializer = InvitationSerializer(myinvitation, context={'request': request})
+        return Response(success_response('Invited Successfully', serializer.data), status=HTTP_200_OK)
+
