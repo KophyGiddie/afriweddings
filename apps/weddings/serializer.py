@@ -44,6 +44,7 @@ class WeddingSerializer(serializers.Serializer):
     currency = serializers.CharField()
     public_url = serializers.CharField()
     is_public = serializers.BooleanField()
+    planner_created = serializers.BooleanField()
     country = serializers.CharField()
     city = serializers.CharField()
     partner_last_name = serializers.CharField()

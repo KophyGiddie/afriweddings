@@ -117,6 +117,16 @@ class SignupUser(APIView):
                             user=user
                         )
 
+                    elif myinvitation.invitation_type == 'COUPLE':
+                        if not mywedding.author:
+                            mywedding.author = request.user
+                        else:
+                            mywedding.partner = user
+                            user.profile_picture = mywedding.partner_picture
+                        user.has_onboarded = True
+                        mywedding.admins.add(user)
+                        mywedding.save()
+
                     if user_role == 'Wedding Planner':
                         mywedding.admins.add(user)
                         mywedding.save()

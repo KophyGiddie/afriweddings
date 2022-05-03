@@ -224,6 +224,7 @@ class AcceptInvite(APIView):
 
         myinvitation.status = 'ACCEPTED'
         myinvitation.save()
+
         myrole = myinvitation.invitee_role
         if myrole.role == 'Groom' or myrole.role == 'Bride':
             mywedding = myinvitation.wedding
